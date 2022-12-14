@@ -1,5 +1,7 @@
 # Zero Trust Framework Documentation (Gluu Server Customizing)  
 
+Zero Trust Demo for Gluu 4.4.2 with OpenID
+
 # Table of Contents
 
 * [Solution Overview](#Solution-Overview)
