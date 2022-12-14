@@ -750,7 +750,7 @@ service oxauth restart
 This script asks the user to enter a password in step 1, sends a signed
 email to the user with an OTP, and asks the user to enter the OTP in step 2.
 
-![Diagram 4 Email Otp Sequence](./img/Diagram-3-email_otp_sequence.png)
+![Diagram 3 Email Otp Sequence](./img/Diagram-3-email_otp_sequence.png)
 
 ```text
 title Email OTP Authenticaiton
@@ -962,7 +962,7 @@ bottom of the page and click **Add custom script configuration**
 
 ### oxAuth Forgot Password Script
 
-![Diagram 6 Forgot Password Sequence](./img/Diagram-5-forgot_password_sequence.png)
+![Diagram 5 Forgot Password Sequence](./img/Diagram-5-forgot_password_sequence.png)
 
 ```text
 title Password Recovery (forgot_password.py)
@@ -1273,7 +1273,7 @@ This template can use follow variables:
 
 ### oxAuth User Registration Script
 
-![Diagram 5 Registration Otp Sequence](./img/Diagram-4-register_otp_sequence.png)
+![Diagram 4 Registration Otp Sequence](./img/Diagram-4-register_otp_sequence.png)
 
 ```text
 title User Registration (register.py)
@@ -2497,7 +2497,7 @@ traversing a firewall. In production, the traffic is routed through a load
 balancer, which exposes a routable IP address. Diagram 5 shows the production
 replication topology with the public addresses of the load balancer.
 
-![Diagram 3 LDAP replication topology](./img/Diagram-2-ldap-replication-topology.png)
+![Diagram 2 LDAP replication topology](./img/Diagram-2-ldap-replication-topology.png)
 
 ## oxAuth OpenID Provider
 
