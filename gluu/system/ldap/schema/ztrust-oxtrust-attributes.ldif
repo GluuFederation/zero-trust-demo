@@ -1,0 +1,113 @@
+dn: inum=11978694-3e96-4f9c-ac3b-455cd063140f,ou=attributes,o=gluu
+description: Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID
+displayName: edipi
+gluuAttributeEditType: admin
+gluuAttributeName: edipi
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: string
+gluuAttributeUsageType: openid
+gluuAttributeViewType: admin
+gluuAttributeViewType: user
+gluuSAML1URI: urn:gluu:dir:attribute-def:edipi
+gluuSAML2URI: https://idp.example.com/saml/edipi
+gluuStatus: active
+inum: 11978694-3e96-4f9c-ac3b-455cd063140f
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: edipi
+oxMultivaluedAttribute: true
+oxSCIMCustomAttribute: false
+
+dn: inum=e88df284-d234-43a7-89e7-cea41d6b2c3f,ou=attributes,o=gluu
+description: Personal Identity Verification (PIV) Identifier
+displayName: pivid
+gluuAttributeEditType: admin
+gluuAttributeName: pivid
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: string
+gluuAttributeUsageType: openid
+gluuAttributeViewType: admin
+gluuSAML1URI: urn:gluu:dir:attribute-def:pivid
+gluuSAML2URI: urn:oid:pivid
+gluuStatus: active
+inum: e88df284-d234-43a7-89e7-cea41d6b2c3f
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: pivid
+oxMultivaluedAttribute: false
+oxSCIMCustomAttribute: false
+
+dn: inum=f851e4e9-1245-403b-9fa8-96e26d41c538,ou=attributes,o=gluu
+description: Legacy OSSO User Distinguish Name
+displayName: ossoUserDN
+gluuAttributeEditType: admin
+gluuAttributeName: ossoUserDN
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: string
+gluuAttributeUsageType: openid
+gluuAttributeViewType: admin
+gluuSAML1URI: urn:gluu:dir:attribute-def:ossoUserDN
+gluuSAML2URI: urn:oid:ossoUserDN
+gluuStatus: active
+inum: f851e4e9-1245-403b-9fa8-96e26d41c538
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: ossoUserDN
+oxMultivaluedAttribute: false
+oxSCIMCustomAttribute: false
+
+dn: inum=c55cef08-969c-4e50-87e0-9b1e2a2061af,ou=attributes,o=gluu
+description: Legacy OSSO Subscriber Global Unique Identifier
+displayName: ossoSubscriberGuid
+gluuAttributeEditType: admin
+gluuAttributeName: ossoSubscriberGuid
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: string
+gluuAttributeUsageType: openid
+gluuAttributeViewType: admin
+gluuSAML1URI: urn:gluu:dir:attribute-def:ossoSubscriberGuid
+gluuSAML2URI: urn:oid:ossoSubscriberGuid
+gluuStatus: active
+inum: c55cef08-969c-4e50-87e0-9b1e2a2061af
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: ossoSubscriberGuid
+oxMultivaluedAttribute: false
+oxSCIMCustomAttribute: false
+
+dn: inum=3d9b76d4-9028-4411-ae81-8f3adc03b52f,ou=attributes,o=gluu
+description: The registration status of the user.
+displayName: userStatus
+gluuAttributeEditType: admin
+gluuAttributeName: userStatus
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: string
+gluuAttributeUsageType: openid
+gluuAttributeViewType: admin
+gluuSAML1URI: urn:gluu:dir:attribute-def:userStatus
+gluuSAML2URI: urn:oid:userStatus
+gluuStatus: active
+inum: 3d9b76d4-9028-4411-ae81-8f3adc03b52f
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: userStatus
+oxMultivaluedAttribute: false
+oxSCIMCustomAttribute: false
+
+dn: inum=d51b279b-f966-420d-b06f-f55663f5a1c6,ou=attributes,o=gluu
+description: Last login time used to expire inactive users
+displayName: Last Login Time
+gluuAttributeEditType: admin
+gluuAttributeName: lastlogin
+gluuAttributeOrigin: ztrustPerson
+gluuAttributeType: generalizedTime
+gluuAttributeViewType: admin
+gluuSAML1URI: urn:gluu:dir:attribute-def:lastlogin
+gluuSAML2URI: urn:oid:lastlogin
+gluuStatus: active
+inum: d51b279b-f966-420d-b06f-f55663f5a1c6
+objectClass: gluuAttribute
+objectClass: top
+oxAuthClaimName: lastlogin
+oxMultivaluedAttribute: false
+oxSCIMCustomAttribute: false

@@ -1,0 +1,45 @@
+dn: cn=schema
+objectClass: top
+objectClass: ldapSubentry
+objectClass: subschema
+cn: schema
+attributeTypes: ( 'edipi' NAME 'edipi'
+  DESC 'Electronic Data Interchange Personal Indentifier aka DoD ID'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  X-ORIGIN 'ZTrust Custom attribute' )
+attributeTypes: ( 'pivid' NAME 'pivid'
+  DESC 'Personal Identity Verification Identifier'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  X-ORIGIN 'ZTrust Custom attribute' )
+attributeTypes: ( 'ossoUserDN' NAME 'ossoUserDN'
+  DESC 'Legacy OSSO User Distinguish Name'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  X-ORIGIN 'ZTrust custom attribute' )
+attributeTypes: ( 'ossoSubscriberGuid' NAME 'ossoSubscriberGuid'
+  DESC 'Legacy OSSO Subscriber Global Unique Identifier'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  X-ORIGIN 'ZTrust custom attribute' )
+attributeTypes: ( 'userStatus' NAME 'userStatus'
+  DESC 'The registration status of the user'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  X-ORIGIN 'ZTrust custom attribute' )
+attributeTypes: ( 'lastlogin' NAME 'lastlogin'
+  EQUALITY generalizedTimeMatch
+  ORDERING generalizedTimeOrderingMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+  X-ORIGIN 'Last login time used to expire inactive users' )
+objectClasses: ( 'ztrustPerson' NAME 'ztrustPerson'
+  SUP ( top )
+  AUXILIARY
+  MAY ( edipi $ pivid $ ossoUserDN $ ossoSubscriberGuid $ userStatus $ lastlogin )
+  X-ORIGIN 'ZTrust custom schema' )
