@@ -50,11 +50,11 @@ def init(argv):
    
     process_files = [
     
-            # <root-dir>/code/scripts/person_authn/sys_assets
+            # <root-dir>/gluu/code/scripts/person_authn/sys_assets
             # /etc/gluu/conf
             (
                 ("ztrust-attributes.json", "ztrust-email-email_2fa.json", "ztrust-email-forgot_password.json", "ztrust-email-register.json", "ztrust-regex.json"),
-                "%s/code/scripts/person_authn/assets_sys/etc" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets_sys/etc" % cust_root,
                 "."
             )            
         ];

@@ -48,91 +48,91 @@ def init(argv):
    
     process_files = [
         
-            # <root-dir>/code/scripts/person_authn/assets/layout
+            # <root-dir>/gluu/code/scripts/person_authn/assets/layout
             # jetty/oxauth/custom/pages/WEB-INF/incl/layout
             (
                 ("login-template.xhtml",),
-                "%s/code/scripts/person_authn/assets/layout" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/layout" % cust_root,
                 "jetty/oxauth/custom/pages/WEB-INF/incl/layout"
             ),
 
-            # <root-dir>/code/scripts/person_authn/assets/removefooter
+            # <root-dir>/gluu/code/scripts/person_authn/assets/removefooter
             # jetty/oxauth/custom/pages/WEB-INF/incl/layout
             (
                 ("authorize-extended-template.xhtml","login-extended-template.xhtml",),
-                "%s/code/scripts/person_authn/assets/removefooter" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/removefooter" % cust_root,
                 "jetty/oxauth/custom/pages/WEB-INF/incl/layout"
             ),
 
-            # <root-dir>/code/scripts/person_authn/assets/removefooter
+            # <root-dir>/gluu/code/scripts/person_authn/assets/removefooter
             # jetty/oxauth/custom/pages
             (
                 ("error.xhtml",),
-                "%s/code/scripts/person_authn/assets/removefooter" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/removefooter" % cust_root,
                 "jetty/oxauth/custom/pages"
             ),
             
-            # <root-dir>/code/scripts/person_authn/assets/removefooter 
+            # <root-dir>/gluu/code/scripts/person_authn/assets/removefooter 
             # jetty/identity/custom/pages
             (
                 ("finishlogout.xhtml",),
-                "%s/code/scripts/person_authn/assets/removefooter" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/removefooter" % cust_root,
                 "jetty/identity/custom/pages"
             ),
 
-            # <root-dir>/code/scripts/person_authn/assets/removefooter
+            # <root-dir>/gluu/code/scripts/person_authn/assets/removefooter
             # jetty/identity/custom/pages/WEB-INF/incl/layout
             (
                 ("fullWidthEmpty.xhtml",),
-                "%s/code/scripts/person_authn/assets/removefooter" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/removefooter" % cust_root,
                 "jetty/identity/custom/pages/WEB-INF/incl/layout"
             ),
 
-            # <root-dir>/code/scripts/person_authn/casa/pages 
+            # <root-dir>/gluu/code/scripts/person_authn/casa/pages 
             # jetty/oxauth/custom/pages/casa
             (
                 ("login.xhtml",),
-                "%s/code/scripts/person_authn/casa/pages" % cust_root,
+                "%s/gluu/code/scripts/person_authn/casa/pages" % cust_root,
                 "jetty/oxauth/custom/pages/casa"
             ),
 
-            # <root-dir>/code/scripts/person_authn/email_2fa_plugin/pages
+            # <root-dir>/gluu/code/scripts/person_authn/email_2fa_plugin/pages
             # jetty/oxauth/custom/pages/email_auth    
             (
                 ("entertoken.xhtml",),
-                "%s/code/scripts/person_authn/email_2fa_plugin/pages" % cust_root,
+                "%s/gluu/code/scripts/person_authn/email_2fa_plugin/pages" % cust_root,
                 "jetty/oxauth/custom/pages/auth/email_auth"
             ),
 
-            # <root-dir>/code/scripts/person_authn/forgot_password/pages
+            # <root-dir>/gluu/code/scripts/person_authn/forgot_password/pages
             # jetty/oxauth/webapp/auth/forgot_password
             (
                 ("entertoken.xhtml","forgot.xhtml","newpassword.xhtml"),
-                "%s/code/scripts/person_authn/forgot_password/pages" % cust_root, 
+                "%s/gluu/code/scripts/person_authn/forgot_password/pages" % cust_root, 
                 "jetty/oxauth/custom/pages/auth/forgot_password"
             ),            
 
-            # <root-dir>/code/scripts/person_authn/user_registration/pages
+            # <root-dir>/gluu/code/scripts/person_authn/user_registration/pages
             # jetty/oxauth/custom/pages/register
             (
                 ("entertoken.xhtml",),
-                "%s/code/scripts/person_authn/user_registration/pages" % cust_root, 
+                "%s/gluu/code/scripts/person_authn/user_registration/pages" % cust_root, 
                 "jetty/oxauth/custom/pages/auth/register"
             ),
 
-            # <root-dir>/code/scripts/person_authn/user_registration/pages
+            # <root-dir>/gluu/code/scripts/person_authn/user_registration/pages
             # jetty/oxauth/custom/pages/register
             (
                 ("reg.xhtml","regtr.xhtml","reg_status.xhtml"),
-                "%s/code/scripts/person_authn/user_registration/pages" % cust_root, 
+                "%s/gluu/code/scripts/person_authn/user_registration/pages" % cust_root, 
                 "jetty/oxauth/custom/pages/auth"
             ),
             
-            # <root-dir>/code/scripts/person_authn/assets/img
+            # <root-dir>/gluu/code/scripts/person_authn/assets/img
             # jetty/oxauth/custom/static/img
             (
                 ("logo.png","zero_trust.png","ver_code.png"),
-                "%s/code/scripts/person_authn/assets/img" % cust_root,
+                "%s/gluu/code/scripts/person_authn/assets/img" % cust_root,
                 "jetty/oxauth/custom/static/img"
             )
         ];
