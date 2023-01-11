@@ -26,8 +26,7 @@ def init(argv):
     
     opt_parser = optparse.OptionParser();
     
-#    in_arch_fpath_default = "./zero-trust-demo-main.zip";
-    in_arch_fpath_default = "./gluu-example-customization-main.zip";
+    in_arch_fpath_default = "./zero-trust-demo-main.zip";
     out_base_dpath_default = "/opt/gluu";
 
     opt_parser.add_option("-i", "--in_arch_fpath", dest="in_arch_fpath", default=in_arch_fpath_default, help="input archive file path (default: '%s')" % in_arch_fpath_default);
