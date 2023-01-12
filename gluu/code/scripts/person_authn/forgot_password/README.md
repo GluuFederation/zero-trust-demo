@@ -1,8 +1,8 @@
 # README Forgot Password
 
-Name of the script in **oxTrust** (**identity**) *Configuration*/*Person Authentication Scripts*: **ztrust-forgot-password**.
+Name of the script in **oxTrust** (**identity**) *Configuration*/*Person Authentication Scripts*: **ztrust-forgot_password**.
 
-Following are the configuration properties for the *forgot_password.py* script (**ztrust-forgot-password**):
+Following are the configuration properties for the *forgot_password.py* script (**ztrust-forgot_password**):
 
 Parameters of the script:
 

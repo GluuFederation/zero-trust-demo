@@ -37,9 +37,9 @@ Following are the configuration properties for the *email_2fa_plugin.py* script:
 
 -----------------------------------------------------------------------------------------------
 
-### **ztrust-forgot-password**
+### **ztrust-forgot_password**
 
-ztrust-forgot-password  
+ztrust-forgot_password  
 
 Following are the configuration properties for the *forgot_password.py* script:  
 

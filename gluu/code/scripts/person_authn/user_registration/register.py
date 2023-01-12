@@ -92,7 +92,7 @@ class PersonAuthentication(PersonAuthenticationType):
         self.emailid = None
         self.identity = CdiUtil.bean(Identity)
 
-    def init(self, configurationAttributes):
+    def init(self, customScript, configurationAttributes):
 
         print "Register. Initialization"
         
@@ -179,7 +179,7 @@ class PersonAuthentication(PersonAuthenticationType):
         return True
 
     def getApiVersion(self):
-        return 1
+        return 11
 
     def isValidAuthenticationMethod(self, usageType, configurationAttributes):
         return True
