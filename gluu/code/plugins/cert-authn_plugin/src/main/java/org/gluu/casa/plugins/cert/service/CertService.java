@@ -26,19 +26,19 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.gluu.casa.plugins.cert.service.UserCertificateMatch.*;
 
 public class CertService {
 
-    public static final String ACR = CertAuthenticationExtension.ACR;
+    private static final Logger logger = LoggerFactory.getLogger(CertService.class);
+
     private static final int DEFAULT_CRL_MAX_RESPONSE_SIZE = 5 * 1024 * 1024;   //5MB
 
     private static final String CERT_PREFIX = "cert:";
 
     private static CertService singleton;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private ObjectMapper mapper;
     private IPersistenceService persistenceService;
@@ -63,9 +63,9 @@ public class CertService {
 
     public void reloadConfiguration() {
 
-        scriptProperties = persistenceService.getCustScriptConfigProperties(ACR);
+        scriptProperties = persistenceService.getCustScriptConfigProperties(CertAuthenticationExtension.ACR);
         if (scriptProperties == null) {
-            logger.warn("Config. properties for custom script '{}' could not be read!!.", ACR);
+            logger.warn("Config. properties for custom script '{}' could not be read!!.", CertAuthenticationExtension.ACR);
         } else {
             String paramName = "crl_max_response_size";
             try {
@@ -193,6 +193,22 @@ public class CertService {
 
             List<org.gluu.oxtrust.model.scim2.user.X509Certificate> x509Certificates = getScimX509Certificates(
                     Optional.ofNullable(person.getX509Certificates()).orElse(Collections.emptyList()));
+            
+            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
+            
+            // CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US            
+            
+            Stream<String> res1 = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX));
+            
+            List<String> res1Str = res1.collect(Collectors.toList());
+            
+            res1 = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX));
+            
+            Certificate cert = getExtraCertsInfo(person.getOxExternalUid().get(0),x509Certificates);
+            
+            Stream<Certificate> res2 = res1.map(uid -> getExtraCertsInfo(uid, x509Certificates));
+            
+            List<Certificate> res2Crt = res2.collect(Collectors.toList());
 
             certs = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX))
                     .map(uid -> getExtraCertsInfo(uid, x509Certificates)).collect(Collectors.toList());

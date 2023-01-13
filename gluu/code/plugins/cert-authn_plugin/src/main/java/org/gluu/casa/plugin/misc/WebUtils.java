@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 public final class WebUtils {
 
-    private static Logger LOG = LoggerFactory.getLogger(WebUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebUtils.class);
 
     /**
      * The page where users are redirected to after they have successfully logged in.

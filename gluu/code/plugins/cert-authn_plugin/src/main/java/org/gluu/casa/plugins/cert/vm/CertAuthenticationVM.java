@@ -25,17 +25,18 @@ import java.security.cert.X509Certificate;
 
 public class CertAuthenticationVM {
 
+    private static final Logger logger = LoggerFactory.getLogger(CertAuthenticationVM.class);
+
     private static final String RND_KEY = "key";
     private static final String CERT_HEADER = "X-ClientCert";
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
     private CertService certService;
     private StringEncrypter stringEncrypter;
 
     @WireVariable
     private ISessionContext sessionContext;
-    
-    private IPersistenceService persistenceService;    
+
+    private IPersistenceService persistenceService;
 
     private boolean hasConfigErrors;
     private boolean present;

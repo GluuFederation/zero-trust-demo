@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class CertAuthenticationSummaryVM {
 
-	private Logger logger = LogManager.getLogger(getClass());
+	private static final Logger logger = LogManager.getLogger(CertAuthenticationSummaryVM.class);
 
 	@WireVariable
 	private ISessionContext sessionContext;
@@ -36,18 +36,30 @@ public class CertAuthenticationSummaryVM {
 	private CertService certService;
 
 	public List<Certificate> getCertificates() {
-	
 		return certificates;
 	}
 	
-	
 	@Init
 	public void init() {
+        logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- >>");
+
 		certService = CertService.getInstance();
 		user = sessionContext.getLoggedUser();
 		// sndFactorUtils = Utils.managedBean(SndFactorAuthenticationUtils.class);
 		certificates = certService.getUserCerts(user.getId());
+
+		for (Certificate certificate : certificates) {
+		    logger.info("----------------------------");
+	        logger.info("certificate.formattedName   = " + certificate.getFormattedName());
+            logger.info("certificate.commonName      = " + certificate.getCommonName());
+            logger.info("certificate.organization    = " + certificate.getOrganization());
+            logger.info("certificate.location        = " + certificate.getLocation());
+            logger.info("certificate.expirationDate  = " + certificate.getExpirationDate());            
+            logger.info("certificate.fingerPrint     = " + certificate.getFingerPrint());
+            logger.info("----------------------------");
+		}
 		
+        logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- <<");
 	}
 
 	public Pair<CredentialRemovalConflict, String> removalConflict(String credentialType, int nCredsOfType, User user) {

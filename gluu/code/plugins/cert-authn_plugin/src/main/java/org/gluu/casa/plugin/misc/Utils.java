@@ -31,11 +31,10 @@ import java.net.HttpURLConnection;
  */
 public final class Utils {
 
-    private static Logger LOG = LoggerFactory.getLogger(Utils.class);
-    private static ObjectMapper MAPPER = new ObjectMapper();
-    private static final String SALT_FILE_LOCATION = "/etc/gluu/conf/salt";
+    private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
-    public static final int MIN_CREDS_2FA_DEFAULT = 2;
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String SALT_FILE_LOCATION = "/etc/gluu/conf/salt";
 
     private Utils() { }
 

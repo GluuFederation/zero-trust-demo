@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.extension.AuthnMethod;
 import org.gluu.casa.plugin.misc.Utils;
+import org.gluu.casa.plugins.cert.CertAuthenticationExtension;
 import org.gluu.casa.plugins.cert.service.CertService;
 
 import org.gluu.casa.service.ISessionContext;
@@ -16,8 +17,11 @@ import org.slf4j.LoggerFactory;
 
 @Extension
 public class CertEnrollAuthnMethod implements AuthnMethod{
-	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	private final static Logger logger = LoggerFactory.getLogger(CertEnrollAuthnMethod.class);
+
 	private ISessionContext sessionContext;
+
 	public CertEnrollAuthnMethod() {
 		sessionContext = Utils.managedBean(ISessionContext.class);
 	}
@@ -36,7 +40,7 @@ public class CertEnrollAuthnMethod implements AuthnMethod{
 
 	@Override
 	public String getAcr() {
-		return CertService.ACR;
+		return CertAuthenticationExtension.ACR;
 	}
 
 	@Override
