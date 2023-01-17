@@ -14,8 +14,8 @@ public class Certificate implements Comparable<Certificate> {
     private List<String> organization = new ArrayList<>();
     private List<String> organizationUnit = new ArrayList<>();
     
+    private List<String> location = new ArrayList<>();
     private List<String> state = new ArrayList<>();    
-    private List<String> location = new ArrayList<>();    
     private List<String> country = new ArrayList<>();    
     
 //    private String commonName;

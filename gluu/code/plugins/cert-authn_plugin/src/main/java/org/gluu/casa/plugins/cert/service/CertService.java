@@ -198,11 +198,13 @@ public class CertService {
             
 //            x509Certificates.add(x509Certificates.get(0));            
             
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
+            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
             //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Austin,ST=TX,C=US");           
 //            x509Certificates.get(1).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Kharkiv,ST=Kharkiv,C=UA");
             
-            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US");
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US");
+            
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
             
             //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.2000000002,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv Area,C=Ukraine");            
             
@@ -227,7 +229,7 @@ public class CertService {
             
             // certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001; Admin.Admin.Admin.20000000011; Admin.Admin.Admin.20000000012");
             
-            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
+//            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
             
             certs.add(certs.get(0));
             
@@ -326,7 +328,7 @@ public class CertService {
                     String formattedCommonName = new String(); 
                     for(String cnVal : cn) {
                         if(formattedCommonName.length() > 0) {
-                            formattedCommonName += ", ";
+                            formattedCommonName += " - ";
                         }
                         formattedCommonName += cnVal;                        
                     }
