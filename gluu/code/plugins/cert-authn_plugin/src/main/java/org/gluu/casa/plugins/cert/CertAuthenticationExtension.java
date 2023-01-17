@@ -49,7 +49,7 @@ public class CertAuthenticationExtension implements AuthnMethod {
     }
 
     public List<BasicCredential> getEnrolledCreds(String id) {
-
+        logger.info("CertAuthenticationExtension.getEnrolledCreds(): id = " + id);
         try {
             return certService.getUserCerts(id).stream()
                     .map(cert -> new BasicCredential(cert.getFormattedName(), -1)).collect(Collectors.toList());

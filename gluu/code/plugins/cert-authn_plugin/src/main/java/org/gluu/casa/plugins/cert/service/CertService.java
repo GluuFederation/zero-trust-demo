@@ -1,6 +1,8 @@
 package org.gluu.casa.plugins.cert.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.Lists;
+
 import org.gluu.casa.core.model.BasePerson;
 import org.gluu.casa.core.model.IdentityPerson;
 import org.gluu.casa.credential.BasicCredential;
@@ -194,7 +196,17 @@ public class CertService {
             List<org.gluu.oxtrust.model.scim2.user.X509Certificate> x509Certificates = getScimX509Certificates(
                     Optional.ofNullable(person.getX509Certificates()).orElse(Collections.emptyList()));
             
-            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
+//            x509Certificates.add(x509Certificates.get(0));            
+            
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
+            //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Austin,ST=TX,C=US");           
+//            x509Certificates.get(1).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Kharkiv,ST=Kharkiv,C=UA");
+            
+            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US");
+            
+            //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.2000000002,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv Area,C=Ukraine");            
+            
+            // /OU=Security Dept/OU=PKI/OU=CONTRACTOR            
             
             // CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US            
             
@@ -213,7 +225,15 @@ public class CertService {
             certs = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX))
                     .map(uid -> getExtraCertsInfo(uid, x509Certificates)).collect(Collectors.toList());
             
-         logger.info("Certificates:"+certs.get(0).toString());
+            // certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001; Admin.Admin.Admin.20000000011; Admin.Admin.Admin.20000000012");
+            
+            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
+            
+            certs.add(certs.get(0));
+            
+            logger.info("certs.get(0).getFormattedName() = " + certs.get(0).getFormattedName());            
+            
+            logger.info("Certificates:"+certs.get(0).toString());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -224,10 +244,12 @@ public class CertService {
     public List<BasicCredential> getCredentials(String uniqueIdOfTheUser) {
 		// Write the code to connect to the 3rd party API and fetch credentials against
 		// the user
+        logger.info("CertService.getCredentials(): uniqueIdOfTheUser = " + uniqueIdOfTheUser);            
 		List<BasicCredential> list = new ArrayList<BasicCredential>();
 		List<Certificate> certs = getUserCerts(uniqueIdOfTheUser);
 		for(Certificate cert:certs) {
-		list.add(new BasicCredential(cert.getCommonName(), System.currentTimeMillis()/1000));
+		    //list.add(new BasicCredential(cert.getCommonName(), System.currentTimeMillis()/1000));
+		    list.add(new BasicCredential(cert.getFormattedCommonName(), System.currentTimeMillis()/1000));
 		}
 		return list;
 	}
@@ -254,7 +276,69 @@ public class CertService {
             try {
                 X509Certificate x509Certificate = CertUtils.x509CertificateFromPem(sc.getValue());
                 if (fingerPrint.equals(getFingerPrint(x509Certificate))) {
+                    
+//                  String[] attributes = sc.getDisplay().split(",\\s*");
+//                  Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1))
+                    
+                    Map<String, List<String>> attributesMap = new HashMap<>();
+                    
+                    String[] attributesArray = sc.getDisplay().split(",\\s*");
+                    
+                    for (String attributeLine : attributesArray) {
+                        String [] attribute = attributeLine.split("=");
+                        if (attribute.length >= 2) {
+                            String key = attribute[0].toLowerCase();
+                            if (!attributesMap.containsKey(key)) {
+                                attributesMap.put(key, new ArrayList<String>());
+                            }
+                            attributesMap.get(key).add(attribute[1]);
+                        }
+//                        t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1))
+//                        String attributeLine
+                    }
 
+                    if(attributesMap.containsKey("cn")) {
+                        cert.setCommonName(attributesMap.get("cn"));
+                    }
+
+                    if(attributesMap.containsKey("ou")) {
+                        cert.setOrganizationUnit(attributesMap.get("ou"));
+                    }
+
+                    if(attributesMap.containsKey("o")) {
+                        cert.setOrganization(attributesMap.get("o"));
+                    }
+
+                    if(attributesMap.containsKey("l")) {
+                        cert.setLocation(attributesMap.get("l"));
+                    }
+
+                    if(attributesMap.containsKey("st")) {
+                        cert.setState(attributesMap.get("st"));
+                    }
+
+                    if(attributesMap.containsKey("c")) {
+                        cert.setCountry(attributesMap.get("c"));
+                    }
+                    
+                    List<String> cn = attributesMap.get("cn");
+                    
+                    String formattedCommonName = new String(); 
+                    for(String cnVal : cn) {
+                        if(formattedCommonName.length() > 0) {
+                            formattedCommonName += ", ";
+                        }
+                        formattedCommonName += cnVal;                        
+                    }
+                    
+                    cert.setFormattedCommonName(formattedCommonName);
+                    cert.setFormattedName(formattedCommonName);
+                    
+/*
+                    Map<String, List<String>> attributes = Arrays.stream(sc.getDisplay().split(",\\s*"))
+                            .collect(Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1)));
+*/
+/*
                     Map<String, String> attributes = Arrays.stream(sc.getDisplay().split(",\\s*"))
                             .collect(Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1)));
 
@@ -278,8 +362,14 @@ public class CertService {
                     cert.setOrganization(ou);
                     cert.setLocation(String.format("%s %s %s", l, st, c).trim());
 
-                    cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
-
+                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
+                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
+                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + "123");
+                    
+                    // cert.setFormattedName(cn + " " + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + cn + " " +  (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
+                    
+                    cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));                    
+*/
                     long date = x509Certificate.getNotAfter().getTime();
                     cert.setExpirationDate(date);
                     cert.setExpired(date < System.currentTimeMillis());

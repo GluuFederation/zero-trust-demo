@@ -34,19 +34,39 @@
                                 </span>
 
                                 <p class="ml3 mb0">
-                                    <z:label sclass="f5 dark-blue2" value="@load(empty each.commonName ? c:l('general.no_named') : each.commonName)" />
+                                	<z:label sclass="f5 dark-blue2" value="@load(empty each.formattedCommonName ? c:l('general.no_named') : each.formattedCommonName)" />
                                     <br />
+
                                     <zk:zk unless="${empty each.organization}">
-                                        <label class="w4 ma0 truncate nb1">${labels.usercert.organization}</label>
-                                        ${each.organization}
-                                        <br />
-                                    </zk:zk>
-                                    <zk:zk unless="${empty each.location}">
-                                        <label class="w4 ma0 truncate nb1">${labels.usercert.location}</label>
-                                        ${each.location}
-                                        <br />
-                                    </zk:zk>
-                                    <zk:zk unless="${empty each.commonName}">
+                                    	<label>Organization:</label>
+                                    	<br />
+                                    	
+		<zk:zscript>
+			List aList = new LinkedList();
+			aList.add("a");
+			aList.add("b");
+			aList.add("c");
+			int listSize = aList.size();
+		</zk:zscript>
+
+		<z:label value="Size (list): ${listSize}" />
+		<br />
+		<z:label value="Size (organization): ${each.organization.size()}" />
+		<br />		
+             	
+                                    	<label>Organization[0]:="${each.organization[0]}"</label>
+                                    	<br />
+                                    	<label>Organization[1]:="${each.organization[1]}"</label>
+                                    	<br />
+
+										<zk:zk forEach="${each.organization}">
+											<label>Item:</label>
+											<z:label value="${forEachStatus.current}" />											
+											<br />
+										</zk:zk>                                    
+										<br/>
+
+                                    <zk:zk unless="${empty each.formattedCommonName}">
                                         <label class="w4 ma0 truncate nb1">${labels.usercert.expires}</label>
                                         <z:label value="@load(each.expirationDate) @converter('org.gluu.casa.ui.CustomDateConverter',
                                         format='MMM d, yyyy - hh:mm a', offset = sessionContext.zoneOffset)"/>
@@ -59,6 +79,8 @@
                                             ${labels.usercert.expired}
                                         </span>
                                     </zk:zk>
+                                    
+ 									</zk:zk>                                    
                                 </p>
                             </div>
                             <div class="pl2 pt2">
