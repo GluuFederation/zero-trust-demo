@@ -26,14 +26,17 @@ public class Certificate implements Comparable<Certificate> {
     
     private String formattedCommonName;
     
-    private long expirationDate;
-    private boolean expired;
-    private String fingerPrint;
+    private long expirationDate = -1L;
+    private boolean expired = false;
+    
+    private String fingerPrint = null;
+    
+    private Certificate issuerCertificate = null;
     
 //  private List<String> organizationUnit = new ArrayList<>();
 //  private String organizationUnit;
 
-    public int compareTo(Certificate cert) {
+    public int compareTo(final Certificate cert) {
         return getFingerPrint().compareTo(cert.getFingerPrint());
     }
     
@@ -41,7 +44,7 @@ public class Certificate implements Comparable<Certificate> {
         return formattedName;
     }
 
-    public void setFormattedName(String formattedName) {
+    public void setFormattedName(final String formattedName) {
         this.formattedName = formattedName;
     }    
     
@@ -49,7 +52,7 @@ public class Certificate implements Comparable<Certificate> {
         return formattedCommonName;
     }
 
-    public void setFormattedCommonName(String formattedCommonName) {
+    public void setFormattedCommonName(final String formattedCommonName) {
         this.formattedCommonName = formattedCommonName;
     }
 
@@ -57,7 +60,7 @@ public class Certificate implements Comparable<Certificate> {
         return expirationDate;
     }
 
-    public void setExpirationDate(long expirationDate) {
+    public void setExpirationDate(final long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -65,7 +68,7 @@ public class Certificate implements Comparable<Certificate> {
         return expired;
     }
 
-    public void setExpired(boolean expired) {
+    public void setExpired(final boolean expired) {
         this.expired = expired;
     }
 
@@ -73,7 +76,7 @@ public class Certificate implements Comparable<Certificate> {
         return fingerPrint;
     }
 
-    public void setFingerPrint(String fingerPrint) {
+    public void setFingerPrint(final String fingerPrint) {
         this.fingerPrint = fingerPrint;
     }
 
@@ -109,7 +112,7 @@ public class Certificate implements Comparable<Certificate> {
         return commonName;
     }
 
-    public void setCommonName(List<String> commonName) {
+    public void setCommonName(final List<String> commonName) {
         this.commonName = commonName;
     }
     
@@ -117,7 +120,7 @@ public class Certificate implements Comparable<Certificate> {
         return organization;
     }
 
-    public void setOrganization(List<String> organization) {
+    public void setOrganization(final List<String> organization) {
         this.organization = organization;
     }
 
@@ -125,7 +128,7 @@ public class Certificate implements Comparable<Certificate> {
         return organizationUnit;
     }
 
-    public void setOrganizationUnit(List<String> organizationUnit) {
+    public void setOrganizationUnit(final List<String> organizationUnit) {
         this.organizationUnit = organizationUnit;
     }
 
@@ -133,7 +136,7 @@ public class Certificate implements Comparable<Certificate> {
         return state;
     }
 
-    public void setState(List<String> state) {
+    public void setState(final List<String> state) {
         this.state = state;
     }
 
@@ -141,7 +144,7 @@ public class Certificate implements Comparable<Certificate> {
         return location;
     }
 
-    public void setLocation(List<String> location) {
+    public void setLocation(final List<String> location) {
         this.location = location;
     }
     
@@ -149,7 +152,16 @@ public class Certificate implements Comparable<Certificate> {
         return country;
     }
 
-    public void setCountry(List<String> country) {
+    public void setCountry(final List<String> country) {
         this.country = country;
     }
+
+    public Certificate getIssuerCertificate() {
+        return issuerCertificate;
+    }
+
+    public void setIssuerCertificate(final Certificate issuerCertificate) {
+        this.issuerCertificate = issuerCertificate;
+    }
+
 }

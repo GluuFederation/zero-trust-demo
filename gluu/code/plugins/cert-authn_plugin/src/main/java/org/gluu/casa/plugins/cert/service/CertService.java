@@ -1,7 +1,6 @@
 package org.gluu.casa.plugins.cert.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.util.Lists;
 
 import org.gluu.casa.core.model.BasePerson;
 import org.gluu.casa.core.model.IdentityPerson;
@@ -198,7 +197,6 @@ public class CertService {
             
 //            x509Certificates.add(x509Certificates.get(0));            
             
-            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
             //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Austin,ST=TX,C=US");           
 //            x509Certificates.get(1).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Kharkiv,ST=Kharkiv,C=UA");
             
@@ -210,7 +208,13 @@ public class CertService {
             
             // /OU=Security Dept/OU=PKI/OU=CONTRACTOR            
             
-            // CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US            
+            // CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US
+            
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
+            
+            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
+            
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin-Admin.Admin.Admin-Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
             
             Stream<String> res1 = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX));
             
@@ -231,7 +235,7 @@ public class CertService {
             
 //            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
             
-            certs.add(certs.get(0));
+//            certs.add(certs.get(0));
             
             logger.info("certs.get(0).getFormattedName() = " + certs.get(0).getFormattedName());            
             
@@ -267,114 +271,96 @@ public class CertService {
         return total;
 
     }
+    
+    private Certificate getExtraCertsInfo(final String dn) {
+        
+        Certificate certificate = new Certificate();
+        
+        Map<String, List<String>> attributesMap = new HashMap<>();
+        
+        String[] attributesArray = dn.split(",\\s*");
+        
+        for (String attributeLine : attributesArray) {
+            String [] attribute = attributeLine.split("=");
+            if (attribute.length >= 2) {
+                String key = attribute[0].toLowerCase();
+                if (!attributesMap.containsKey(key)) {
+                    attributesMap.put(key, new ArrayList<String>());
+                }
+                attributesMap.get(key).add(attribute[1]);
+            }
+        }
+
+        if(attributesMap.containsKey("cn")) {
+            certificate.setCommonName(attributesMap.get("cn"));
+        }
+
+        if(attributesMap.containsKey("ou")) {
+            certificate.setOrganizationUnit(attributesMap.get("ou"));
+        }
+
+        if(attributesMap.containsKey("o")) {
+            certificate.setOrganization(attributesMap.get("o"));
+        }
+
+        if(attributesMap.containsKey("l")) {
+            certificate.setLocation(attributesMap.get("l"));
+        }
+
+        if(attributesMap.containsKey("st")) {
+            certificate.setState(attributesMap.get("st"));
+        }
+
+        if(attributesMap.containsKey("c")) {
+            certificate.setCountry(attributesMap.get("c"));
+        }
+        
+        List<String> cn = attributesMap.get("cn");
+        
+        String formattedCommonName = new String(); 
+        for(String cnVal : cn) {
+            if(formattedCommonName.length() > 0) {
+                formattedCommonName += " - ";
+            }
+            formattedCommonName += cnVal;                        
+        }
+        
+        certificate.setFormattedCommonName(formattedCommonName);
+        certificate.setFormattedName(formattedCommonName);
+        
+        return certificate;
+    }    
 
     private Certificate getExtraCertsInfo(String externalUid, List<org.gluu.oxtrust.model.scim2.user.X509Certificate> scimCerts) {
 
         String fingerPrint = externalUid.replace(CERT_PREFIX, "");
-        Certificate cert = new Certificate();
-        cert.setFingerPrint(fingerPrint);
+        Certificate subjectCertificate = new Certificate();
+        subjectCertificate.setFingerPrint(fingerPrint);
 
         for (org.gluu.oxtrust.model.scim2.user.X509Certificate sc : scimCerts) {
             try {
                 X509Certificate x509Certificate = CertUtils.x509CertificateFromPem(sc.getValue());
                 if (fingerPrint.equals(getFingerPrint(x509Certificate))) {
+
+                    //String subjectDN = x509Certificate.getSubjectDN().getName();
+                    String subjectDN = sc.getDisplay();
+                    String issuerDN = x509Certificate.getIssuerDN().getName();
                     
-//                  String[] attributes = sc.getDisplay().split(",\\s*");
-//                  Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1))
+                    subjectCertificate = getExtraCertsInfo(subjectDN);
+                    Certificate isserCertificate = getExtraCertsInfo(issuerDN);
                     
-                    Map<String, List<String>> attributesMap = new HashMap<>();
+                    subjectCertificate.setIssuerCertificate(isserCertificate);
                     
-                    String[] attributesArray = sc.getDisplay().split(",\\s*");
-                    
-                    for (String attributeLine : attributesArray) {
-                        String [] attribute = attributeLine.split("=");
-                        if (attribute.length >= 2) {
-                            String key = attribute[0].toLowerCase();
-                            if (!attributesMap.containsKey(key)) {
-                                attributesMap.put(key, new ArrayList<String>());
-                            }
-                            attributesMap.get(key).add(attribute[1]);
-                        }
-//                        t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1))
-//                        String attributeLine
-                    }
-
-                    if(attributesMap.containsKey("cn")) {
-                        cert.setCommonName(attributesMap.get("cn"));
-                    }
-
-                    if(attributesMap.containsKey("ou")) {
-                        cert.setOrganizationUnit(attributesMap.get("ou"));
-                    }
-
-                    if(attributesMap.containsKey("o")) {
-                        cert.setOrganization(attributesMap.get("o"));
-                    }
-
-                    if(attributesMap.containsKey("l")) {
-                        cert.setLocation(attributesMap.get("l"));
-                    }
-
-                    if(attributesMap.containsKey("st")) {
-                        cert.setState(attributesMap.get("st"));
-                    }
-
-                    if(attributesMap.containsKey("c")) {
-                        cert.setCountry(attributesMap.get("c"));
-                    }
-                    
-                    List<String> cn = attributesMap.get("cn");
-                    
-                    String formattedCommonName = new String(); 
-                    for(String cnVal : cn) {
-                        if(formattedCommonName.length() > 0) {
-                            formattedCommonName += " - ";
-                        }
-                        formattedCommonName += cnVal;                        
-                    }
-                    
-                    cert.setFormattedCommonName(formattedCommonName);
-                    cert.setFormattedName(formattedCommonName);
-                    
-/*
-                    Map<String, List<String>> attributes = Arrays.stream(sc.getDisplay().split(",\\s*"))
-                            .collect(Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1)));
-*/
-/*
-                    Map<String, String> attributes = Arrays.stream(sc.getDisplay().split(",\\s*"))
-                            .collect(Collectors.toMap(t -> t.substring(0,t.indexOf('=')).toLowerCase(), t -> t.substring(t.indexOf('=') + 1)));
-
-                    String cn = attributes.get("cn");
-                    String ou = attributes.getOrDefault("ou", "");
-                    String o = attributes.getOrDefault("o", "");
-
-                    if (Utils.isNotEmpty(ou)) {
-                        if (Utils.isNotEmpty(o)) {
-                            ou += ", " + o;
-                        }
-                    } else if (Utils.isNotEmpty(o)){
-                        ou = o;
-                    }
-
-                    String l = attributes.getOrDefault("l", "");
-                    String st = attributes.getOrDefault("st", "");
-                    String c = attributes.getOrDefault("c", "");
-
-                    cert.setCommonName(cn);
-                    cert.setOrganization(ou);
-                    cert.setLocation(String.format("%s %s %s", l, st, c).trim());
-
-                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
-                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
-                    // cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + "123");
-                    
-                    // cert.setFormattedName(cn + " " + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)) + " ; " + cn + " " +  (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));
-                    
-                    cert.setFormattedName(cn + (Utils.isEmpty(ou) ? "" : String.format(" (%s)", ou)));                    
-*/
                     long date = x509Certificate.getNotAfter().getTime();
-                    cert.setExpirationDate(date);
-                    cert.setExpired(date < System.currentTimeMillis());
+
+/*                    
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(2022, 1, 1);
+                    date = calendar.getTime().getTime();
+*/                    
+                    
+                    subjectCertificate.setExpirationDate(date);
+                    subjectCertificate.setExpired(date < System.currentTimeMillis());
 
                     break;
                 }
@@ -383,7 +369,7 @@ public class CertService {
             }
 
         }
-        return cert;
+        return subjectCertificate;
 
     }
 
