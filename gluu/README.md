@@ -2525,3 +2525,4 @@ FIPS 140-2 conformance.
 
 "token_endpoint_auth_signing_alg_values_supported" : [ "ES256", "ES384", "ES512" ]
 ```
+
