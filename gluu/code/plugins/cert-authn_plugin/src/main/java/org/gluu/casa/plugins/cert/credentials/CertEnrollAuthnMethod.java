@@ -35,7 +35,6 @@ public class CertEnrollAuthnMethod implements AuthnMethod{
 	public boolean mayBe2faActivationRequisite() {
 		return Boolean.parseBoolean(Optional
 				.ofNullable(CertService.getInstance().getScriptPropertyValue("2fa_requisite")).orElse("false"));
-		
 	}
 
 	@Override

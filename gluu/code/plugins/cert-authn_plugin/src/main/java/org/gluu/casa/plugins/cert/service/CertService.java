@@ -7,7 +7,6 @@ import org.gluu.casa.core.model.IdentityPerson;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
 import org.gluu.casa.plugins.cert.CertAuthenticationExtension;
-import org.gluu.casa.plugins.cert.CertAuthenticationPlugin;
 import org.gluu.casa.plugins.cert.model.CertPerson;
 import org.gluu.casa.plugins.cert.model.Certificate;
 
@@ -19,27 +18,15 @@ import org.gluu.oxauth.model.util.CertUtils;
 import org.gluu.search.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.Sessions;
-import org.zkoss.zk.ui.WebApp;
-import org.zkoss.zk.ui.WebApps;
-import org.zkoss.zk.ui.util.Configuration;
 
-import java.io.File;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.servlet.ServletContext;
 
 import static org.gluu.casa.plugins.cert.service.UserCertificateMatch.*;
 
@@ -206,105 +193,9 @@ public class CertService {
 
             List<org.gluu.oxtrust.model.scim2.user.X509Certificate> x509Certificates = getScimX509Certificates(
                     Optional.ofNullable(person.getX509Certificates()).orElse(Collections.emptyList()));
-            
-            CertAuthenticationPlugin plugin = CertAuthenticationPlugin.getInstance(); 
-            
-            Path pluginPath = plugin.getWrapper().getPluginPath();
-            
-            String pluginId = plugin.getWrapper().getPluginId();
-            
-            Session session = Sessions.getCurrent();
-            
-            Map<String, Object> attrs = session.getAttributes();
-            
-            Set<String> keys = attrs.keySet();
-            
-            WebApp webApp = WebApps.getCurrent();
-            
-            attrs = webApp.getAttributes();
-            
-            keys = attrs.keySet();
-            
-            String directory = webApp.getDirectory();
-            
-            Configuration config = webApp.getConfiguration();
-
-            String path = webApp.getRealPath("img/flags_32/us_32.png");
-            
-            path = webApp.getRealPath(String.format("pl/%s/img/flags_32/us_32.png", pluginId)); 
-
-            InputStream is = webApp.getResourceAsStream(path);
-
-            is = webApp.getResourceAsStream("img/flags_32/us_32.png");
-
-            ServletContext ctx = webApp.getServletContext();
-
-//            URL resourceUrl = webApp.getResource("img/flags_32/us_32.png");
-            
-            String resourceUri = webApp.getResourceURI();
-
-//          assets/img/flags_32/             
-//          us_32.png
-            
-//          assets/img/flags_32/us_32.png            
-            
-            File file = new File("assets/img/flags_32/us_32.png"); 
-            boolean exists = file.exists();
-            
-            file = new File("img/flags_32/us_32.png"); 
-            exists = file.exists();
-
-            file = new File("pl/cert-authn_plugin/img/flags_32/us_32.png"); 
-            exists = file.exists();
-            
-            file = new File(path);
-            exists = file.exists();
-            
-//            x509Certificates.add(x509Certificates.get(0));            
-            
-            //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Austin,ST=TX,C=US");           
-//            x509Certificates.get(1).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Kharkiv,ST=Kharkiv,C=UA");
-            
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US");
-            
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
-            
-            //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.2000000002,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv Area,C=Ukraine");            
-            
-            // /OU=Security Dept/OU=PKI/OU=CONTRACTOR            
-            
-            // CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US
-            
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
-            
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
-            
-            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=ZZ,C=ES,C=FR,C=DE,C=PT,C=NO,C=CH,C=AA,C=YY");            
-            
-//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin-Admin.Admin.Admin-Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
-            
-            Stream<String> res1 = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX));
-            
-            List<String> res1Str = res1.collect(Collectors.toList());
-            
-            res1 = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX));
-            
-            Certificate cert = getExtraCertsInfo(person.getOxExternalUid().get(0),x509Certificates);
-            
-            Stream<Certificate> res2 = res1.map(uid -> getExtraCertsInfo(uid, x509Certificates));
-            
-            List<Certificate> res2Crt = res2.collect(Collectors.toList());
 
             certs = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX))
                     .map(uid -> getExtraCertsInfo(uid, x509Certificates)).collect(Collectors.toList());
-            
-            // certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001; Admin.Admin.Admin.20000000011; Admin.Admin.Admin.20000000012");
-            
-//            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
-            
-            certs.add(certs.get(0));
-            
-            logger.info("certs.get(0).getFormattedName() = " + certs.get(0).getFormattedName());            
             
             logger.info("Certificates:"+certs.get(0).toString());
             
@@ -410,8 +301,8 @@ public class CertService {
                 X509Certificate x509Certificate = CertUtils.x509CertificateFromPem(sc.getValue());
                 if (fingerPrint.equals(getFingerPrint(x509Certificate))) {
 
-                    //String subjectDN = x509Certificate.getSubjectDN().getName();
-                    String subjectDN = sc.getDisplay();
+                    String subjectDN = x509Certificate.getSubjectDN().getName();
+                    // String subjectDN = sc.getDisplay();
                     String issuerDN = x509Certificate.getIssuerDN().getName();
                     
                     subjectCertificate = getExtraCertsInfo(subjectDN);
@@ -420,12 +311,6 @@ public class CertService {
                     subjectCertificate.setIssuerCertificate(isserCertificate);
                     
                     long date = x509Certificate.getNotAfter().getTime();
-
-/*                    
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(2022, 1, 1);
-                    date = calendar.getTime().getTime();
-*/                    
                     
                     subjectCertificate.setExpirationDate(date);
                     subjectCertificate.setExpired(date < System.currentTimeMillis());

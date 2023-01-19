@@ -5,22 +5,13 @@ import java.util.List;
 
 public class Certificate implements Comparable<Certificate> {
 
-//    private String formattedName;
-//    private String commonName;
-//    private String organization;
-//    private String location;
-
     private List<String> commonName = new ArrayList<>();
     private List<String> organization = new ArrayList<>();
     private List<String> organizationUnit = new ArrayList<>();
     
     private List<String> location = new ArrayList<>();
-    private List<String> state = new ArrayList<>();    
-    private List<String> country = new ArrayList<>();    
-    
-//    private String commonName;
-//    private String organization;
-//    private String location;
+    private List<String> state = new ArrayList<>();
+    private List<String> country = new ArrayList<>();
     
     private String formattedName;
     
@@ -32,9 +23,6 @@ public class Certificate implements Comparable<Certificate> {
     private String fingerPrint = null;
     
     private Certificate issuerCertificate = null;
-    
-//  private List<String> organizationUnit = new ArrayList<>();
-//  private String organizationUnit;
 
     public int compareTo(final Certificate cert) {
         return getFingerPrint().compareTo(cert.getFingerPrint());
@@ -79,34 +67,6 @@ public class Certificate implements Comparable<Certificate> {
     public void setFingerPrint(final String fingerPrint) {
         this.fingerPrint = fingerPrint;
     }
-
-
-    /*    
-    public String getCommonName() {
-        return commonName;
-    }
-
-    public void setCommonName(String commonName) {
-        this.commonName = commonName;
-    }
-*/    
-/*    
-    public String getOrganization() {
-        return organization;
-    }
-    
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-*/
 
     public List<String> getCommonName() {
         return commonName;

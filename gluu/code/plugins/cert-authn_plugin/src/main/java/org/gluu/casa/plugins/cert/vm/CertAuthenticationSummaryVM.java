@@ -46,30 +46,13 @@ public class CertAuthenticationSummaryVM {
 	
 	@Init
 	public void init() {
-        logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- >>");
-
 		certService = CertService.getInstance();
 		user = sessionContext.getLoggedUser();
 		// sndFactorUtils = Utils.managedBean(SndFactorAuthenticationUtils.class);
 		certificates = certService.getUserCerts(user.getId());
-
-		for (Certificate certificate : certificates) {
-		    logger.info("----------------------------");
-	        logger.info("certificate.formattedName   = " + certificate.getFormattedName());
-            logger.info("certificate.commonName      = " + certificate.getCommonName());
-            logger.info("certificate.organization    = " + certificate.getOrganization());
-            logger.info("certificate.location        = " + certificate.getLocation());
-            logger.info("certificate.expirationDate  = " + certificate.getExpirationDate());
-            logger.info("certificate.fingerPrint     = " + certificate.getFingerPrint());
-            logger.info("----------------------------");
-		}
 		
         CertAuthenticationPlugin plugin = CertAuthenticationPlugin.getInstance();
         pluginId = plugin.getWrapper().getPluginId();
-        
-        logger.info("pluginId = " + pluginId);        
-		
-        logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- <<");
 	}
 
 	public Pair<CredentialRemovalConflict, String> removalConflict(String credentialType, int nCredsOfType, User user) {
@@ -124,52 +107,16 @@ public class CertAuthenticationSummaryVM {
 
 	}
 	
-	public boolean getIsCountryValid(final String countryCode) {
-	    
-	    logger.info("getIsCountryValid --------------------------------------------- >>");
-	    logger.info("countryCode = " + countryCode);
+	public boolean isCountryValid(final String countryCode) {
 
 	    boolean res = false;
 
 	    String relFilePath = String.format("pl/%s/img/flags_32/%s_32.png", pluginId, countryCode.toLowerCase());
 	    String filePath = WebApps.getCurrent().getRealPath(relFilePath);
 
-        logger.info("relFilePath = " + relFilePath);  	    
-        logger.info("filePath = " + filePath);        
-
 	    File file = new File(filePath);
 	    res = file.exists();
-
-        logger.info("res = " + res);
-
-        logger.info("getIsCountryValid --------------------------------------------- <<");
 	    
 	    return res;
 	}
-
-    public boolean getIsCountryValid1() {
-        
-        final String countryCode = "US";
-        
-        logger.info("getIsCountryValid1 --------------------------------------------- >>");
-        logger.info("countryCode = " + countryCode);
-        
-        boolean res = false;
-        
-        String relFilePath = String.format("pl/%s/img/flags_32/%s_32.png", pluginId, countryCode.toLowerCase());
-        String filePath = WebApps.getCurrent().getRealPath(relFilePath);
-        
-        logger.info("relFilePath = " + relFilePath);
-        logger.info("filePath = " + filePath);
-        
-        File file = new File(filePath);
-        res = file.exists();
-
-        logger.info("res = " + res);
-
-        logger.info("getIsCountryValid1 --------------------------------------------- <<");
-
-        return res;
-    }
-	
 }

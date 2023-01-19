@@ -83,10 +83,10 @@
 											<zk:zk forEach="${each.country}">
 											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
 												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
-												<zk:zk if="${vm.getIsCountryValid(each)}">
+												<zk:zk if="${vm.isCountryValid(each)}">
 													<img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
 												</zk:zk>
-												<zk:zk unless="${vm.getIsCountryValid(each)}">
+												<zk:zk unless="${vm.isCountryValid(each)}">
 													<z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
 												</zk:zk>
 												<br/>
@@ -159,10 +159,10 @@
 											<zk:zk forEach="${each.issuerCertificate.country}">
 											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
 											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
-												<zk:zk if="${vm.getIsCountryValid(each)}">
+												<zk:zk if="${vm.isCountryValid(each)}">
 													<img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
 												</zk:zk>
-												<zk:zk unless="${vm.getIsCountryValid(each)}">
+												<zk:zk unless="${vm.isCountryValid(each)}">
 													<z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
 												</zk:zk>
 												<br/>
