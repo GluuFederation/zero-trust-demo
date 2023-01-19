@@ -66,6 +66,8 @@ public class CertAuthenticationSummaryVM {
 		
         CertAuthenticationPlugin plugin = CertAuthenticationPlugin.getInstance();
         pluginId = plugin.getWrapper().getPluginId();
+        
+        logger.info("pluginId = " + pluginId);        
 		
         logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- <<");
 	}
@@ -122,16 +124,52 @@ public class CertAuthenticationSummaryVM {
 
 	}
 	
-	public boolean isCountryValid(final String countryCode) {
-	    boolean res = false;
+	public boolean getIsCountryValid(final String countryCode) {
 	    
+	    logger.info("getIsCountryValid --------------------------------------------- >>");
+	    logger.info("countryCode = " + countryCode);
+
+	    boolean res = false;
+
 	    String relFilePath = String.format("pl/%s/img/flags_32/%s_32.png", pluginId, countryCode.toLowerCase());
 	    String filePath = WebApps.getCurrent().getRealPath(relFilePath);
-	    
+
+        logger.info("relFilePath = " + relFilePath);  	    
+        logger.info("filePath = " + filePath);        
+
 	    File file = new File(filePath);
 	    res = file.exists();
+
+        logger.info("res = " + res);
+
+        logger.info("getIsCountryValid --------------------------------------------- <<");
 	    
 	    return res;
 	}
 
+    public boolean getIsCountryValid1() {
+        
+        final String countryCode = "US";
+        
+        logger.info("getIsCountryValid1 --------------------------------------------- >>");
+        logger.info("countryCode = " + countryCode);
+        
+        boolean res = false;
+        
+        String relFilePath = String.format("pl/%s/img/flags_32/%s_32.png", pluginId, countryCode.toLowerCase());
+        String filePath = WebApps.getCurrent().getRealPath(relFilePath);
+        
+        logger.info("relFilePath = " + relFilePath);
+        logger.info("filePath = " + filePath);
+        
+        File file = new File(filePath);
+        res = file.exists();
+
+        logger.info("res = " + res);
+
+        logger.info("getIsCountryValid1 --------------------------------------------- <<");
+
+        return res;
+    }
+	
 }
