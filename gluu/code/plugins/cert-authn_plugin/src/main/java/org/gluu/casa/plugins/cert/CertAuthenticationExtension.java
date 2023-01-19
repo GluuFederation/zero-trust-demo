@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Extension
 public class CertAuthenticationExtension implements AuthnMethod {
 
-    private final static Logger logger = LoggerFactory.getLogger(CertAuthenticationExtension.ACR);
+    private final static Logger logger = LoggerFactory.getLogger(CertAuthenticationExtension.class);
 
     public final static String ACR = "ztrust-cert";
 

@@ -7,6 +7,7 @@ import org.gluu.casa.core.model.IdentityPerson;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
 import org.gluu.casa.plugins.cert.CertAuthenticationExtension;
+import org.gluu.casa.plugins.cert.CertAuthenticationPlugin;
 import org.gluu.casa.plugins.cert.model.CertPerson;
 import org.gluu.casa.plugins.cert.model.Certificate;
 
@@ -18,16 +19,27 @@ import org.gluu.oxauth.model.util.CertUtils;
 import org.gluu.search.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.WebApp;
+import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.util.Configuration;
 
+import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.servlet.ServletContext;
 
 import static org.gluu.casa.plugins.cert.service.UserCertificateMatch.*;
 
@@ -195,6 +207,59 @@ public class CertService {
             List<org.gluu.oxtrust.model.scim2.user.X509Certificate> x509Certificates = getScimX509Certificates(
                     Optional.ofNullable(person.getX509Certificates()).orElse(Collections.emptyList()));
             
+            CertAuthenticationPlugin plugin = CertAuthenticationPlugin.getInstance(); 
+            
+            Path pluginPath = plugin.getWrapper().getPluginPath();
+            
+            String pluginId = plugin.getWrapper().getPluginId();
+            
+            Session session = Sessions.getCurrent();
+            
+            Map<String, Object> attrs = session.getAttributes();
+            
+            Set<String> keys = attrs.keySet();
+            
+            WebApp webApp = WebApps.getCurrent();
+            
+            attrs = webApp.getAttributes();
+            
+            keys = attrs.keySet();
+            
+            String directory = webApp.getDirectory();
+            
+            Configuration config = webApp.getConfiguration();
+
+            String path = webApp.getRealPath("img/flags_32/us_32.png");
+            
+            path = webApp.getRealPath(String.format("pl/%s/img/flags_32/us_32.png", pluginId)); 
+
+            InputStream is = webApp.getResourceAsStream(path);
+
+            is = webApp.getResourceAsStream("img/flags_32/us_32.png");
+
+            ServletContext ctx = webApp.getServletContext();
+
+//            URL resourceUrl = webApp.getResource("img/flags_32/us_32.png");
+            
+            String resourceUri = webApp.getResourceURI();
+
+//          assets/img/flags_32/             
+//          us_32.png
+            
+//          assets/img/flags_32/us_32.png            
+            
+            File file = new File("assets/img/flags_32/us_32.png"); 
+            boolean exists = file.exists();
+            
+            file = new File("img/flags_32/us_32.png"); 
+            exists = file.exists();
+
+            file = new File("pl/cert-authn_plugin/img/flags_32/us_32.png"); 
+            exists = file.exists();
+            
+            file = new File(path);
+            exists = file.exists();
+            
 //            x509Certificates.add(x509Certificates.get(0));            
             
             //x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,L=Austin,ST=TX,C=US");           
@@ -242,6 +307,7 @@ public class CertService {
             logger.info("certs.get(0).getFormattedName() = " + certs.get(0).getFormattedName());            
             
             logger.info("Certificates:"+certs.get(0).toString());
+            
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

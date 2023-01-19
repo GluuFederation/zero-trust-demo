@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.credential.CredentialRemovalConflict;
 import org.gluu.casa.plugins.cert.CertAuthenticationExtension;
+import org.gluu.casa.plugins.cert.CertAuthenticationPlugin;
 import org.gluu.casa.plugins.cert.model.Certificate;
 import org.gluu.casa.plugins.cert.service.CertService;
 import org.gluu.casa.service.ISessionContext;
@@ -15,9 +16,11 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.util.Pair;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -34,6 +37,8 @@ public class CertAuthenticationSummaryVM {
 	private User user;
 	private List<Certificate> certificates;
 	private CertService certService;
+	
+    private String pluginId = null;
 
 	public List<Certificate> getCertificates() {
 		return certificates;
@@ -54,10 +59,13 @@ public class CertAuthenticationSummaryVM {
             logger.info("certificate.commonName      = " + certificate.getCommonName());
             logger.info("certificate.organization    = " + certificate.getOrganization());
             logger.info("certificate.location        = " + certificate.getLocation());
-            logger.info("certificate.expirationDate  = " + certificate.getExpirationDate());            
+            logger.info("certificate.expirationDate  = " + certificate.getExpirationDate());
             logger.info("certificate.fingerPrint     = " + certificate.getFingerPrint());
             logger.info("----------------------------");
 		}
+		
+        CertAuthenticationPlugin plugin = CertAuthenticationPlugin.getInstance();
+        pluginId = plugin.getWrapper().getPluginId();
 		
         logger.info("CertAuthenticationSummaryVM.init(): ------------------------------------------------------- <<");
 	}
@@ -112,6 +120,18 @@ public class CertAuthenticationSummaryVM {
 
 		return new Pair<>(null, text.toString());
 
+	}
+	
+	public boolean isCountryValid(final String countryCode) {
+	    boolean res = false;
+	    
+	    String relFilePath = String.format("pl/%s/img/flags_32/%s_32.png", pluginId, countryCode.toLowerCase());
+	    String filePath = WebApps.getCurrent().getRealPath(relFilePath);
+	    
+	    File file = new File(filePath);
+	    res = file.exists();
+	    
+	    return res;
 	}
 
 }
