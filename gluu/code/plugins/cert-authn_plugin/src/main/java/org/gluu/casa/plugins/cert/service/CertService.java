@@ -196,25 +196,23 @@ public class CertService {
 
             certs = person.getOxExternalUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX))
                     .map(uid -> getExtraCertsInfo(uid, x509Certificates)).collect(Collectors.toList());
-            
+
             logger.info("Certificates:"+certs.get(0).toString());
-            
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        
+
         return certs;
 
     }
     public List<BasicCredential> getCredentials(String uniqueIdOfTheUser) {
 		// Write the code to connect to the 3rd party API and fetch credentials against
 		// the user
-        logger.info("CertService.getCredentials(): uniqueIdOfTheUser = " + uniqueIdOfTheUser);            
 		List<BasicCredential> list = new ArrayList<BasicCredential>();
 		List<Certificate> certs = getUserCerts(uniqueIdOfTheUser);
 		for(Certificate cert:certs) {
-		    //list.add(new BasicCredential(cert.getCommonName(), System.currentTimeMillis()/1000));
-		    list.add(new BasicCredential(cert.getFormattedCommonName(), System.currentTimeMillis()/1000));
+		    list.add(new BasicCredential(cert.getFormattedName(), System.currentTimeMillis()/1000));
 		}
 		return list;
 	}
@@ -230,15 +228,15 @@ public class CertService {
         return total;
 
     }
-    
+
     private Certificate getExtraCertsInfo(final String dn) {
-        
+
         Certificate certificate = new Certificate();
-        
+
         Map<String, List<String>> attributesMap = new HashMap<>();
-        
+
         String[] attributesArray = dn.split(",\\s*");
-        
+
         for (String attributeLine : attributesArray) {
             String [] attribute = attributeLine.split("=");
             if (attribute.length >= 2) {
@@ -273,22 +271,22 @@ public class CertService {
         if(attributesMap.containsKey("c")) {
             certificate.setCountry(attributesMap.get("c"));
         }
-        
+
         List<String> cn = attributesMap.get("cn");
-        
+
         String formattedCommonName = new String(); 
         for(String cnVal : cn) {
             if(formattedCommonName.length() > 0) {
                 formattedCommonName += " - ";
             }
-            formattedCommonName += cnVal;                        
+            formattedCommonName += cnVal;
         }
-        
+
         certificate.setFormattedCommonName(formattedCommonName);
         certificate.setFormattedName(formattedCommonName);
-        
+
         return certificate;
-    }    
+    }
 
     private Certificate getExtraCertsInfo(String externalUid, List<org.gluu.oxtrust.model.scim2.user.X509Certificate> scimCerts) {
 
@@ -302,16 +300,24 @@ public class CertService {
                 if (fingerPrint.equals(getFingerPrint(x509Certificate))) {
 
                     String subjectDN = x509Certificate.getSubjectDN().getName();
-                    // String subjectDN = sc.getDisplay();
                     String issuerDN = x509Certificate.getIssuerDN().getName();
-                    
+
                     subjectCertificate = getExtraCertsInfo(subjectDN);
                     Certificate isserCertificate = getExtraCertsInfo(issuerDN);
-                    
+
                     subjectCertificate.setIssuerCertificate(isserCertificate);
-                    
+
+                    if (isserCertificate != null) {
+                        String issuerFormattedCN = isserCertificate.getFormattedCommonName();
+                        if (issuerFormattedCN != null) {
+                            String subjectFormattedCN = subjectCertificate.getFormattedCommonName();
+                            String subjectFormattedCNUpd = subjectFormattedCN + " ( " + issuerFormattedCN + " )" ;
+                            subjectCertificate.setFormattedName(subjectFormattedCNUpd);
+                        }
+                    }
+
                     long date = x509Certificate.getNotAfter().getTime();
-                    
+
                     subjectCertificate.setExpirationDate(date);
                     subjectCertificate.setExpired(date < System.currentTimeMillis());
 
@@ -396,7 +402,7 @@ public class CertService {
                 person.setX509Certificates(stringCerts);
                 logger.debug("Updating user's userCertificate attribute");
                 person.setUserCertificate(new String(Base64.getEncoder().encode(DEREncoded), StandardCharsets.UTF_8));
-                
+
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
