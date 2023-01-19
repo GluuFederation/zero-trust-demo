@@ -212,7 +212,9 @@ public class CertService {
             
 //            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,OU=Security Dept,O=For-Profit Corporation,C=US");
             
-            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
+//            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
+            
+            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=ZZ,C=ES,C=FR,C=DE,C=PT,C=NO,C=CH,C=AA,C=YY");            
             
 //            x509Certificates.get(0).setDisplay("CN=Admin.Admin.Admin-Admin.Admin.Admin-Admin.Admin.Admin.2000000001,CN=Admin.Admin.Admin.20000000011,CN=Admin.Admin.Admin.20000000012,OU=Security Dept,OU=PKI,OU=CONTRACTOR,O=For-Profit Corporation,O=For-Non-Profit Corporation,L=Austin,ST=TX,C=US,L=Kharkiv,ST=Kharkiv,C=UA");            
             
@@ -235,7 +237,7 @@ public class CertService {
             
 //            certs.get(0).setFormattedCommonName("Admin.Admin.Admin.2000000001, Admin.Admin.Admin.20000000011, Admin.Admin.Admin.20000000012");
             
-//            certs.add(certs.get(0));
+            certs.add(certs.get(0));
             
             logger.info("certs.get(0).getFormattedName() = " + certs.get(0).getFormattedName());            
             

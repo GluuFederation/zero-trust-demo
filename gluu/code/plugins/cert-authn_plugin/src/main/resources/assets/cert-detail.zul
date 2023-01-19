@@ -81,9 +81,9 @@
 
 										<zk:zk unless="${empty each.country}">
 											<zk:zk forEach="${each.country}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
-												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<img alt="${forEachStatus.current.toLowerCase()}" src="img/${forEachStatus.current.toLowerCase()}_32.png"></img>
+												 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
+													<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+													<img alt="${forEachStatus.current}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${forEachStatus.current.toLowerCase()}_32.png"></img>
 												<br/>
 											</zk:zk>
 										</zk:zk>
@@ -153,7 +153,8 @@
 										<zk:zk unless="${empty each.issuerCertificate.country}">
 											<zk:zk forEach="${each.issuerCertificate.country}">
 											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
+											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+												<img alt="${forEachStatus.current}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${forEachStatus.current.toLowerCase()}_32.png"></img>
 												<br/>
 											</zk:zk>
 										</zk:zk>
