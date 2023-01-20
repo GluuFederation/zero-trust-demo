@@ -1722,6 +1722,26 @@ file **/etc/gluu/conf/ztrust-regex.json**.
 
 After that scripts **ztrust-register** and **ztrust-forgot_password**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/gluu/conf/ztrust-regex.json**.
 
+### Certificate Authentication plug-in
+
+**Certificate Authentication plug-in**  allows enrollment and authentication via client certificates.
+
+Here is list of enrolled certificates by current user (**Admin**) account:  
+![Certificate Authentication plug-in 1](./img/screenshot-8-casa-cert-authn-1.png)
+
+Detailed info of enrolled certificates:  
+![Certificate Authentication plug-in 2](./img/screenshot-9-casa-cert-authn-2.png)
+
+Certificates with **multivalued DN** can be used. These certifciate (**Subject**) have been generated and singed, using option: **-multivalue-rdn**:  
+![Certificate Authentication plug-in 3](./img/screenshot-10-casa-cert-authn-3.png)
+
+Proceeding of new certificate:  
+![Certificate Authentication plug-in 4](./img/screenshot-11-casa-cert-authn-4.png)
+
+Selected certificate has been added:  
+![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
+
+
 ## HTTPD configuration
 
 Root configuration file: **/etc/httpd/conf/httpd.conf**
