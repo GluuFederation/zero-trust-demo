@@ -51,6 +51,7 @@ Zero Trust Demo for Gluu 4.4.2 with OpenID
 	* [Casa Configuration](#Casa-Configuration)
 		* [Activation Casa plug-in](#Activation-Casa-plug-in)
 		* [Password Policy Casa plug-in](#Password-Policy-Casa-plug-in)
+		* [Certificate Authentication plug-in](#Certificate-Authentication-plug-in)
 	* [HTTPD configuration](#HTTPD-configuration)
 		* [httpd SSL configuration](#httpd-SSL-configuration)
 		* [httpd Enabling TLS v1.3 Protocol](#httpd-Enabling-TLS-v1.3-Protocol)
