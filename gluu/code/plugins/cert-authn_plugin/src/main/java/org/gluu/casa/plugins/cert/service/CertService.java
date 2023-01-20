@@ -291,8 +291,7 @@ public class CertService {
     private Certificate getExtraCertsInfo(String externalUid, List<org.gluu.oxtrust.model.scim2.user.X509Certificate> scimCerts) {
 
         String fingerPrint = externalUid.replace(CERT_PREFIX, "");
-        Certificate subjectCertificate = new Certificate();
-        subjectCertificate.setFingerPrint(fingerPrint);
+        Certificate subjectCertificate = null;
 
         for (org.gluu.oxtrust.model.scim2.user.X509Certificate sc : scimCerts) {
             try {
@@ -303,11 +302,11 @@ public class CertService {
                     String issuerDN = x509Certificate.getIssuerDN().getName();
 
                     subjectCertificate = getExtraCertsInfo(subjectDN);
+                    subjectCertificate.setFingerPrint(fingerPrint);
+
                     Certificate isserCertificate = getExtraCertsInfo(issuerDN);
-
-                    subjectCertificate.setIssuerCertificate(isserCertificate);
-
                     if (isserCertificate != null) {
+                        subjectCertificate.setIssuerCertificate(isserCertificate);
                         String issuerFormattedCN = isserCertificate.getFormattedCommonName();
                         if (issuerFormattedCN != null) {
                             String subjectFormattedCN = subjectCertificate.getFormattedCommonName();
