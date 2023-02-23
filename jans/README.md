@@ -260,4 +260,25 @@ Builddate:
 Build: a798e35dcf82de58a75d2299639b355300a79042
 ```
 
+1. Verify Janssen Server Access
+
+* use these configuration endpoints for checking access:
+
+[Auth Server / Authorization](https://docs.jans.io/v1.0.7/admin/auth-server/endpoints/authorization/)  
+[Auth Server / Crypto Keys](https://docs.jans.io/v1.0.7/admin/auth-server/crypto/keys/)  
+.
+
+* use these admin tools for checking access:
+
+[jans-cli Module Command line Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
+[jans_cli_tui Text User Interface Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
+
+
+<dl>
+  <dt>Note:</dt>
+  <dd>You need to allow https in the RHEL system firewall. You should
+  have done this already (see above.)</dd>
+</dl>
+
 ## PostgreSQL Server Configuration
+
