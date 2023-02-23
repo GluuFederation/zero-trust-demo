@@ -230,8 +230,6 @@ rpm -qi gpg-pubkey-0544ba38-572aa647
 
 ### Janssen Server setup
 
-After installing
-
 ### Janssen Server Verification
 
 1. Check the version of the installed Jannsen components
@@ -266,13 +264,12 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
 
 [Auth Server / Authorization](https://docs.jans.io/v1.0.7/admin/auth-server/endpoints/authorization/)  
 [Auth Server / Crypto Keys](https://docs.jans.io/v1.0.7/admin/auth-server/crypto/keys/)  
-.
+
 
 * use these admin tools for checking access:
 
 [jans-cli Module Command line Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
 [jans_cli_tui Text User Interface Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
-
 
 <dl>
   <dt>Note:</dt>
@@ -281,4 +278,35 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
 </dl>
 
 ## PostgreSQL Server Configuration
+
+## oxAuth configuration
+
+### oxAuth properties
+
+Make these changes to the default oxAuth JSON configuration properties:
+
+* `dynamicRegistrationEnabled` : `False`
+* `claimsParameterSupported` : `False`
+* `disableU2fEndpoint` : `True`
+* `bruteForceProtectionEnabled` : `True`
+
+### Custom assets
+
+* For installing assets use script **ztrust_install_oxauth_assets.py**:
+
+```bash
+python3 ./ztrust_install_jans_assets.py --help
+
+Usage: ztrust_install_jans_assets.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -i IN_ARCH_FPATH, --in_arch_fpath=IN_ARCH_FPATH
+                        input archive file path (default: 'zero-trust-demo-main.zip')
+  -o OUT_BASE_DPATH, --out_base_dpath=OUT_BASE_DPATH
+                        base output directory path (default: '/opt/jans')
+```
+
+During installing, set of resources (templates, images,...) will be extracted from archive and
+and will be deployed to gluu diorectory (default: **/opt/jans**).
 

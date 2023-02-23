@@ -514,13 +514,11 @@ to Casa at &lt;https://{hostname}/casa&gt;. Note if you are using a self-signed
 certificate, you may need to type `thisisunsafe` in the browser to bypass the
 untrusted SSL certificate warning page.
 
-```html
 <dl>
   <dt>Note:</dt>
   <dd>You need to allow https in the RHEL system firewall. You should
   have done this already (see above.)</dd>
 </dl>
-```
 
 ## OpenDJ LDAP Server Configuration
 
