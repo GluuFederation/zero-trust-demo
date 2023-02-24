@@ -1750,7 +1750,7 @@ contains:
 IncludeOptional conf.d/*gluu.conf
 ```
 
-This definition **IncludeOptional conf.d/*gluu.conf** includes follow additional
+This definition **IncludeOptional conf.d/\*gluu.conf** includes follow additional
 **httpd** configuarion: **/etc/httpd/conf.d/https_gluu.conf**.
 
 Configuration files:  
