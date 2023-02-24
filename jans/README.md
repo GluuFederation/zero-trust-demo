@@ -375,21 +375,21 @@ production deployment, you would only need to choose one signature algorithm.
 ```bash
 keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256withRSA \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/gluuEmailSigner.bcfks \
+  -keystore /etc/certs/jansEmailSigner.bcfks \
   -keypass xxxxxxxx -storepass xxxxxxxx \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
 
 ```bash
 keytool -certreq -alias EmailSigner-RSA \
--keystore /etc/certs/gluuEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./gluuEmailSigner.csr \
+-keystore /etc/certs/jansEmailSigner.bcfks \
+-storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -405,21 +405,21 @@ keytool -certreq -alias EmailSigner-RSA \
 ```bash
 keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -sigalg SHA256withECDSA -dname "CN=SMTP CA Certificate" -validity 365
--storetype bcfks -keystore /etc/certs/gluuEmailSigner.bcfks \
+-storetype bcfks -keystore /etc/certs/jansEmailSigner.bcfks \
 -keypass xxxxxxxx -storepass xxxxxxxx -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
 
 ```bash
 keytool -certreq -alias EmailSigner-EC \
--keystore /etc/certs/gluuEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./gluuEmailSigner.csr \
+-keystore /etc/certs/jansEmailSigner.bcfks \
+-storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -435,21 +435,21 @@ keytool -certreq -alias EmailSigner-EC \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/gluuEmailSigner.bcfks \
+  -keystore /etc/certs/jansEmailSigner.bcfks \
   -keypass xxxxxxx -storepass xxxxxxx \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed25519 \
--keystore /etc/certs/gluuEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./gluuEmailSigner.csr \
+-keystore /etc/certs/jansEmailSigner.bcfks \
+-storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -465,21 +465,21 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/gluuEmailSigner.bcfks \
+  -keystore /etc/certs/jansEmailSigner.bcfks \
   -keypass xxxxxxxx -storepass xxxxxxxx \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed448 \
--keystore /etc/certs/gluuEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./gluuEmailSigner.csr \
+-keystore /etc/certs/jansEmailSigner.bcfks \
+-storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -487,22 +487,22 @@ keytool -certreq -alias EmailSigner-Ed448 \
 * Change the ownership of the keystore so it can be read by jans-auth
 
 ```bash
-chgrp gluu /etc/certs/gluuEmailSigner.bcfks
+chgrp gluu /etc/certs/jansEmailSigner.bcfks
 ```
 
 ```bash
-chmod g+r /etc/certs/gluuEmailSigner.bcfks
+chmod g+r /etc/certs/jansEmailSigner.bcfks
 ```
 
 * You can check the certificate:
 
 ```bash
-keytool -list -v -keystore /etc/certs/gluuEmailSigner.bcfks -storetype BCFKS \
+keytool -list -v -keystore /etc/certs/jansEmailSigner.bcfks -storetype BCFKS \
   -keypass xxxxxxxx \
   -storepass xxxxxxxx \
   -providername BCFIPS \
   -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
 ```
 
 #### Properties of Email 2FA Script
@@ -519,7 +519,7 @@ bottom of the page and click **Add custom script configuration**
 |token_lifetime                 | no                          | 15                                          |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      |
 |                               | SMTP properties )           |                                             |
-|Signer_Cert_KeyStore           | yes (default: value from    | gluuEmailSigner.bcfks                       |
+|Signer_Cert_KeyStore           | yes (default: value from    | jansEmailSigner.bcfks                       |
 |                               | SMTP properties )           |                                             |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     |
 |                               | SMTP properties )           |                                             |  
@@ -571,7 +571,7 @@ to the bottom of the page and click **Add custom script configuration**
 |token_lifetime                 | no                              | 15                                              |
 |Signer_Cert_Alias              | yes (default: value from        | signer                                          |
 |                               | SMTP properties )               |                                                 |
-|Signer_Cert_KeyStore           | yes (default: value from        | gluuEmailSigner.bcfks                           |
+|Signer_Cert_KeyStore           | yes (default: value from        | jansEmailSigner.bcfks                           |
 |                               | SMTP properties )               |                                                 |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from        | *******                                         |
 |                               | SMTP properties )               |                                                 |  
