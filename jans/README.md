@@ -389,7 +389,7 @@ keytool -certreq -alias EmailSigner-RSA \
 -storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -408,7 +408,7 @@ keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -storetype bcfks -keystore /etc/certs/jansEmailSigner.bcfks \
 -keypass xxxxxxxx -storepass xxxxxxxx -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
@@ -419,7 +419,7 @@ keytool -certreq -alias EmailSigner-EC \
 -storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -438,7 +438,7 @@ keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -keystore /etc/certs/jansEmailSigner.bcfks \
   -keypass xxxxxxx -storepass xxxxxxx \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
@@ -449,7 +449,7 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 -storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -468,7 +468,7 @@ keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -keystore /etc/certs/jansEmailSigner.bcfks \
   -keypass xxxxxxxx -storepass xxxxxxxx \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 * CSR
@@ -479,7 +479,7 @@ keytool -certreq -alias EmailSigner-Ed448 \
 -storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
--providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+-providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 ***
@@ -502,7 +502,7 @@ keytool -list -v -keystore /etc/certs/jansEmailSigner.bcfks -storetype BCFKS \
   -storepass xxxxxxxx \
   -providername BCFIPS \
   -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
-  -providerpath /opt/dist/app/app/bc-fips-1.0.2.3.jar:/opt/dist/app/app/bcpkix-fips-1.0.6.jar
+  -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
 #### Properties of Email 2FA Script
