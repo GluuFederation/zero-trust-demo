@@ -1,6 +1,6 @@
 # Zero Trust Framework Documentation (Janssen Server Customizing)  
 
-Zero Trust Demo for Jans with OpenID
+Zero Trust Demo for Janssen 1.0.7 with OpenID
 
 # Table of Contents
 
@@ -381,7 +381,7 @@ production deployment, you would only need to choose one signature algorithm.
 ```bash
 keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256withRSA \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jansEmailSigner.bcfks \
+  -keystore /etc/certs/jans-email-signer.bcfks \
   -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -391,8 +391,8 @@ keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256w
 
 ```bash
 keytool -certreq -alias EmailSigner-RSA \
--keystore /etc/certs/jansEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
+-keystore /etc/certs/jans-email-signer.bcfks \
+-storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -411,7 +411,7 @@ keytool -certreq -alias EmailSigner-RSA \
 ```bash
 keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -sigalg SHA256withECDSA -dname "CN=SMTP CA Certificate" -validity 365
--storetype bcfks -keystore /etc/certs/jansEmailSigner.bcfks \
+-storetype bcfks -keystore /etc/certs/jans-email-signer.bcfks \
 -keypass ******** -storepass ******** -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -421,8 +421,8 @@ BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider 
 
 ```bash
 keytool -certreq -alias EmailSigner-EC \
--keystore /etc/certs/jansEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
+-keystore /etc/certs/jans-email-signer.bcfks \
+-storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -441,7 +441,7 @@ keytool -certreq -alias EmailSigner-EC \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jansEmailSigner.bcfks \
+  -keystore /etc/certs/jans-email-signer.bcfks \
   -keypass ******* -storepass ******* \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -451,8 +451,8 @@ keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed25519 \
--keystore /etc/certs/jansEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
+-keystore /etc/certs/jans-email-signer.bcfks \
+-storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -471,7 +471,7 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jansEmailSigner.bcfks \
+  -keystore /etc/certs/jans-email-signer.bcfks \
   -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -481,8 +481,8 @@ keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed448 \
--keystore /etc/certs/jansEmailSigner.bcfks \
--storetype bcfks -keyalg ec -file ./jansEmailSigner.csr \
+-keystore /etc/certs/jans-email-signer.bcfks \
+-storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -493,17 +493,17 @@ keytool -certreq -alias EmailSigner-Ed448 \
 * Change the ownership of the keystore so it can be read by jans-auth
 
 ```bash
-chgrp gluu /etc/certs/jansEmailSigner.bcfks
+chgrp gluu /etc/certs/jans-email-signer.bcfks
 ```
 
 ```bash
-chmod g+r /etc/certs/jansEmailSigner.bcfks
+chmod g+r /etc/certs/jans-email-signer.bcfks
 ```
 
 * You can check the certificate:
 
 ```bash
-keytool -list -v -keystore /etc/certs/jansEmailSigner.bcfks -storetype BCFKS \
+keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
   -keypass ******** \
   -storepass ******** \
   -providername BCFIPS \
@@ -525,14 +525,14 @@ bottom of the page and click **Add custom script configuration**
 |token_lifetime                 | no                          | 15                                          |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      |
 |                               | SMTP properties )           |                                             |
-|Signer_Cert_KeyStore           | yes (default: value from    | jansEmailSigner.bcfks                       |
+|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                       |
 |                               | SMTP properties )           |                                             |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     |
 |                               | SMTP properties )           |                                             |  
 |Signer_SignAlgorithm           | yes (default: value from    | SHA256withECDSA                             |
 |                               | SMTP properties )           |                                             |  
-|email_templates_json_file_path | no                          | /etc/gluu/conf/ztrust-email-email_2fa.json    |
-|regex_json_file_path           | no                          | /etc/gluu/conf/ztrust-regex.json              |
+|email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json    |
+|regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json              |
 
 * Copy and paste the text of `email_2fa_plugin.py` into the *Script* text area.
 
@@ -577,7 +577,7 @@ to the bottom of the page and click **Add custom script configuration**
 |token_lifetime                 | no                              | 15                                              |
 |Signer_Cert_Alias              | yes (default: value from        | signer                                          |
 |                               | SMTP properties )               |                                                 |
-|Signer_Cert_KeyStore           | yes (default: value from        | jansEmailSigner.bcfks                           |
+|Signer_Cert_KeyStore           | yes (default: value from        | jans-email-signer.bcfks                           |
 |                               | SMTP properties )               |                                                 |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from        | *******                                         |
 |                               | SMTP properties )               |                                                 |  
@@ -585,9 +585,9 @@ to the bottom of the page and click **Add custom script configuration**
 |                               | SMTP properties )               |                                                 |  
 |Signer_SignAlgorithm           | yes (default: value from        | SHA256withECDSA                                 |  
 |                               | SMTP properties )               |                                                 |  
-|email_templates_json_file_path | no                              | /etc/gluu/conf/ztrust-email-forgot_password.json  |  
-|attributes_json_file_path      | no                              | /etc/gluu/conf/ztrust-attributes.json             |  
-|regex_json_file_path           | no                              | /etc/gluu/conf/ztrust-regex.json                  |  
+|email_templates_json_file_path | no                              | /etc/jans/conf/ztrust-email-forgot_password.json  |  
+|attributes_json_file_path      | no                              | /etc/jans/conf/ztrust-attributes.json             |  
+|regex_json_file_path           | no                              | /etc/jans/conf/ztrust-regex.json                  |  
 
 **attributes_json_file_path**:
 
@@ -1247,7 +1247,7 @@ Also **pending** users can be activated.
 
 ![Password Policy Casa plug-in 2](./img/screenshot-7-casa-password-policy-2.png)
 
-**Password Policy Casa plug-in** allows to read/write the file **/etc/gluu/conf/ztrust-regex.json**,
+**Password Policy Casa plug-in** allows to read/write the file **/etc/jans/conf/ztrust-regex.json**,
 property: **pass_regex**.
 
 For example, **pass_regex** can contain:
@@ -1259,9 +1259,9 @@ For example, **pass_regex** can contain:
 ```
 
 User can update this property, using plug-in. Also, user can generate a new Regular Expression, that can be coipied and saved in the
-file **/etc/gluu/conf/ztrust-regex.json**.
+file **/etc/jans/conf/ztrust-regex.json**.
 
-After that scripts **ztrust-register** and **ztrust-forgot_password**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/gluu/conf/ztrust-regex.json**.
+After that scripts **ztrust-register** and **ztrust-forgot_password**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/jans/conf/ztrust-regex.json**.
 
 ### Certificate Authentication plug-in
 
@@ -1288,16 +1288,16 @@ Root configuration file: **/etc/httpd/conf/httpd.conf**
 contains:
 
 ```text
-IncludeOptional conf.d/*gluu.conf
+IncludeOptional conf.d/*jans.conf
 ```
 
-This definition **IncludeOptional conf.d/*gluu.conf** includes follow additional
-**httpd** configuarion: **/etc/httpd/conf.d/https_gluu.conf**.
+This definition **IncludeOptional conf.d/*jans.conf** includes follow additional
+**httpd** configuarion: **/etc/httpd/conf.d/https_jans.conf**.
 
 Configuration files:  
 
 * */etc/httpd/conf/httpd.conf*
-* */etc/httpd/conf.d/https_gluu.conf*
+* */etc/httpd/conf.d/https_jans.conf*
 
 contain follow important directives:
 
@@ -1384,7 +1384,7 @@ Important security issues of definition of **\<VirtualHost *:443\>** directive:
     SSLHonorCipherOrder On
     SSLCertificateFile /etc/certs/httpd.crt
     SSLCertificateKeyFile /etc/certs/httpd.key
-    SSLCACertificateFile /etc/certs/user-gluu.org.chain
+    SSLCACertificateFile /etc/certs/user-jans.org.chain
 ```
 
 where:
@@ -1509,11 +1509,11 @@ OCSP Response Data:
 ```
 
 ```text
-    SSLCACertificateFile /etc/certs/user-gluu.org.chain
+    SSLCACertificateFile /etc/certs/user-jans.org.chain
     SSLCACertificatePath /etc/ssl/certs
 ```
 
-**SSLCACertificateFile /etc/certs/user-gluu.org.chain**   - file, where trust CA certificates (Root and Intermediate) (PEM-encoded) are placed;  
+**SSLCACertificateFile /etc/certs/user-jans.org.chain**   - file, where trust CA certificates (Root and Intermediate) (PEM-encoded) are placed;  
 or  
 **SSLCACertificatePath /etc/ssl/certs** - directory, where trust CA certificates (Root and Intermediate) (PEM-encoded) are placed;  
 
@@ -1543,11 +1543,11 @@ openssl ocsp -index ./certindex -port 8080 -rsigner ./ocsp.crt -rkey ./ocsp.key 
 here is **./certindex** - database of certificates. Example of database:
 
 ```text
-R 271007051208Z   1000  unknown /CN=Gluu.Intermediate.ECDSA/ST=TX/C=US/emailAddress=support@gluu.org/O=Gluu, Inc/OU=Gluu Intermediate ECDSA
-V 271010190051Z   1001  unknown /CN=Gluu.Intermediate.ECDSA/ST=TX/C=US/emailAddress=support@gluu.org/O=Gluu, Inc/OU=Gluu Intermediate ECDSA
-R 271007050921Z   1002  unknown /CN=Gluu.Cln.ECDSA/ST=Texas/C=US/emailAddress=client@gluu.org/O=Gluu, Inc/OU=Gluu Client ECDSA
-V 271010190203Z   1003  unknown /CN=Gluu.Cln.ECDSA/ST=Texas/C=US/emailAddress=client@gluu.org/O=Gluu, Inc/OU=Gluu Client ECDSA
-V 271010190333Z   1004  unknown /CN=Gluu.OCSP.ECDSA/ST=Texas/C=US/emailAddress=ocsp@gluu.org/O=Gluu, Inc/OU=Gluu OCSP ECDSA
+R 271007051208Z   1000  unknown /CN=Gluu.Intermediate.ECDSA/ST=TX/C=US/emailAddress=support@jans.io/O=Gluu, Inc/OU=Gluu Intermediate ECDSA
+V 271010190051Z   1001  unknown /CN=Gluu.Intermediate.ECDSA/ST=TX/C=US/emailAddress=support@jans.io/O=Gluu, Inc/OU=Gluu Intermediate ECDSA
+R 271007050921Z   1002  unknown /CN=Gluu.Cln.ECDSA/ST=Texas/C=US/emailAddress=client@jans.io/O=Gluu, Inc/OU=Gluu Client ECDSA
+V 271010190203Z   1003  unknown /CN=Gluu.Cln.ECDSA/ST=Texas/C=US/emailAddress=client@jans.io/O=Gluu, Inc/OU=Gluu Client ECDSA
+V 271010190333Z   1004  unknown /CN=Gluu.OCSP.ECDSA/ST=Texas/C=US/emailAddress=ocsp@jans.io/O=Gluu, Inc/OU=Gluu OCSP ECDSA
 ```
 
 **./ocsp.key** - key, that is used by OCSP server;  
@@ -1559,7 +1559,7 @@ V 271010190333Z   1004  unknown /CN=Gluu.OCSP.ECDSA/ST=Texas/C=US/emailAddress=o
 Optional feature. For enabling **TLS v1.3** protocol you should update httpd configuration files:
 
 * */etc/httpd/conf/httpd.conf*
-* */etc/httpd/conf.d/https_gluu.conf*
+* */etc/httpd/conf.d/https_jans.conf*
 
 Update
 
@@ -1625,23 +1625,18 @@ At the current moment we can recommend to use **Client Authentication** (**cert*
 
 ### httpd Java application proxy configuration
 
-After installing **Gluu suite** on the server (full configuring), follow servers are launched:
+After installing **Jansssen Suite** on the server (full configuring), follow servers are launched:
 
 | serivce/application | ports |
 | ----------- |------|
 |`httpd`|0.0.0.0:80|
 |`httpd`|0.0.0.0:443|
-|`opendj`|0.0.0.0:1636|
-|`opendj`|127.0.0.1:4444|
-|`oxauth`|127.0.0.1:8081|
-|`identity`|127.0.0.1:8082|
+|`jans-auth`|127.0.0.1:8081|
+|`jans-fido2`|127.0.0.1:8073|
+|`jans-scim`|127.0.0.1:8087|
 |`casa`|127.0.0.1:8099|
-|`fido2`|127.0.0.1:8073|
-|`scim`|127.0.0.1:8087|
-|`oxd-server`|0.0.0.0:8443|
-|`oxd-server`|0.0.0.0:8444|
 
-Some servers (**oxauth**, **identity**, **casa**, **fido2**, **scim**) launched on the **localhost** (**127.0.0.1**) interface.
+Some servers (**jans-auth**, **jans-fido2**, **jans-scim**, **casa**) launched on the **localhost** (**127.0.0.1**) interface.
 Outer access to these servers organized via **httpd**, using suite of **Reverse Proxies**.
 
 Here are some proxy tuning, you need follow modules:  
@@ -1657,38 +1652,38 @@ Disabling usage of **ProxyPass** as **Forward Proxies**.
 Suite of **Reverse Proxies** for getting access to the localhosted resources:  
 
 ```text
-    <Location /identity>
-        ProxyPass http://localhost:8082/identity retry=5 connectiontimeout=60 timeout=60
+    <Location /jans-scim>
+        ProxyPass http://localhost:8087/jans-scim retry=5 connectiontimeout=60 timeout=60
         Order deny,allow
         Allow from all
     </Location>
 
-    <Location /identity/restv1/scim/>
-        ProxyPass http://localhost:8087/scim/restv1/scim/ retry=5 connectiontimeout=60 timeout=60
+    <Location /jans-fido2>
+        ProxyPass http://localhost:8073/jans-fido2 retry=5 connectiontimeout=60 timeout=60
         Order deny,allow
         Allow from all
     </Location>
 
-    <Location /casa>
-        ProxyPass http://localhost:8099/casa retry=5 connectiontimeout=60 timeout=60
-        Order deny,allow
-        Allow from all
-    </Location>
-
-    <Location /fido2>
-        ProxyPass http://localhost:8073/fido2 retry=5 connectiontimeout=60 timeout=60
-        Order deny,allow
-        Allow from all
-    </Location>
-
-    <Location /oxauth>
-        ProxyPass http://localhost:8081/oxauth retry=5 connectiontimeout=60 timeout=60
+    <Location /jans-auth>
+        ProxyPass http://localhost:8081/jans-auth retry=5 connectiontimeout=60 timeout=60
         # Header set Access-Control-Allow-Origin "*"
         Order deny,allow
         Allow from all
     </Location>
 
-    <Location /oxauth/auth/cert/cert-login.htm>
+    <Location /jans-config-api>
+        ProxyPass http://localhost:8074/jans-config-api retry=5 connectiontimeout=60 timeout=60
+        Order deny,allow
+        Allow from all
+    </Location>
+
+    <Location /jans-eleven>
+        ProxyPass http://localhost:8075/jans-eleven retry=5 connectiontimeout=60 timeout=60
+        Order deny,allow
+        Allow from all
+    </Location>
+
+    <Location /jans-auth/auth/cert/cert-login.htm>
         SSLVerifyClient optional_no_ca
         SSLVerifyDepth 10
         SSLOptions -StdEnvVars +StrictRequire +ExportCertData
@@ -1703,15 +1698,15 @@ Suite of **Reverse Proxies** for getting access to the localhosted resources:
         RequestHeader set X-ClientCert %{SSL_CLIENT_CERT}s
     </Location>
 
-    ProxyPass   /.well-known/openid-configuration http://localhost:8081/oxauth/.well-known/openid-configuration
-    ProxyPass   /.well-known/webfinger http://localhost:8081/oxauth/.well-known/webfinger
-    ProxyPass   /.well-known/uma2-configuration http://localhost:8081/oxauth/restv1/uma2-configuration
-    ProxyPass   /.well-known/fido-configuration http://localhost:8081/oxauth/restv1/fido-configuration
-    ProxyPass   /.well-known/fido2-configuration http://localhost:8073/fido2/restv1/fido2/configuration
-    ProxyPass   /.well-known/fido-u2f-configuration http://localhost:8081/oxauth/restv1/fido-configuration
-    ProxyPass   /.well-known/scim-configuration http://localhost:8087/scim/restv1/scim/scim-configuration
-    ProxyPass   /firebase-messaging-sw.js http://localhost:8081/oxauth/firebase-messaging-sw.js
-    ProxyPass   /device-code http://localhost:8081/oxauth/device_authorization.htm
+    ProxyPass   /.well-known/openid-configuration http://localhost:8081/jans-auth/.well-known/openid-configuration
+    ProxyPass   /.well-known/webfinger http://localhost:8081/jans-auth/.well-known/webfinger
+    ProxyPass   /.well-known/uma2-configuration http://localhost:8081/jans-auth/restv1/uma2-configuration
+    ProxyPass   /.well-known/fido-configuration http://localhost:8081/jans-auth/restv1/fido-configuration
+    ProxyPass   /.well-known/fido-u2f-configuration http://localhost:8081/jans-auth/restv1/fido-configuration
+    ProxyPass   /.well-known/fido2-configuration http://localhost:8073/jans-fido2/restv1/configuration
+    ProxyPass   /.well-known/scim-configuration http://localhost:8087/jans-scim/restv1/scim-configuration
+    ProxyPass   /firebase-messaging-sw.js http://localhost:8081/jans-auth/firebase-messaging-sw.js
+    ProxyPass   /device-code http://localhost:8081/jans-auth/device_authorization.htm
 ```
 
 ### httpd Development load balancer
@@ -1785,7 +1780,7 @@ LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so
           BalancerMember https://<load_balancer_node_2_domain_name/address> route=2
           BalancerMember https://<load_balancer_node_3_domain_name/address> route=3
           BalancerMember https://<load_balancer_node_4_domain_name/address> route=4
-          BalancerMember https://<load_balancer_node_5_domain_name/address> route=5          
+          BalancerMember https://<load_balancer_node_5_domain_name/address> route=5
 
           ProxySet lbmethod=byrequests  # weighted request counting
       #   ProxySet lbmethod=bytraffic   # weighted traffic byte count balancing
