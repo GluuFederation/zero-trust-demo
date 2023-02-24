@@ -803,7 +803,7 @@ production deployment, you would only need to choose one signature algorithm.
 keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256withRSA \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/gluuEmailSigner.bcfks \
-  -keypass xxxxxxxx -storepass xxxxxxxx \
+  -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -833,7 +833,7 @@ keytool -certreq -alias EmailSigner-RSA \
 keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -sigalg SHA256withECDSA -dname "CN=SMTP CA Certificate" -validity 365
 -storetype bcfks -keystore /etc/certs/gluuEmailSigner.bcfks \
--keypass xxxxxxxx -storepass xxxxxxxx -providername \
+-keypass ******** -storepass ******** -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -863,7 +863,7 @@ keytool -certreq -alias EmailSigner-EC \
 keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/gluuEmailSigner.bcfks \
-  -keypass xxxxxxx -storepass xxxxxxx \
+  -keypass ******* -storepass ******* \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -893,7 +893,7 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/gluuEmailSigner.bcfks \
-  -keypass xxxxxxxx -storepass xxxxxxxx \
+  -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -925,8 +925,8 @@ chmod g+r /etc/certs/gluuEmailSigner.bcfks
 
 ```bash
 keytool -list -v -keystore /etc/certs/gluuEmailSigner.bcfks -storetype BCFKS \
-  -keypass xxxxxxxx \
-  -storepass xxxxxxxx \
+  -keypass ******** \
+  -storepass ******** \
   -providername BCFIPS \
   -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /var/gluu/dist/app/bc-fips-1.0.2.3.jar:/var/gluu/dist/app/bcpkix-fips-1.0.6.jar

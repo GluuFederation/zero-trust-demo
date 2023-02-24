@@ -12,7 +12,7 @@ Zero Trust Demo for Jans with OpenID
 
 
 
-
+# Solution Overview
 
 The purpose of the Zero Trust Framework (customizing) is to centralize authentication,
 to enable Single Sign-on (SSO), and to provide a web portal to enable end-users to
@@ -27,6 +27,10 @@ name, role, email address, etc), and an access token (which the website can
 present to other services to convey permissions). The End User can visit Casa to
 enroll additional credentials or to register an email address or SMS phone
 number.
+
+![Diagram 1 -- Single Sign-On Overview](./img/Diagram-1-sso_overview.png)
+
+**Diagram 1 -- Single Sign-On Overview**
 
 ## Use Cases
 
@@ -326,6 +330,8 @@ systemctl restart jans-auth
 This script asks the user to enter a password in step 1, sends a signed
 email to the user with an OTP, and asks the user to enter the OTP in step 2.
 
+![Diagram 3 Email Otp Sequence](./img/Diagram-3-email_otp_sequence.png)
+
 ```text
 title Email OTP Authenticaiton
 
@@ -376,7 +382,7 @@ production deployment, you would only need to choose one signature algorithm.
 keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256withRSA \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/jansEmailSigner.bcfks \
-  -keypass xxxxxxxx -storepass xxxxxxxx \
+  -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -406,7 +412,7 @@ keytool -certreq -alias EmailSigner-RSA \
 keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -sigalg SHA256withECDSA -dname "CN=SMTP CA Certificate" -validity 365
 -storetype bcfks -keystore /etc/certs/jansEmailSigner.bcfks \
--keypass xxxxxxxx -storepass xxxxxxxx -providername \
+-keypass ******** -storepass ******** -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -436,7 +442,7 @@ keytool -certreq -alias EmailSigner-EC \
 keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/jansEmailSigner.bcfks \
-  -keypass xxxxxxx -storepass xxxxxxx \
+  -keypass ******* -storepass ******* \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -466,7 +472,7 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
   -keystore /etc/certs/jansEmailSigner.bcfks \
-  -keypass xxxxxxxx -storepass xxxxxxxx \
+  -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
@@ -498,8 +504,8 @@ chmod g+r /etc/certs/jansEmailSigner.bcfks
 
 ```bash
 keytool -list -v -keystore /etc/certs/jansEmailSigner.bcfks -storetype BCFKS \
-  -keypass xxxxxxxx \
-  -storepass xxxxxxxx \
+  -keypass ******** \
+  -storepass ******** \
   -providername BCFIPS \
   -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -1156,9 +1162,9 @@ script and click **Add custom script configuration**
 
 * Build extension **ztrust-ext**.
 
-* Copy built jar (**ztrust-ext-4.4.2.Final.jar**) to the directory: **/opt/gluu/jetty/jans-auth/custom/libs**.
+* Copy built jar (**ztrust-ext-4.4.2.Final.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
 
-* Open file: **/opt/gluu/jetty/jans-auth/webapps/jans-auth.xml**.
+* Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
 
 * Add extension lib: **./custom/libs/ztrust-ext-4.4.2.Final.jar**:
 
@@ -1171,7 +1177,6 @@ script and click **Add custom script configuration**
 ```bash
 service jans-auth restart  
 ```
-
 
 ## Casa Configuration
 
@@ -1276,7 +1281,6 @@ Proceeding of new certificate:
 
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
-
 
 ## HTTPD configuration
 
@@ -1805,4 +1809,3 @@ LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so
 If you use **Load Balancer**, you also need to use SSL setup directives described in the chapter:
 **httpd SSL configuration** in configuation files of **httpd** of **Load Balancer**,  
 for example, **SSL Session Cache**, **Usage of SSL OCSP Stapling**.
-
