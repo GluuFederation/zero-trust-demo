@@ -228,7 +228,16 @@ rpm -qi gpg-pubkey-0544ba38-572aa647
 
 ### Install Janssen Server RPM
 
+You can always find the latest Gluu Server packages here (for all linux
+distributions): [Janssen Releases](https://github.com/JanssenProject/jans/releases/).
+
+Please, use follow doc for installing RHEL packages:
+[Red Hat EL Janssen Installation](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/).
+
 ### Janssen Server setup
+
+Please, use follow doc for running setup:
+[Run the Setup Script](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/#run-the-setup-script).
 
 ### Janssen Server Verification
 
@@ -260,13 +269,11 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
 
 1. Verify Janssen Server Access
 
-* use these configuration endpoints for checking access:
-
+* use these configuration endpoints for checking access:  
 [Auth Server / Authorization](https://docs.jans.io/v1.0.7/admin/auth-server/endpoints/authorization/)  
 [Auth Server / Crypto Keys](https://docs.jans.io/v1.0.7/admin/auth-server/crypto/keys/)  
 
-* use these admin tools for checking access:
-
+* use these admin tools for checking access:  
 [jans-cli Module Command line Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
 [jans_cli_tui Text User Interface Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
 
