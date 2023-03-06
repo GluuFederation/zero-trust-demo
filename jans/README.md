@@ -18,9 +18,9 @@ The purpose of the Zero Trust Framework (customizing) is to centralize authentic
 to enable Single Sign-on (SSO), and to provide a web portal to enable end-users to
 view and manage their two-factor credentials. Diagram 1 provides an overview of
 how federated SSO works. In this example, an End User starts his web browser,
-navigates to the Training Website, and initiates a Login event. The Browser is
+navigates to the Website, and initiates a Login event. The Browser is
 redirected to the Janssen Server, which returns the Login Page. After
-authentication, the Training Website can obtain an Identity Assertion from the
+authentication, the Website can obtain an Identity Assertion from the
 Janssen Server which details the authentication event (e.g. who authenticated, when
 they authenticated, how they authenticated), user claims (e.g. first name, last
 name, role, email address, etc), and an access token (which the website can
@@ -44,12 +44,6 @@ yet have a CAC/PIV card, we should enroll email and an SMS number.
 1. **Associate a CAC card against existing account**  This use case is possible
 when a person registered before they obtained a CAC/PIV, and then want to
 associate their smart card with their account.
-1. **Confirmation of OTP to verify email address**
-   1. Email OTP should expire after 15 minutes
-   1. An admin can disable OTP email confirmation
-1. **Sponsor Approval**  In this use case, an authorized person logs into Casa
-to see a list of people who enrolled. They must then approve each registration
-manually.
 1. **Registration for account with duplicate email** Do not allow.
 1. **Required fields for registration**
 1. **CAPTCHA**
@@ -57,27 +51,21 @@ manually.
 Example of some implemented password policy:  
 "The minimum password length is 15 characters, containing at least one lowercase letter,
 one uppercase letter, one number, and one special character".
-1. **Valid email domain validation**.
 1. **Disable automatic account enablement**  The Janssen Server admin can
 restrict enrollment to certain domains.
 1. **Redirect from Smart Card Login for unregistered person**.
-1. **Signed Verification email** The Janssen Server must sign emails.
 
 ### Authentication
 
+1. **FIDO**.
 1. **email identifier** The end-user's email address is used for identification
 (i.e. the email is the username).
 1. **Smart Card**  The end user clicks on a button, which should prompt their
 browser to enable the selection of an X.509 certificate.
-1. **SMS**  After successful password authentication, and SMS message is sent
-with a one time code, which the person must enter within a certain timeframe.
-1. **Email**  After successful password authentication, an email is sent with a
-one time code, which the person must enter within a certain timeframe.
-1. **Forgot Password** An end user can trigger an email to reset their password.
-1. **Email** Janssen Server sends a signed email to a person's email account.
 
 ### Credential Management
 
+1. **FIDO**.
 1. **Smart Card** The end user should be able to enroll a CAC/PIV card, and to
 view the details of an associated X.509 certificate.
 1. **SMS**  The end user should be able to view, add, and remove an associated
@@ -86,29 +74,6 @@ phone number to receive SMS notifications.
 email account (as long as the domain is allowed).
 1. **Change Password** End users should be able to change their password,
 provided the new password meets the associated password complexity.
-
-### Audit Logging
-
-An audit log of all session activity should be stored in the LDAP server, under
-the `o=metric` suffix. A sample record is here:
-
-```text
-dn=uniqueIdentifier={guid},ou={year-month},ou=audit,o=metric
-objectclass: top
-objectclass: oxMetric
-uniqueIdentifier: {guid}
-oxMetricType: audit
-creationDate: {timestamp}
-oxApplicationType: client_id
-oxData: {“uid”:”foobar”,
-          “edipi”:”1234567”,
-          “type”: “startSession”,
-          "redirect_uri": "https://abc.xyz/cb"
-          "ip": "10.10.10.10",
-          "acr": "smartcard",
-          "session_id": "1234"}
-
-```
 
 ### Restrict to single sessions
 
@@ -1156,7 +1121,7 @@ script and click **Add custom script configuration**
 
 |key                          | value               |
 |---------------------------- | ------------------- |
-| ou_name | |
+| metric_audit_ou_name | |
 
 ### jans-auth Extension ztrust-ext
 
@@ -1291,7 +1256,7 @@ contains:
 IncludeOptional conf.d/*jans.conf
 ```
 
-This definition **IncludeOptional conf.d/*jans.conf** includes follow additional
+This definition **IncludeOptional conf.d/\*jans.conf** includes follow additional
 **httpd** configuarion: **/etc/httpd/conf.d/https_jans.conf**.
 
 Configuration files:  
@@ -1610,7 +1575,6 @@ You can see follow **httpd** logs (**TLS v1.3** and **HTTP/2.0**):
 ... "GET /identity/ HTTP/2.0" 200 81 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
 ... "GET /identity/home.htm HTTP/2.0" 302 - "https://<domain>/identity/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
 ... "GET /identity/login.htm HTTP/2.0" 302 - "https://<domain>/identity/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
-
 ```
 
 ```text
@@ -1635,6 +1599,7 @@ After installing **Jansssen Suite** on the server (full configuring), follow ser
 |`jans-fido2`|127.0.0.1:8073|
 |`jans-scim`|127.0.0.1:8087|
 |`casa`|127.0.0.1:8099|
+|`postgresql`|127.0.0.1:5432|
 
 Some servers (**jans-auth**, **jans-fido2**, **jans-scim**, **casa**) launched on the **localhost** (**127.0.0.1**) interface.
 Outer access to these servers organized via **httpd**, using suite of **Reverse Proxies**.
