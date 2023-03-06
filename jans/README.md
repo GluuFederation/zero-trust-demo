@@ -30,8 +30,6 @@ number.
 
 ![Diagram 1 -- Single Sign-On Overview](./img/Diagram-1-sso_overview.png)
 
-**Diagram 1 -- Single Sign-On Overview**
-
 ## Use Cases
 
 ### Registration
