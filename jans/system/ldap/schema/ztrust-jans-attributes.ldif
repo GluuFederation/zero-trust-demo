@@ -1,0 +1,113 @@
+dn: inum=11978694-3e96-4f9c-ac3b-455cd063140f,ou=attributes,o=jans
+description: Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID
+displayName: edipi
+jansAttrEditTyp: admin
+jansAttrName: edipi
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: string
+jansAttrUsgTyp: openid
+jansAttrViewTyp: admin
+jansAttrViewTyp: user
+jansSAML1URI: urn:gluu:dir:attribute-def:edipi
+jansSAML2URI: https://idp.example.com/saml/edipi
+jansStatus: active
+inum: 11978694-3e96-4f9c-ac3b-455cd063140f
+objectClass: jansAttr
+objectClass: top
+jansClaimName: edipi
+jansMultivaluedAttr: true
+jansScimCustomAttr: false
+
+dn: inum=e88df284-d234-43a7-89e7-cea41d6b2c3f,ou=attributes,o=jans
+description: Personal Identity Verification (PIV) Identifier
+displayName: pivid
+jansAttrEditTyp: admin
+jansAttrName: pivid
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: string
+jansAttrUsgTyp: openid
+jansAttrViewTyp: admin
+jansSAML1URI: urn:gluu:dir:attribute-def:pivid
+jansSAML2URI: urn:oid:pivid
+jansStatus: active
+inum: e88df284-d234-43a7-89e7-cea41d6b2c3f
+objectClass: jansAttr
+objectClass: top
+jansClaimName: pivid
+jansMultivaluedAttr: false
+jansScimCustomAttr: false
+
+dn: inum=f851e4e9-1245-403b-9fa8-96e26d41c538,ou=attributes,o=jans
+description: Legacy OSSO User Distinguish Name
+displayName: ossoUserDN
+jansAttrEditTyp: admin
+jansAttrName: ossoUserDN
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: string
+jansAttrUsgTyp: openid
+jansAttrViewTyp: admin
+jansSAML1URI: urn:gluu:dir:attribute-def:ossoUserDN
+jansSAML2URI: urn:oid:ossoUserDN
+jansStatus: active
+inum: f851e4e9-1245-403b-9fa8-96e26d41c538
+objectClass: jansAttr
+objectClass: top
+jansClaimName: ossoUserDN
+jansMultivaluedAttr: false
+jansScimCustomAttr: false
+
+dn: inum=c55cef08-969c-4e50-87e0-9b1e2a2061af,ou=attributes,o=jans
+description: Legacy OSSO Subscriber Global Unique Identifier
+displayName: ossoSubscriberGuid
+jansAttrEditTyp: admin
+jansAttrName: ossoSubscriberGuid
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: string
+jansAttrUsgTyp: openid
+jansAttrViewTyp: admin
+jansSAML1URI: urn:gluu:dir:attribute-def:ossoSubscriberGuid
+jansSAML2URI: urn:oid:ossoSubscriberGuid
+jansStatus: active
+inum: c55cef08-969c-4e50-87e0-9b1e2a2061af
+objectClass: jansAttr
+objectClass: top
+jansClaimName: ossoSubscriberGuid
+jansMultivaluedAttr: false
+jansScimCustomAttr: false
+
+dn: inum=3d9b76d4-9028-4411-ae81-8f3adc03b52f,ou=attributes,o=jans
+description: The registration status of the user.
+displayName: userStatus
+jansAttrEditTyp: admin
+jansAttrName: userStatus
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: string
+jansAttrUsgTyp: openid
+jansAttrViewTyp: admin
+jansSAML1URI: urn:gluu:dir:attribute-def:userStatus
+jansSAML2URI: urn:oid:userStatus
+jansStatus: active
+inum: 3d9b76d4-9028-4411-ae81-8f3adc03b52f
+objectClass: jansAttr
+objectClass: top
+jansClaimName: userStatus
+jansMultivaluedAttr: false
+jansScimCustomAttr: false
+
+dn: inum=d51b279b-f966-420d-b06f-f55663f5a1c6,ou=attributes,o=jans
+description: Last login time used to expire inactive users
+displayName: Last Login Time
+jansAttrEditTyp: admin
+jansAttrName: lastlogin
+jansAttrOrigin: ztrustPerson
+jansAttrTyp: generalizedTime
+jansAttrViewTyp: admin
+jansSAML1URI: urn:gluu:dir:attribute-def:lastlogin
+jansSAML2URI: urn:oid:lastlogin
+jansStatus: active
+inum: d51b279b-f966-420d-b06f-f55663f5a1c6
+objectClass: jansAttr
+objectClass: top
+jansClaimName: lastlogin
+jansMultivaluedAttr: false
+jansScimCustomAttr: false
