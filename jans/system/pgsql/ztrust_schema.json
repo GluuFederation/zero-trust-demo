@@ -1,0 +1,110 @@
+{
+    "schemaFile": "102-ztrustPerson.ldif",
+    
+    "attributeTypes": [
+
+    {
+      "desc": "Electronic Data Interchange Personal Indentifier aka DoD ID",
+      "equality": "caseIgnoreMatch",
+      "names": [
+        "edipi"
+      ],
+      "oid": "jansAttr",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+      "x_origin": "ZTrust Custom attribute"
+    },
+
+    {
+      "desc": "Personal Identity Verification Identifier",
+      "equality": "caseIgnoreMatch",
+      "names": [
+        "pivid"
+      ],
+      "oid": "jansAttr",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+      "x_origin": "ZTrust Custom attribute"
+    },
+
+    {
+      "desc": "Legacy OSSO User Distinguish Name",
+      "equality": "caseIgnoreMatch",
+      "names": [
+        "ossoUserDN"
+      ],
+      "oid": "jansAttr",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+      "x_origin": "ZTrust Custom attribute"
+    },
+
+    {
+      "desc": "Legacy OSSO Subscriber Global Unique Identifier",
+      "equality": "caseIgnoreMatch",
+      "names": [
+        "ossoSubscriberGuid"
+      ],
+      "oid": "jansAttr",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+      "x_origin": "ZTrust Custom attribute"
+    },
+
+    {
+      "desc": "The registration status of the user",
+      "equality": "caseIgnoreMatch",
+      "names": [
+        "userStatus"
+      ],
+      "oid": "jansAttr",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.15",
+      "x_origin": "ZTrust Custom attribute"
+    },
+
+    {
+      "desc": "Last login time used to expire inactive users",
+      "equality": "generalizedTimeMatch",
+      "names": [
+        "lastlogin"
+      ],
+      "oid": "jansAttr",
+      "ordering": "generalizedTimeOrderingMatch",
+      "syntax": "1.3.6.1.4.1.1466.115.121.1.24",
+      "x_origin": "ZTrust Custom attribute"
+    }
+    
+    ],
+    
+    "objectClasses": [    
+    {
+       "kind": "STRUCTURAL",
+       "may": [
+        "edipi",
+        "pivid",
+        "ossoUserDN",
+        "ossoSubscriberGuid",
+        "userStatus",
+        "lastlogin"
+      ],
+      "must": [
+        "objectclass"
+      ],
+      "names": [
+        "ztrustPerson"
+      ],
+      "oid": "jansObjClass",
+      "sup": [
+        "top"
+      ],
+      "x_origin": "ZTrust custom schema"
+    }
+    
+    ],    
+
+    "oidMacros": {
+        "jansAttr": "jansPublished:3",
+        "jansMatchRules": "jansPublished:2",
+        "jansObjClass": "jansPublished:4",
+        "jansOrgOID": "1.3.6.1.4.1.48710",
+        "jansPublished": "jansOrgOID:1",
+        "jansReserved": "jansOrgOID:0",
+        "jansSyntax": "jansPublished:1"
+    }
+}
