@@ -12,8 +12,8 @@ parser.add_argument('-rdbm-password', help="RDBM password",  required = True)
 parser.add_argument('-rdbm-port', help="RDBM port", type=int)
 parser.add_argument('-rdbm-db', help="RDBM database",  required = True)
 parser.add_argument('-rdbm-host', help="RDBM host",  required = True)
-parser.add_argument('-in-ldif-fpath', help="Input ldif file path",  required = True)
-parser.add_argument('-in-json-fpath', help="Input json file path",  required = True)
+parser.add_argument('-in-ldif-fpath', help="Input ldif file path",  required = False)
+parser.add_argument('-in-json-fpath', help="Input json file path",  required = False)
 parser.add_argument('-jans-setup-dpath', help="Input json file path", default="/opt/jans/jans-setup", required = False)
 
 argsp = parser.parse_args()
@@ -27,8 +27,8 @@ if os.path.exists(argsp_dict['jans_setup_dpath']):
 import warnings
 warnings.filterwarnings("ignore")
 
-import pydevd
-import debugpy
+#import pydevd
+#import debugpy
 
 import json
 
@@ -44,17 +44,17 @@ from setup_app.utils.properties_utils import PropertiesUtils
 from setup_app.utils.ldif_utils import myLdifParser
 from setup_app.utils.db_utils import dbUtils
 
-debugpy.listen(("0.0.0.0",5678));
-debugpy.wait_for_client();
+#debugpy.listen(('0.0.0.0',5678));
+#debugpy.wait_for_client();
 
 
 def main():
 
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
 
     base.argsp = argsp
 
-    base.argsp.opendj_keystore_type = "bcfks"
+    base.argsp.opendj_keystore_type = 'bcfks'
     base.argsp.j = True
 
     Config.init(paths.INSTALL_DIR)
@@ -64,8 +64,6 @@ def main():
 
     Config.installed_instance = True
 
-    print('Config.mapping_locations = {}'.format(Config.mapping_locations))
-
     Config.rdbm_type = argsp_dict['rdbm_type']
     Config.rdbm_host = argsp_dict['rdbm_host']
     Config.rdbm_port = argsp_dict['rdbm_port']
@@ -73,41 +71,43 @@ def main():
     Config.rdbm_user = argsp_dict['rdbm_user']
     Config.rdbm_password = argsp_dict['rdbm_password']
 
-    print('Config.rdbm_type = {}'.format(Config.rdbm_type))
-    print('Config.rdbm_host = {}'.format(Config.rdbm_host))
-    print('Config.rdbm_port = {}'.format(Config.rdbm_port))
-    print('Config.rdbm_db   = {}'.format(Config.rdbm_db))
-    print('Config.rdbm_user = {}'.format(Config.rdbm_user))
-    print('Config.rdbm_password = {}'.format(Config.rdbm_password))
+    print('Parameters:')
 
-    print('in_json_fpath = {}'.format(argsp_dict['in_json_fpath']))
-    print('in_ldif_fpath = {}'.format(argsp_dict['in_ldif_fpath']))
+    print('rdbm_type = {}'.format(Config.rdbm_type))
+    print('rdbm_host = {}'.format(Config.rdbm_host))
+    print('rdbm_port = {}'.format(Config.rdbm_port))
+    print('rdbm_db   = {}'.format(Config.rdbm_db))
+    print('rdbm_user = {}'.format(Config.rdbm_user))
+    print('rdbm_password = {}'.format(Config.rdbm_password))
 
-    schema_ = base.readJsonFile(argsp_dict['in_json_fpath'])
-    jans_attributes = schema_.get('attributeTypes', [])
+    if argsp_dict['in_json_fpath'] is not None:
+        print('in_json_fpath = {}'.format(argsp_dict['in_json_fpath']))
+    if argsp_dict['in_ldif_fpath'] is not None:
+        print('in_ldif_fpath = {}'.format(argsp_dict['in_ldif_fpath']))
 
-    print('jans_attributes = {}'.format(jans_attributes))
-    
-    in_json_files = []
-    in_json_files.append(argsp_dict['in_json_fpath'])
+    print('jans-setup-dpath = {}'.format(argsp_dict['jans_setup_dpath']))
 
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
 
-    print('dbUtils.bind() ------------------------ >>')
+    print('------------------------')
+
+    print('database bind')
     dbUtils.bind()
-    print('dbUtils.bind() ------------------------ <<')
 
-    print('create_tables ------------------------ >>')
-    create_tables(in_json_files)
-    print('create_tables ------------------------ <<')
+    if argsp_dict['in_json_fpath'] is not None:
+        print('reading schema file: {}'.format(argsp_dict['in_json_fpath']))
+        in_json_files = []
+        in_json_files.append(argsp_dict['in_json_fpath'])
+        print('creating tables from schema')
+        create_tables(in_json_files)
 
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
 
-    print('dbUtils.import_ldif ------------------------ >>')
-    dbUtils.import_ldif([argsp_dict['in_ldif_fpath']])
-    print('dbUtils.import_ldif ------------------------ <<')
-    
-    print('return')
+    if argsp_dict['in_ldif_fpath'] is not None:
+        print('import ldif file: {}'.format(argsp_dict['in_ldif_fpath']))
+        dbUtils.import_ldif([argsp_dict['in_ldif_fpath']])
+
+    print('------------------------')
 
     return
 
@@ -119,7 +119,7 @@ def create_tables(jans_schema_files):
     column_add = 'COLUMN ' if Config.rdbm_type == 'spanner' else ''
     alter_table_sql_cmd = 'ALTER TABLE %s{}%s ADD %s{};' % (get_qchar(), get_qchar(), column_add)
 
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
 
     for jans_schema_fn in jans_schema_files:
         jans_schema = base.readJsonFile(jans_schema_fn)
@@ -128,13 +128,13 @@ def create_tables(jans_schema_files):
         for attr in jans_schema['attributeTypes']:
             all_attribs[attr['names'][0]] = attr
 
-    debugpy.breakpoint();
+ #   debugpy.breakpoint();
 
     subtable_attrs = {}
     for stbl in dbUtils.sub_tables.get(Config.rdbm_type):
         subtable_attrs[stbl] = [ scol[0] for scol in dbUtils.sub_tables[Config.rdbm_type][stbl] ]
 
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
 
     for obj_name in all_schema:
         obj = all_schema[obj_name]
@@ -260,6 +260,6 @@ def run(*args, **kwargs):
         return base.run(*args)
 
 if __name__ == "__main__":
-    debugpy.breakpoint();
+#    debugpy.breakpoint();
     base.logIt('jans_setup: main()')
     main()
