@@ -1577,7 +1577,7 @@ script and click **Add custom script configuration**
 
 |key                          | value               |
 |---------------------------- | ------------------- |
-| ou_name | |
+| metric_audit_ou_name | |
 
 ### oxAuth Extension ztrust-ext
 
@@ -2069,7 +2069,6 @@ You can see follow **httpd** logs (**TLS v1.3** and **HTTP/2.0**):
 ... "GET /identity/ HTTP/2.0" 200 81 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
 ... "GET /identity/home.htm HTTP/2.0" 302 - "https://<domain>/identity/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
 ... "GET /identity/login.htm HTTP/2.0" 302 - "https://<domain>/identity/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 OPR/91.0.4516.77"
-
 ```
 
 ```text

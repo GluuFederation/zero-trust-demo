@@ -301,6 +301,68 @@ import ldif file: /root/pgsql/ztrust-jans-attributes.ldif
 ------------------------
 ```
 
+Follow tables will be added, after installing of the schema (after running of the script: **ztrust_install_schema.py**):  
+
+```sql
+SELECT table_catalog, table_schema, table_name, column_name, data_type, character_maximum_length, character_octet_length
+FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name   = 'ztrustPerson';
+```
+
+```text
+ table_catalog | table_schema |  table_name  |    column_name     |     data_type     | character_maximum_length | character_octet_length 
+---------------+--------------+--------------+--------------------+-------------------+--------------------------+------------------------
+ jansdb        | public       | ztrustPerson | doc_id             | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | objectClass        | character varying |                       48 |                    192
+ jansdb        | public       | ztrustPerson | dn                 | character varying |                      128 |                    512
+ jansdb        | public       | ztrustPerson | edipi              | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | pivid              | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | ossoUserDN         | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | ossoSubscriberGuid | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | userStatus         | character varying |                       64 |                    256
+ jansdb        | public       | ztrustPerson | lastlogin          | character varying |                       64 |                    256
+```
+
+Follow attributes will be added to the table **jansAttr** (after running of the script: **ztrust_install_schema.py**):
+
+```sql
+SELECT
+    public."jansAttr".doc_id, public."jansAttr"."objectClass", public."jansAttr".dn,
+    public."jansAttr".description, public."jansAttr"."jansAttrName", public."jansAttr"."jansAttrOrigin"
+FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson';
+```
+
+```text
+                doc_id                | objectClass |                               dn                               |                            description                            |    jansAttrName    | jansAttrOrigin 
+--------------------------------------+-------------+----------------------------------------------------------------+-------------------------------------------------------------------+--------------------+----------------
+ 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | inum=11978694-3e96-4f9c-ac3b-455cd063140f,ou=attributes,o=jans | Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID | edipi              | ztrustPerson
+ e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | inum=e88df284-d234-43a7-89e7-cea41d6b2c3f,ou=attributes,o=jans | Personal Identity Verification (PIV) Identifier                   | pivid              | ztrustPerson
+ f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | inum=f851e4e9-1245-403b-9fa8-96e26d41c538,ou=attributes,o=jans | Legacy OSSO User Distinguish Name                                 | ossoUserDN         | ztrustPerson
+ c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | inum=c55cef08-969c-4e50-87e0-9b1e2a2061af,ou=attributes,o=jans | Legacy OSSO Subscriber Global Unique Identifier                   | ossoSubscriberGuid | ztrustPerson
+ 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | inum=3d9b76d4-9028-4411-ae81-8f3adc03b52f,ou=attributes,o=jans | The registration status of the user.                              | userStatus         | ztrustPerson
+ d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | inum=d51b279b-f966-420d-b06f-f55663f5a1c6,ou=attributes,o=jans | Last login time used to expire inactive users                     | lastlogin          | ztrustPerson
+```
+
+```sql
+SELECT
+    public."jansAttr".doc_id, public."jansAttr"."objectClass",
+    public."jansAttr"."jansAttrName", public."jansAttr"."jansAttrOrigin",
+    public."jansAttr"."jansSAML1URI", public."jansAttr"."jansSAML2URI"
+FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson';
+```
+
+```text
+                doc_id                | objectClass |    jansAttrName    | jansAttrOrigin |                 jansSAML1URI                  |            jansSAML2URI            
+--------------------------------------+-------------+--------------------+----------------+-----------------------------------------------+------------------------------------
+ 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | edipi              | ztrustPerson   | urn:gluu:dir:attribute-def:edipi              | https://idp.example.com/saml/edipi
+ e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | pivid              | ztrustPerson   | urn:gluu:dir:attribute-def:pivid              | urn:oid:pivid
+ f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | ossoUserDN         | ztrustPerson   | urn:gluu:dir:attribute-def:ossoUserDN         | urn:oid:ossoUserDN
+ c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | ossoSubscriberGuid | ztrustPerson   | urn:gluu:dir:attribute-def:ossoSubscriberGuid | urn:oid:ossoSubscriberGuid
+ 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | userStatus         | ztrustPerson   | urn:gluu:dir:attribute-def:userStatus         | urn:oid:userStatus
+ d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | lastlogin          | ztrustPerson   | urn:gluu:dir:attribute-def:lastlogin          | urn:oid:lastlogin
+ ```
+
+
 .
 
 ## jans-auth configuration
