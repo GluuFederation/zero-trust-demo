@@ -251,10 +251,6 @@ This script can be used for installing ZTrust custom schema.
 Usage:
 
 ```bash
-python3   ztrust_install_ldap_schema.sh <password> <password_fpath> <shema_dpath>
-```
-
-```bash
 usage: ztrust_install_schema.py [-h] -rdbm-user RDBM_USER -rdbm-password
                                 RDBM_PASSWORD [-rdbm-port RDBM_PORT] -rdbm-db
                                 RDBM_DB -rdbm-host RDBM_HOST
