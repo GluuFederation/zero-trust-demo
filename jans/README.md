@@ -245,7 +245,13 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
 
 ## PostgreSQL Server Configuration
 
-Directory **&lt;root-dir&gt; /system/pgsql/schema** contains script: **ztrust_install_schema.py**.
+During launching **install.py** (**jans-linux-setup**), please  
+
+1. don't use option **-ldap-admin-password**=**&lt;passw&gt;**;
+1. use option **-local-rdbm**=**pgsql**;
+1. use option **-rdbm-password**=**&lt;passw&gt;**;
+
+Directory **&lt;root-dir&gt;/system/pgsql/schema** contains script: **ztrust_install_schema.py**.
 
 This script can be used for installing ZTrust custom schema.  
 Usage:
@@ -301,6 +307,8 @@ import ldif file: /root/pgsql/ztrust-jans-attributes.ldif
 ------------------------
 ```
 
+.
+
 Follow tables will be added, after installing of the schema (after running of the script: **ztrust_install_schema.py**):  
 
 ```sql
@@ -322,6 +330,8 @@ WHERE table_schema = 'public' AND table_name   = 'ztrustPerson';
  jansdb        | public       | ztrustPerson | userStatus         | character varying |                       64 |                    256
  jansdb        | public       | ztrustPerson | lastlogin          | character varying |                       64 |                    256
 ```
+
+.
 
 Follow attributes will be added to the table **jansAttr** (after running of the script: **ztrust_install_schema.py**):
 
