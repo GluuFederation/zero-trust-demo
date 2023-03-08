@@ -245,6 +245,68 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
 
 ## PostgreSQL Server Configuration
 
+Directory **&lt;root-dir&gt; /system/pgsql/schema** contains script: **ztrust_install_schema.py**.
+
+This script can be used for installing ZTrust custom schema.  
+Usage:
+
+```bash
+python3   ztrust_install_ldap_schema.sh <password> <password_fpath> <shema_dpath>
+```
+
+```bash
+usage: ztrust_install_schema.py [-h] -rdbm-user RDBM_USER -rdbm-password
+                                RDBM_PASSWORD [-rdbm-port RDBM_PORT] -rdbm-db
+                                RDBM_DB -rdbm-host RDBM_HOST
+                                [-in-json-fpath IN_JSON_FPATH]
+                                [-in-ldif-fpath IN_LDIF_FPATH]
+                                [-jans-setup-dpath JANS_SETUP_DPATH]
+```
+
+, where
+
+```text
+RDBM_USER           - database user name
+RDBM_PASSWORD       - database user password
+RDBM_DB             - database name to connect
+RDBM_HOST           - database host
+IN_JSON_FPATH       - input json file path (defitinions of tables) 
+IN_LDIF_FPATH       - input ldif file path (entries, will be added to table, defined by objectClass in ldif) 
+JANS_SETUP_DPATH    - path, shere jans setup has been installed
+```
+
+Example of usage:
+
+```bash
+python3 ztrust_install_schema.py -rdbm-user=jans -rdbm-password=1234567890$ -rdbm-db=jansdb -rdbm-host=192.168.64.65 -rdbm-port=5432 -in-json-fpath=/root/pgsql/ztrust_schema.json -in-ldif-fpath=/root/pgsql/ztrust-jans-attributes.ldif -jans-setup-dpath=/opt/jans/jans-setup
+```
+
+And correspondent output:
+
+```text
+Parameters:
+rdbm_type = pgsql
+rdbm_host = 192.168.64.65
+rdbm_port = 5432
+rdbm_db   = jansdb
+rdbm_user = jans
+rdbm_password = 1234567890$
+in_json_fpath = /root/pgsql/ztrust_schema.json
+in_ldif_fpath = /root/pgsql/ztrust-jans-attributes.ldif
+jans-setup-dpath = /opt/jans/jans-setup
+------------------------
+database bind
+reading schema file: /root/pgsql/ztrust_schema.json
+creating tables from schema
+Creating tables for ['/root/pgsql/ztrust_schema.json']
+tables = ['CREATE TABLE "ztrustPerson" (doc_id VARCHAR(64) NOT NULL UNIQUE, "objectClass" VARCHAR(48), dn VARCHAR(128), "edipi" VARCHAR(64), "pivid" VARCHAR(64), "ossoUserDN" VARCHAR(64), "ossoSubscriberGuid" VARCHAR(64), "userStatus" VARCHAR(64), "lastlogin" VARCHAR(64), PRIMARY KEY (doc_id));']
+Writing file /tmp/jans_tables.sql
+import ldif file: /root/pgsql/ztrust-jans-attributes.ldif
+------------------------
+```
+
+.
+
 ## jans-auth configuration
 
 ### jans-auth properties
