@@ -1,0 +1,4 @@
+#!/bin/sh
+
+markdown-toc -t github README.md
+

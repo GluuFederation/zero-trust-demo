@@ -372,7 +372,6 @@ FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson'
  d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | lastlogin          | ztrustPerson   | urn:gluu:dir:attribute-def:lastlogin          | urn:oid:lastlogin
  ```
 
-
 .
 
 ## jans-auth configuration
