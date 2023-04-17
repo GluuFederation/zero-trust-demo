@@ -46,7 +46,7 @@ def get_casa_setup_parser():
     parser.add_argument('--jans-branch', help="Janssen github branch", default='main')
     parser.add_argument('--forse-download-jans', help="Forse download Janssen installer", action='store_true')
     parser.add_argument('--install-casa', help="Install casa", action='store_true')
-    parser.add_argument('--remove-casa', help="Remove casa", action='store_true')
+    parser.add_argument('--uninstall-casa', help="Remove casa", action='store_true')
     parser.add_argument('--profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
 
     return parser
@@ -58,18 +58,18 @@ argsp,nargs = parser.parse_known_args()
 print("argsp = {}".format(argsp))
 print("nargs = {}".format(nargs))
 
-if argsp.install_casa and argsp.remove_casa:
+if argsp.install_casa and argsp.uninstall_casa:
     print("Options:")
     print("--install-casa = {}".format(argsp.install_casa))
-    print("--remove-casa = {}".format(argsp.remove_casa))
+    print("--uninstall-casa = {}".format(argsp.uninstall_casa))
     print("Incompatible Options...")
     sys.exit();
 
 install_casa = argsp.install_casa
-remove_casa = argsp.remove_casa
+uninstall_casa = argsp.uninstall_casa
 
 print("install_casa = {}".format(install_casa))
-print("remove_casa = {}".format(remove_casa))
+print("uninstall_casa = {}".format(uninstall_casa))
 
 #with open("/etc/gluu/conf/salt") as f:
 with open("/etc/jans/conf/salt") as f:
@@ -144,7 +144,6 @@ from setup_app.utils import base
 from setup_app.utils import arg_parser
 
 arg_parser.add_to_me(parser)
-
 argsp = arg_parser.get_parser()
 
 base.current_app.profile = profile
@@ -402,9 +401,9 @@ class SetupCasa (JettyInstaller):
         # copy casa scripts
         if not os.path.exists(self.py_lib_dpath):
             os.makedirs(self.py_lib_dpath)
-        for fn in glob.glob(os.path.join(self.casa_dist_dpath, 'pylib/*.py')):
-            print("Copying", fn, "to", self.py_lib_dpath)
-            self.copyFile(fn, self.py_lib_dpath)
+        for fpath in glob.glob(os.path.join(self.casa_dist_dpath, 'pylib/*.py')):
+            print("Copying", fpath, "to", self.py_lib_dpath)
+            self.copyFile(fpath, self.py_lib_dpath)
             
         if not os.path.exists(self.output_dpath):
             os.makedirs(self.output_dpath)
@@ -557,6 +556,80 @@ class SetupCasa (JettyInstaller):
 
             if modified:
                 base_mod_path.write_text('\n'.join(mod_load_content))
+                
+    def remove_apache_directive(self, directive):
+
+        debugpy.breakpoint();
+
+        https_jans_current = self.readFile(httpd_installer.https_jans_fn)
+        tmp_ = directive.lstrip('<').rstrip('>').strip()
+        dir_name, dir_arg = tmp_.split()
+        dir_fname = '/'+dir_name
+
+        https_jans_list = []
+        append_c = 2
+
+        for l in https_jans_current.splitlines():
+            if dir_name in l and dir_arg in l:
+                append_c = 0
+            elif append_c == 0 and dir_fname in l:
+                append_c = 1
+
+            if append_c > 1:
+                https_jans_list.append(l)
+
+            if append_c == 1:
+                append_c = 2
+
+        self.writeFile(httpd_installer.https_jans_fn, '\n'.join(https_jans_list))
+
+    def uninstall_casa(self):
+
+        debugpy.breakpoint();
+
+        print("Uninstalling Gluu Casa")
+        for fpath in (os.path.join(Config.os_default, 'casa'), os.path.join(Config.unit_files_path, 'casa.service')):
+            if os.path.exists(fpath):
+                print('  - Deleting', fpath)
+                self.run(['rm', '-f', fpath])
+
+        print("  - Removing casa directives from apache configuration")
+        self.remove_apache_directive('<Location /casa>')
+
+        jans_auth_plugins = jans_auth_installer.get_plugins(paths=True)
+
+        casa_config_class_path = os.path.join(self.jans_auth_custom_lib_dpath, os.path.basename(self.casa_config_fpath))
+
+        if os.path.exists(casa_config_class_path):
+            print('  - Deleting', casa_config_class_path)
+            self.run(['rm', '-f', casa_config_class_path])
+
+        if casa_config_class_path in jans_auth_plugins:
+            print("  - Removing plugin {} from Jans Auth Configuration".format(casa_config_class_path))
+            jans_auth_plugins.remove(casa_config_class_path)
+            jans_auth_installer.set_class_path(jans_auth_plugins)
+
+        for plib in self.casa_python_libs:
+            plib_fpath = os.path.join(self.py_lib_dpath, plib)
+            if os.path.exists(plib_fpath):
+                print('  - Deleting', plib_fpath)
+                self.run(['rm', '-f', plib_fpath])
+
+        result = self.dbUtils.search('ou=clients,o=jans', '(&(inum={}*)(objectClass=jansClnt))'.format(self.casa_client_id_prefix))
+        if result:
+            print("  - Deleting casa client from db backend")
+            self.dbUtils.delete_dn(result['dn'])
+
+        print("  - Deleting casa configuration from db backend")
+        self.dbUtils.delete_dn('ou=casa,ou=configuration,o=jans')
+
+        print("  - Deleting script 3000-F75A from db backend")
+        self.dbUtils.delete_dn('inum=3000-F75A,ou=scripts,o=jans')
+
+        casa_dir = os.path.join(Config.jetty_base, 'casa')
+        if os.path.exists(casa_dir):
+            print('  - Deleting', casa_dir)
+            self.run(['rm', '-f', '-r', casa_dir])        
 
 if __name__ == '__main__':
 
@@ -570,6 +643,12 @@ if __name__ == '__main__':
             setup_casa.download_files()
             setup_casa.install_casa()
 
+        elif uninstall_casa:
+
+            setup_casa.uninstall_casa()
+            
+        if install_casa or uninstall_casa:
+            
             print("Restarting Apache")
             httpd_installer.restart()
 
@@ -578,6 +657,8 @@ if __name__ == '__main__':
 
             print("Restarting Janssen Config Api")
             config_api_installer.restart()
+            
+        if install_casa:
 
             print("Starting Casa")
             config_api_installer.start('casa')
@@ -585,12 +666,7 @@ if __name__ == '__main__':
             print("Installation was completed")
             print()
             print("Casa https://{}/casa".format(Config.hostname))
-
-        elif remove_casa:
-            pass
             
-        else:
-            pass
 
     except Exception as ex:
         print(ex)
@@ -598,6 +674,7 @@ if __name__ == '__main__':
 
     debugpy.breakpoint();
 
+    print("")
     print("Exit Setup Casa")
 
 #    sys.exit()
