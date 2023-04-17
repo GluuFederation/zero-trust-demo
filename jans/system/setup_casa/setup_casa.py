@@ -34,7 +34,7 @@ debugpy.breakpoint();
 
 cur_dpath = os.path.dirname(os.path.realpath(__file__))
 
-dist_dpath = '/opt/dist'
+dist_dpath = '/opt/dist/'
 dist_jans_dpath = os.path.join(dist_dpath, 'jans')
 
 jans_setup_dpath = '/opt/jans/jans-setup/'
@@ -44,16 +44,32 @@ def get_casa_setup_parser():
 
     parser.add_argument('--jans-setup-branch', help="Janssen setup github branch", default='main')
     parser.add_argument('--jans-branch', help="Janssen github branch", default='main')
+    parser.add_argument('--forse-download-jans', help="Forse download Janssen installer", action='store_true')
     parser.add_argument('--install-casa', help="Install casa", action='store_true')
     parser.add_argument('--remove-casa', help="Remove casa", action='store_true')
     parser.add_argument('--profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
 
     return parser
    
-argsp,nargs = get_casa_setup_parser().parse_known_args()
+parser = get_casa_setup_parser()   
+
+argsp,nargs = parser.parse_known_args()
 
 print("argsp = {}".format(argsp))
 print("nargs = {}".format(nargs))
+
+if argsp.install_casa and argsp.remove_casa:
+    print("Options:")
+    print("--install-casa = {}".format(argsp.install_casa))
+    print("--remove-casa = {}".format(argsp.remove_casa))
+    print("Incompatible Options...")
+    sys.exit();
+
+install_casa = argsp.install_casa
+remove_casa = argsp.remove_casa
+
+print("install_casa = {}".format(install_casa))
+print("remove_casa = {}".format(remove_casa))
 
 #with open("/etc/gluu/conf/salt") as f:
 with open("/etc/jans/conf/salt") as f:
@@ -84,10 +100,6 @@ with open("/etc/jans/conf/salt") as f:
 #                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
 #                ]
 
-if os.path.exists(jans_setup_dpath):
-    print("Backing up old Janssen setup directory")
-    os.system('mv {} {}-{}'.format(jans_setup_dpath, jans_setup_dpath.rstrip('/'), time.ctime().replace(' ', '_')))
-
 profile = argsp.profile
 os.environ['JANS_PROFILE'] = profile
 
@@ -112,7 +124,15 @@ def download_jans_installer(setup_branch):
 
 debugpy.breakpoint();
 
-download_jans_installer(argsp.jans_branch)
+jans_setup_dpath_exists = os.path.exists(jans_setup_dpath)
+
+if argsp.forse_download_jans or not jans_setup_dpath_exists:
+
+    if jans_setup_dpath_exists:
+        print("Backing up old Janssen setup directory")
+        os.system('mv {} {}-{}'.format(jans_setup_dpath, jans_setup_dpath.rstrip('/'), time.ctime().replace(' ', '_')))
+
+    download_jans_installer(argsp.jans_branch)
 
 debugpy.breakpoint();
 
@@ -123,15 +143,21 @@ from setup_app import downloads
 from setup_app.utils import base
 from setup_app.utils import arg_parser
 
+arg_parser.add_to_me(parser)
+
+argsp = arg_parser.get_parser()
+
+base.current_app.profile = profile
+base.argsp = argsp
+
+base.argsp.j = True
+
 #base.argsp = arg_parser.get_parser()
 downloads.base.current_app.app_info = base.readJsonFile(os.path.join(jans_setup_dpath, 'app_info.json'))
 
 downloads.download_sqlalchemy()
 downloads.download_cryptography()
 downloads.download_pyjwt()
-
-base.current_app.profile = profile
-base.argsp = argsp
 
 if 'SETUP_BRANCH' not in base.current_app.app_info:
     base.current_app.app_info['SETUP_BRANCH'] = argsp.jans_setup_branch
@@ -177,20 +203,8 @@ print(paths.LOG_FILE)
 print(paths.LOG_ERROR_FILE)
 print()
 
-parser = get_casa_setup_parser()
-from setup_app.utils import arg_parser
-arg_parser.add_to_me(parser)
-installed = False
-
-argsp = arg_parser.get_parser()
-
 from setup_app import static
 from setup_app.utils import base
-
-base.current_app.profile = profile
-base.argsp = argsp
-
-base.argsp.j = True
 
 if argsp.profile == 'disa-stig':
     base.argsp.opendj_keystore_type = 'bcfks'
@@ -419,7 +433,7 @@ class SetupCasa (JettyInstaller):
 
         if not Config.get('casa_client_encoded_pw'):
             Config.casa_client_encoded_pw = jans_auth_installer.obscure(Config.casa_client_pw)
-            
+
         print()
         print("Casa Client ID:", Config.casa_client_id)
         print("Casa Client Secret:", Config.casa_client_pw)
@@ -551,24 +565,32 @@ if __name__ == '__main__':
     try:
         setup_casa = SetupCasa(cur_dpath)
 
-        setup_casa.download_files()
-        setup_casa.install_casa()
+        if install_casa:
 
-        print("Restarting Apache")
-        httpd_installer.restart()
+            setup_casa.download_files()
+            setup_casa.install_casa()
 
-        print("Restarting Jans Auth")
-        config_api_installer.restart('jans-auth')
+            print("Restarting Apache")
+            httpd_installer.restart()
 
-        print("Restarting Janssen Config Api")
-        config_api_installer.restart()      
+            print("Restarting Jans Auth")
+            config_api_installer.restart('jans-auth')
 
-        print("Starting Casa")
-        config_api_installer.start('casa')
+            print("Restarting Janssen Config Api")
+            config_api_installer.restart()
 
-        print("Installation was completed")
-        print()
-        print("Casa https://{}/casa".format(Config.hostname))
+            print("Starting Casa")
+            config_api_installer.start('casa')
+
+            print("Installation was completed")
+            print()
+            print("Casa https://{}/casa".format(Config.hostname))
+
+        elif remove_casa:
+            pass
+            
+        else:
+            pass
 
     except Exception as ex:
         print(ex)
@@ -576,5 +598,6 @@ if __name__ == '__main__':
 
     debugpy.breakpoint();
 
-#    sys.exit()
+    print("Exit Setup Casa")
 
+#    sys.exit()
