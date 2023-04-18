@@ -44,7 +44,7 @@ def get_casa_setup_parser():
 
     parser.add_argument('--jans-setup-branch', help="Janssen setup github branch", default='main')
     parser.add_argument('--jans-branch', help="Janssen github branch", default='main')
-    parser.add_argument('--forse-download-jans', help="Forse download Janssen installer", action='store_true')
+    parser.add_argument('--force-download-jans', help="Force download Janssen installer", action='store_true')
     parser.add_argument('--install-casa', help="Install casa", action='store_true')
     parser.add_argument('--uninstall-casa', help="Remove casa", action='store_true')
     parser.add_argument('--profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
@@ -126,7 +126,7 @@ debugpy.breakpoint();
 
 jans_setup_dpath_exists = os.path.exists(jans_setup_dpath)
 
-if argsp.forse_download_jans or not jans_setup_dpath_exists:
+if argsp.force_download_jans or not jans_setup_dpath_exists:
 
     if jans_setup_dpath_exists:
         print("Backing up old Janssen setup directory")
