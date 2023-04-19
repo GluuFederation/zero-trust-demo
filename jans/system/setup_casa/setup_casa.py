@@ -256,7 +256,7 @@ class SetupCasa (JettyInstaller):
         print("self.twillo_fpath              = {0}".format(self.twillo_fpath))
         print("self.fido2_client_fpath        = {0}".format(self.fido2_client_fpath))
         print("----------------------")
-    
+
         app_info_fpath = os.path.join(install_dpath, 'app_info.json')
         with open(app_info_fpath) as f_app_info:
             self.app_info = json.load(f_app_info)
@@ -316,8 +316,8 @@ class SetupCasa (JettyInstaller):
 
         self.dwnl_files = [
                 (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
-                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-SNAPSHOT.war'), self.casa_war_fpath),
-                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-SNAPSHOT.jar'), self.casa_config_fpath),
+                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath),
+                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
                 (os.path.join(self.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(self.app_info['TWILIO_VERSION'])), self.twillo_fpath),
                 (os.path.join(self.app_info['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath),                
         
@@ -332,19 +332,19 @@ class SetupCasa (JettyInstaller):
             
         for plib in self.casa_python_libs:
             self.dwnl_files.append((os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/_extras/{}'.format(plib)), os.path.join(self.casa_dist_dpath, 'pylib', plib)))
-            
+
         print("----------------------")
         print("self.dwnl_files = {0}".format(self.dwnl_files))
         print("----------------------")
-        
+
         self.jans_auth_dpath = os.path.join(Config.jetty_base, jans_auth_installer.service_name)
         self.jans_auth_custom_lib_dpath = os.path.join(self.jans_auth_dpath, 'custom/libs')
-        
+
         self.source_dpath = cur_dpath
-        
+
         self.templates_dpath = os.path.join(self.source_dpath, 'templates')
         self.output_dpath = os.path.join(self.source_dpath, 'output')
-        
+
         self.casa_client_id_prefix = '3000.'
 
         Config.templateRenderingDict['admin_ui_apache_root'] = os.path.join(httpd_installer.server_root, 'admin')
@@ -500,7 +500,7 @@ class SetupCasa (JettyInstaller):
 
         self.add_apache_directive('<Location /casa>', 'casa_apache_directive')
 
-        self.enable()        
+        self.enable()
 
         return
         
@@ -630,10 +630,10 @@ class SetupCasa (JettyInstaller):
         casa_dir = os.path.join(Config.jetty_base, self.service_name)
         if os.path.exists(casa_dir):
             print('  - Deleting', casa_dir)
-            self.run(['rm', '-f', '-r', casa_dir])
+            self.run(['rm', '-f', '-r', casa_dir])     
 
     def check_if_casa_installed(self):
-
+    
         jetty_service_dpath = os.path.join(Config.jetty_base, self.service_name)
         jetty_service_webapps_dpath = os.path.join(jetty_service_dpath, 'webapps')
 
@@ -676,9 +676,9 @@ if __name__ == '__main__':
         elif to_uninstall_casa:
 
             setup_casa.uninstall_casa()
-            
+
         if to_install_casa or to_uninstall_casa:
-            
+
             print("Restarting Apache")
             httpd_installer.restart()
 
@@ -687,7 +687,7 @@ if __name__ == '__main__':
 
             print("Restarting Janssen Config Api")
             config_api_installer.restart()
-            
+
         if to_install_casa:
 
             print("Starting Casa")
@@ -696,7 +696,6 @@ if __name__ == '__main__':
             print("Installation was completed")
             print()
             print("Casa https://{}/casa".format(Config.hostname))
-            
 
     except Exception as ex:
         print(ex)
