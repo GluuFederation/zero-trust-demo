@@ -260,7 +260,7 @@ class SetupCasa (JettyInstaller):
         app_info_fpath = os.path.join(install_dpath, 'app_info.json')
         with open(app_info_fpath) as f_app_info:
             self.app_info = json.load(f_app_info)
-        f_app_info.close();
+        f_app_info.close()
 
 #        print("----------------------")
 #        print("app_info = {0}".format(self.app_info))
@@ -350,6 +350,10 @@ class SetupCasa (JettyInstaller):
         Config.templateRenderingDict['admin_ui_apache_root'] = os.path.join(httpd_installer.server_root, 'admin')
         Config.templateRenderingDict['casa_web_port'] = '8080'
 
+        self.service_name = 'casa'
+
+        self.source_files = [(self.casa_war_fpath,)]
+
     def download_files(self):
         for dwnl_url, target_fpath in self.dwnl_files:
             if not os.path.exists(target_fpath):
@@ -374,8 +378,6 @@ class SetupCasa (JettyInstaller):
         print ("Installing Casa")
 
         debugpy.breakpoint();
-
-        self.source_files = [(self.casa_war_fpath,)]
         
         print("jans_auth_installer.web_app_xml_fn:", jans_auth_installer.web_app_xml_fn)
         jans_auth_web_app_xml = jans_auth_installer.readFile(jans_auth_installer.web_app_xml_fn)
@@ -422,7 +424,6 @@ class SetupCasa (JettyInstaller):
 
         self.casa_client_fpath = os.path.join(self.templates_dpath, 'casa_client.ldif')
         self.casa_config_fpath = os.path.join(self.templates_dpath, 'casa_config.ldif')
-        self.service_name = 'casa'
 
         for casa_prop in ('casa_client_id', 'casa_client_pw'):
             if casa_prop in setup_properties:
@@ -626,10 +627,27 @@ class SetupCasa (JettyInstaller):
         print("  - Deleting script 3000-F75A from db backend")
         self.dbUtils.delete_dn('inum=3000-F75A,ou=scripts,o=jans')
 
-        casa_dir = os.path.join(Config.jetty_base, 'casa')
+        casa_dir = os.path.join(Config.jetty_base, self.service_name)
         if os.path.exists(casa_dir):
             print('  - Deleting', casa_dir)
-            self.run(['rm', '-f', '-r', casa_dir])        
+            self.run(['rm', '-f', '-r', casa_dir])
+
+    def check_if_casa_installed(self):
+
+        jetty_service_dpath = os.path.join(Config.jetty_base, self.service_name)
+        jetty_service_webapps_dpath = os.path.join(jetty_service_dpath, 'webapps')
+
+        casa_webapps_fpath = os.path.join(jetty_service_webapps_dpath, os.path.basename(self.casa_war_fpath))
+        casa_default_fpath = os.path.join(Config.os_default, 'casa')
+        casa_service_fpath = os.path.join(Config.unit_files_path, 'casa.service')
+
+        if os.path.exists(casa_webapps_fpath) and os.path.exists(casa_default_fpath) and os.path.exists(casa_service_fpath):
+
+            return True
+
+        else:
+
+            return False
 
 if __name__ == '__main__':
 
@@ -638,16 +656,28 @@ if __name__ == '__main__':
     try:
         setup_casa = SetupCasa(cur_dpath)
 
-        if install_casa:
+        casa_installed = setup_casa.check_if_casa_installed()
+
+        to_install_casa = install_casa and not casa_installed
+        to_uninstall_casa = uninstall_casa and casa_installed
+
+        print("to_install_casa   = {}", to_install_casa)
+        print("to_uninstall_casa = {}", to_uninstall_casa)
+
+        if to_install_casa and to_uninstall_casa:
+
+            print("Incompatible Options...")
+
+        if to_install_casa:
 
             setup_casa.download_files()
             setup_casa.install_casa()
 
-        elif uninstall_casa:
+        elif to_uninstall_casa:
 
             setup_casa.uninstall_casa()
             
-        if install_casa or uninstall_casa:
+        if to_install_casa or to_uninstall_casa:
             
             print("Restarting Apache")
             httpd_installer.restart()
@@ -658,7 +688,7 @@ if __name__ == '__main__':
             print("Restarting Janssen Config Api")
             config_api_installer.restart()
             
-        if install_casa:
+        if to_install_casa:
 
             print("Starting Casa")
             config_api_installer.start('casa')
