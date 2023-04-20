@@ -675,6 +675,7 @@ if __name__ == '__main__':
 
         elif to_uninstall_casa:
 
+            config_api_installer.stop('casa')
             setup_casa.uninstall_casa()
 
         if to_install_casa or to_uninstall_casa:
