@@ -42,12 +42,12 @@ jans_setup_dpath = '/opt/jans/jans-setup/'
 def get_casa_setup_parser():
     parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
 
-    parser.add_argument('--jans-setup-branch', help="Janssen setup github branch", default='main')
-    parser.add_argument('--jans-branch', help="Janssen github branch", default='main')
-    parser.add_argument('--force-download-jans', help="Force download Janssen installer", action='store_true')
-    parser.add_argument('--install-casa', help="Install casa", action='store_true')
-    parser.add_argument('--uninstall-casa', help="Remove casa", action='store_true')
-    parser.add_argument('--profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
+    parser.add_argument('-jans-setup-branch', help="Janssen setup github branch", default='main')
+    parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
+    parser.add_argument('-force-download-jans', help="Force download Janssen installer", action='store_true')
+    parser.add_argument('-install-casa', help="Install casa", action='store_true')
+    parser.add_argument('-uninstall-casa', help="Remove casa", action='store_true')
+    parser.add_argument('-profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
 
     return parser
    
@@ -60,8 +60,8 @@ print("nargs = {}".format(nargs))
 
 if argsp.install_casa and argsp.uninstall_casa:
     print("Options:")
-    print("--install-casa = {}".format(argsp.install_casa))
-    print("--uninstall-casa = {}".format(argsp.uninstall_casa))
+    print("-install-casa = {}".format(argsp.install_casa))
+    print("-uninstall-casa = {}".format(argsp.uninstall_casa))
     print("Incompatible Options...")
     sys.exit();
 
@@ -70,11 +70,6 @@ uninstall_casa = argsp.uninstall_casa
 
 print("install_casa = {}".format(install_casa))
 print("uninstall_casa = {}".format(uninstall_casa))
-
-#with open("/etc/gluu/conf/salt") as f:
-with open("/etc/jans/conf/salt") as f:
-    salt_property = f.read().strip()
-    key = salt_property.split("=")[1].strip()
 
 # "JANS_MAVEN": "https://jenkins.jans.io",
 # "TWILIO_MAVEN": "https://repo1.maven.org/maven2/com/twilio/sdk/twilio/",
@@ -674,8 +669,8 @@ if __name__ == '__main__':
             setup_casa.install_casa()
 
         elif to_uninstall_casa:
-
-            config_api_installer.stop('casa')
+        
+            config_api_installer.stop(setup_casa.service_name)
             setup_casa.uninstall_casa()
 
         if to_install_casa or to_uninstall_casa:
@@ -692,7 +687,7 @@ if __name__ == '__main__':
         if to_install_casa:
 
             print("Starting Casa")
-            config_api_installer.start('casa')
+            config_api_installer.start(setup_casa.service_name)
 
             print("Installation was completed")
             print()
