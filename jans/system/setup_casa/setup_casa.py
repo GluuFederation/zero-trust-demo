@@ -37,6 +37,10 @@ casa_web_resources_fname = 'casa_web_resources.xml'
  
 jans_setup_dpath = '/opt/jans/jans-setup/'
 
+JANS_PROFILE = 'jans'
+OPENBANKING_PROFILE = 'openbanking'
+DISA_STIG_PROFILE = 'disa-stig'
+
 def get_casa_setup_parser():
     parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
 
@@ -136,7 +140,9 @@ if os.path.exists(jans_setup_dpath):
     os.system('mv {} {}-{}'.format(jans_setup_dpath, jans_setup_dpath.rstrip('/'), time.ctime().replace(' ', '_')))
 
 download_jans_installer(argsp.jans_branch)
-download_flex(argsp.casa_version)
+
+if install_casa:
+    download_flex(argsp.casa_version)
 
 debugpy.breakpoint();
 
@@ -207,7 +213,7 @@ print()
 from setup_app import static
 from setup_app.utils import base
 
-if argsp.profile == 'disa-stig':
+if argsp.profile == DISA_STIG_PROFILE:
     base.argsp.opendj_keystore_type = 'bcfks'
 
 Config.init(paths.INSTALL_DIR)
@@ -260,7 +266,6 @@ class SetupCasa (JettyInstaller):
 
         self.dwnl_files = [
                 (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
-                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath),
                 (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
                 (os.path.join(downloads.base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(downloads.base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
                 (os.path.join(app_versions['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath)
@@ -268,11 +273,18 @@ class SetupCasa (JettyInstaller):
 
 #        self.dwnl_files = [
 #                ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fpath),
-#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(app_versions['CASA_VERSION'])), self.casa_war_fpath),
-#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(app_versions['CASA_VERSION'])), self.casa_config_fpath),
+#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(argsp.casa_version)), self.casa_config_fpath),
 #                (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
 #                (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(base.current_app.app_info['JANS_APP_VERSION'], base.current_app.app_info['JANS_BUILD'])), self.fido2_client_fpath),
 #            ]
+
+        if argsp.profile == DISA_STIG_PROFILE:
+            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-fips-{0}.war'.format(argsp.casa_version)), self.casa_war_fpath))
+
+        else:
+            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-5.0.0-12.war'), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(argsp.casa_version)), self.casa_war_fpath))
 
         print("----------------------")
         print("self.dwnl_files = {0}".format(self.dwnl_files))
