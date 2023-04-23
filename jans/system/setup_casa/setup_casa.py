@@ -8,10 +8,6 @@ import os
 import os.path
 import json
 import traceback
-import ssl
-import base64
-#import pyDes
-import re
 import time
 import argparse
 import tempfile
@@ -24,9 +20,6 @@ from urllib.request import urlretrieve
 from urllib import request
 from pathlib import Path
 
-#from setup import *
-#from pylib import Properties
-
 debugpy.listen(("0.0.0.0", 5678));
 debugpy.wait_for_client();
 
@@ -35,16 +28,20 @@ debugpy.breakpoint();
 cur_dpath = os.path.dirname(os.path.realpath(__file__))
 
 dist_dpath = '/opt/dist/'
-dist_jans_dpath = os.path.join(dist_dpath, 'jans')
 
+jans_dist_dpath = os.path.join(dist_dpath, 'jans')
+casa_dist_dpath = os.path.join(jans_dist_dpath, 'gluu-casa')
+casa_dist_pylib_dpath = os.path.join(casa_dist_dpath, 'pylib')
+
+casa_web_resources_fname = 'casa_web_resources.xml'
+ 
 jans_setup_dpath = '/opt/jans/jans-setup/'
 
 def get_casa_setup_parser():
     parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
 
-    parser.add_argument('-jans-setup-branch', help="Janssen setup github branch", default='main')
     parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
-    parser.add_argument('-force-download-jans', help="Force download Janssen installer", action='store_true')
+    parser.add_argument('-casa-version', help="Casa version", default='5.0.0-12')
     parser.add_argument('-install-casa', help="Install casa", action='store_true')
     parser.add_argument('-uninstall-casa', help="Remove casa", action='store_true')
     parser.add_argument('-profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
@@ -64,36 +61,22 @@ if argsp.install_casa and argsp.uninstall_casa:
     print("-uninstall-casa = {}".format(argsp.uninstall_casa))
     print("Incompatible Options...")
     sys.exit();
+    
+app_versions = {
+    "BASE_SERVER": "http://192.168.64.4/jans",
+    "BASE_SERVER_JANS": "http://192.168.64.4/jans",
+    "BASE_SERVER_CASA": "http://192.168.64.4/casa"
+}
+
+#app_versions = {
+#    "GLUU_MAVEN": "https://maven.gluu.org"
+#}
 
 install_casa = argsp.install_casa
 uninstall_casa = argsp.uninstall_casa
 
 print("install_casa = {}".format(install_casa))
 print("uninstall_casa = {}".format(uninstall_casa))
-
-# "JANS_MAVEN": "https://jenkins.jans.io",
-# "TWILIO_MAVEN": "https://repo1.maven.org/maven2/com/twilio/sdk/twilio/",
-# "TWILIO_VERSION": "7.17.0",
-# "BASE_SERVER": "http://192.168.64.4/jans"
-#}
-
-#        if install_components['casa'] or argsp.download_exit:
-#            download_files += [
-#                    ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                    ('https://maven.gluu.org/maven/org/gluu/casa/{0}/casa-{0}.war'.format(app_versions['CASA_VERSION']), self.casa_war_fpath),
-#                    ('https://maven.gluu.org/maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(app_versions['CASA_VERSION']), self.casa_config_fn),
-#                    (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-#                ]
-
-#            download_files += [
-#                    ('http://192.168.64.4/casa/_out/_extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                    ('http://192.168.64.4/casa/_out/casa-fips-5.0.0-SNAPSHOT.war', self.casa_war_fpath),
-#                    ('http://192.168.64.4/casa/_out/casa-config-5.0.0-SNAPSHOT.jar', self.casa_config_fn),
-#                    (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                    ('http://192.168.64.4/jans/_out/Fido2-Client.jar', self.fido2_client_jar_fn),
-#                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-#                ]
 
 profile = argsp.profile
 os.environ['JANS_PROFILE'] = profile
@@ -103,31 +86,57 @@ def download_jans_installer(setup_branch):
 #    jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
     jans_archieve_url = 'http://192.168.64.4/jans/jans.2278.zip'
     with tempfile.TemporaryDirectory() as tmp_dir:
-        jans_zip_file = os.path.join(tmp_dir, os.path.basename(jans_archieve_url))
-        print("Downloading {} as {}".format(jans_archieve_url, jans_zip_file))
-        request.urlretrieve(jans_archieve_url, jans_zip_file)
-        if not os.path.exists(dist_jans_dpath):
-            os.makedirs(dist_jans_dpath)
-        shutil.copyfile(jans_zip_file, os.path.join(dist_jans_dpath, 'jans.zip'))
+        jans_zip_fpath = os.path.join(tmp_dir, os.path.basename(jans_archieve_url))
+        print("Downloading {} as {}".format(jans_archieve_url, jans_zip_fpath))
+        request.urlretrieve(jans_archieve_url, jans_zip_fpath)
+        if not os.path.exists(jans_dist_dpath):
+            os.makedirs(jans_dist_dpath)
+        shutil.copyfile(jans_zip_fpath, os.path.join(jans_dist_dpath, 'jans.zip'))
         print("Extracting jans-setup package")
-        jans_zip = zipfile.ZipFile(jans_zip_file)
+        jans_zip = zipfile.ZipFile(jans_zip_fpath)
         parent_dir = jans_zip.filelist[0].orig_filename
         unpack_dir = os.path.join(tmp_dir, 'unpacked')
-        shutil.unpack_archive(jans_zip_file, unpack_dir)
+        shutil.unpack_archive(jans_zip_fpath, unpack_dir)
         shutil.copytree(os.path.join(unpack_dir, parent_dir, 'jans-linux-setup/jans_setup'), jans_setup_dpath)
         jans_zip.close()
 
+def download_flex(flex_version):
+    debugpy.breakpoint();
+    flex_archieve_url = 'https://github.com/GluuFederation/flex/archive/refs/tags/v{}.zip'.format(flex_version)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        flex_zip_fpath = os.path.join(tmp_dir, os.path.basename(flex_archieve_url))
+        print("Downloading {} as {}".format(flex_archieve_url, flex_zip_fpath))
+        request.urlretrieve(flex_archieve_url, flex_zip_fpath)
+
+        print("Extracting flex package")
+        flex_zip = zipfile.ZipFile(flex_zip_fpath)
+
+        unpack_dir = os.path.join(tmp_dir, 'unpacked')
+        parent_dir = flex_zip.filelist[0].orig_filename
+        shutil.unpack_archive(flex_zip_fpath, unpack_dir)
+
+        if not os.path.exists(casa_dist_dpath):
+            os.makedirs(casa_dist_dpath)
+
+        if not os.path.exists(casa_dist_pylib_dpath):
+            os.makedirs(casa_dist_pylib_dpath)
+
+        for fpath in glob.glob(os.path.join(unpack_dir, parent_dir, 'casa/extras/*.py')):
+            print("Copying", fpath, "to", casa_dist_pylib_dpath)
+            shutil.copyfile(fpath, os.path.join(casa_dist_pylib_dpath, os.path.basename(fpath)))
+
+        shutil.copyfile(os.path.join(unpack_dir, parent_dir, 'casa/extras/{}'.format(casa_web_resources_fname)), os.path.join(casa_dist_dpath, casa_web_resources_fname))
+
+        flex_zip.close()
+
 debugpy.breakpoint();
 
-jans_setup_dpath_exists = os.path.exists(jans_setup_dpath)
+if os.path.exists(jans_setup_dpath):
+    print("Backing up old Janssen setup directory")
+    os.system('mv {} {}-{}'.format(jans_setup_dpath, jans_setup_dpath.rstrip('/'), time.ctime().replace(' ', '_')))
 
-if argsp.force_download_jans or not jans_setup_dpath_exists:
-
-    if jans_setup_dpath_exists:
-        print("Backing up old Janssen setup directory")
-        os.system('mv {} {}-{}'.format(jans_setup_dpath, jans_setup_dpath.rstrip('/'), time.ctime().replace(' ', '_')))
-
-    download_jans_installer(argsp.jans_branch)
+download_jans_installer(argsp.jans_branch)
+download_flex(argsp.casa_version)
 
 debugpy.breakpoint();
 
@@ -146,7 +155,6 @@ base.argsp = argsp
 
 base.argsp.j = True
 
-#base.argsp = arg_parser.get_parser()
 downloads.base.current_app.app_info = base.readJsonFile(os.path.join(jans_setup_dpath, 'app_info.json'))
 
 downloads.download_sqlalchemy()
@@ -154,12 +162,11 @@ downloads.download_cryptography()
 downloads.download_pyjwt()
 
 if 'SETUP_BRANCH' not in base.current_app.app_info:
-    base.current_app.app_info['SETUP_BRANCH'] = argsp.jans_setup_branch
+    base.current_app.app_info['SETUP_BRANCH'] = argsp.jans_branch
 
 base.current_app.app_info['ox_version'] = base.current_app.app_info['JANS_APP_VERSION'] + base.current_app.app_info['JANS_BUILD']
 
 sys.path.insert(0, base.pylib_dir)
-#sys.path.insert(0, os.path.join(base.pylib_dir, 'gcs'))
 
 from setup_app.pylib.jproperties import Properties
 from setup_app.pylib import jwt
@@ -230,21 +237,20 @@ class SetupCasa (JettyInstaller):
 
     def __init__(self, install_dpath):
 
-        self.casa_dist_dpath = os.path.join(dist_jans_dpath, 'gluu-casa')
-        self.casa_web_resources_fpath = os.path.join(self.casa_dist_dpath, 'casa_web_resources.xml')
-        self.casa_war_fpath = os.path.join(self.casa_dist_dpath, 'casa.war')
-        self.casa_config_fpath = os.path.join(self.casa_dist_dpath, 'casa-config.jar')
+        self.casa_web_resources_fpath = os.path.join(casa_dist_dpath, casa_web_resources_fname)
+        self.casa_war_fpath = os.path.join(casa_dist_dpath, 'casa.war')
+        self.casa_config_fpath = os.path.join(casa_dist_dpath, 'casa-config.jar')
 
-        self.twillo_fpath = os.path.join(self.casa_dist_dpath, 'twilio.jar')
-        self.fido2_client_fpath = os.path.join(dist_jans_dpath, 'jans-fido2-client.jar')
+        self.twillo_fpath = os.path.join(casa_dist_dpath, 'twilio.jar')
+        self.fido2_client_fpath = os.path.join(jans_dist_dpath, 'jans-fido2-client.jar')
 
         self.py_lib_dpath = os.path.join(Config.jansOptPythonFolder, 'libs')
-        
-        self.casa_script_fpath = os.path.join(self.casa_dist_dpath, 'pylib', self.casa_python_libs[0])    
+
+        self.casa_script_fpath = os.path.join(casa_dist_dpath, 'pylib', self.casa_python_libs[0])
 
         print("----------------------")
-        print("dist_jans_dpath                = {0}".format(dist_jans_dpath))
-        print("self.casa_dist_dpath           = {0}".format(self.casa_dist_dpath))
+        print("jans_dist_dpath                = {0}".format(jans_dist_dpath))
+        print("casa_dist_dpath           = {0}".format(casa_dist_dpath))
         print("self.casa_web_resources_fpath  = {0}".format(self.casa_web_resources_fpath))
         print("self.casa_war_fpath            = {0}".format(self.casa_war_fpath))
         print("self.casa_config_fpath         = {0}".format(self.casa_config_fpath))
@@ -252,81 +258,21 @@ class SetupCasa (JettyInstaller):
         print("self.fido2_client_fpath        = {0}".format(self.fido2_client_fpath))
         print("----------------------")
 
-        app_info_fpath = os.path.join(install_dpath, 'app_info.json')
-        with open(app_info_fpath) as f_app_info:
-            self.app_info = json.load(f_app_info)
-        f_app_info.close()
-
-#        print("----------------------")
-#        print("app_info = {0}".format(self.app_info))
-#        print("----------------------")
-        
-#            download_files += [
-#                    ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                    ('https://maven.gluu.org/maven/org/gluu/casa/{0}/casa-{0}.war'.format(app_versions['CASA_VERSION']), self.casa_war_fpath),
-#                    ('https://maven.gluu.org/maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(app_versions['CASA_VERSION']), self.casa_config_fn),
-#                    (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-#                ]
-
-#            download_files += [
-#                    ('http://192.168.64.4/casa/_out/_extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                    ('http://192.168.64.4/casa/_out/casa-fips-5.0.0-SNAPSHOT.war', self.casa_war_fpath),
-#                    ('http://192.168.64.4/casa/_out/casa-config-5.0.0-SNAPSHOT.jar', self.casa_config_fn),
-#                    (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                    ('http://192.168.64.4/jans/_out/Fido2-Client.jar', self.fido2_client_jar_fn),
-#                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-#                ]        
-        
-#            download_files += [
-#                    ('http://192.168.64.4/casa/_out/_extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                    ('http://192.168.64.4/casa/_out/casa-fips-5.0.0-SNAPSHOT.war', self.casa_war_fpath),
-#                    ('http://192.168.64.4/casa/_out/casa-config-5.0.0-SNAPSHOT.jar', self.casa_config_fn),
-#                    (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                    ('http://192.168.64.4/jans/_out/Fido2-Client.jar', self.fido2_client_jar_fn),
-#                    (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-#                ]
-
-#app_versions = {
-#  "SETUP_BRANCH": argsp.jans_setup_branch,
-#  "FLEX_BRANCH": argsp.flex_branch,
-#  "JANS_BRANCH": argsp.jans_branch,
-#  "JANS_APP_VERSION": "1.0.11",
-#  "JANS_BUILD": "-SNAPSHOT",
-#  "NODE_VERSION": "v14.18.2",
-#  "CASA_VERSION": "5.0.0-SNAPSHOT",
-#  "NODE_MODULES_BRANCH": argsp.node_modules_branch or argsp.flex_branch
-#}
+        self.dwnl_files = [
+                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
+                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath),
+                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
+                (os.path.join(downloads.base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(downloads.base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
+                (os.path.join(app_versions['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath)
+            ]
 
 #        self.dwnl_files = [
 #                ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fpath),
-#                ('https://maven.gluu.org/maven/org/gluu/casa/{0}/casa-{0}.war'.format(self.app_info['CASA_VERSION']), self.casa_war_fpath),
-#                ('https://maven.gluu.org/maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(self.app_info['CASA_VERSION']), self.casa_config_fpath),
-#                (os.path.join(self.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(self.app_info['TWILIO_VERSION'])), self.twillo_fpath),
-#                (os.path.join(self.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(self.app_info['JANS_APP_VERSION'], self.app_info['JANS_BUILD'])), self.fido2_client_fpath),
+#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(app_versions['CASA_VERSION'])), self.casa_war_fpath),
+#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(app_versions['CASA_VERSION'])), self.casa_config_fpath),
+#                (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
+#                (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(base.current_app.app_info['JANS_APP_VERSION'], base.current_app.app_info['JANS_BUILD'])), self.fido2_client_fpath),
 #            ]
-
-#        for plib in self.casa_python_libs:
-#            self.dwnl_files.append(('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/{}'.format(plib), os.path.join(self.casa_dist_dpath, 'pylib', plib)))
-
-        self.dwnl_files = [
-                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
-                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath),
-                (os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
-                (os.path.join(self.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(self.app_info['TWILIO_VERSION'])), self.twillo_fpath),
-                (os.path.join(self.app_info['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath),                
-        
-#                ('http://192.168.64.4/casa/_out/_extras/casa_web_resources.xml', self.casa_web_resources_fn),
-#                ('http://192.168.64.4/casa/_out/casa-fips-5.0.0-SNAPSHOT.war', self.casa_war_fpath),
-#                ('http://192.168.64.4/casa/_out/casa-config-5.0.0-SNAPSHOT.jar', self.casa_config_fn),
-#                (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fn),
-#                ('http://192.168.64.4/jans/_out/Fido2-Client.jar', self.fido2_client_jar_fn),
-#                (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(app_versions['JANS_APP_VERSION'], app_versions['JANS_BUILD'])), self.fido2_client_jar_fn),
-
-            ]
-            
-        for plib in self.casa_python_libs:
-            self.dwnl_files.append((os.path.join(self.app_info['BASE_SERVER_CASA'], '_out/_extras/{}'.format(plib)), os.path.join(self.casa_dist_dpath, 'pylib', plib)))
 
         print("----------------------")
         print("self.dwnl_files = {0}".format(self.dwnl_files))
@@ -398,7 +344,7 @@ class SetupCasa (JettyInstaller):
         # copy casa scripts
         if not os.path.exists(self.py_lib_dpath):
             os.makedirs(self.py_lib_dpath)
-        for fpath in glob.glob(os.path.join(self.casa_dist_dpath, 'pylib/*.py')):
+        for fpath in glob.glob(os.path.join(casa_dist_dpath, 'pylib/*.py')):
             print("Copying", fpath, "to", self.py_lib_dpath)
             self.copyFile(fpath, self.py_lib_dpath)
             
@@ -496,8 +442,6 @@ class SetupCasa (JettyInstaller):
         self.add_apache_directive('<Location /casa>', 'casa_apache_directive')
 
         self.enable()
-
-        return
         
     def add_apache_directive(self, check_str, template):
 
@@ -510,7 +454,6 @@ class SetupCasa (JettyInstaller):
         https_jans_text = self.readFile(httpd_installer.https_jans_fn)
 
         if check_str not in https_jans_text:
-
             https_jans_list = https_jans_text.splitlines()
             n = 0
 
@@ -637,11 +580,8 @@ class SetupCasa (JettyInstaller):
         casa_service_fpath = os.path.join(Config.unit_files_path, 'casa.service')
 
         if os.path.exists(casa_webapps_fpath) and os.path.exists(casa_default_fpath) and os.path.exists(casa_service_fpath):
-
             return True
-
         else:
-
             return False
 
 if __name__ == '__main__':
@@ -660,21 +600,17 @@ if __name__ == '__main__':
         print("to_uninstall_casa = {}", to_uninstall_casa)
 
         if to_install_casa and to_uninstall_casa:
-
             print("Incompatible Options...")
 
         if to_install_casa:
-
             setup_casa.download_files()
             setup_casa.install_casa()
 
         elif to_uninstall_casa:
-        
             config_api_installer.stop(setup_casa.service_name)
             setup_casa.uninstall_casa()
 
         if to_install_casa or to_uninstall_casa:
-
             print("Restarting Apache")
             httpd_installer.restart()
 
@@ -685,7 +621,6 @@ if __name__ == '__main__':
             config_api_installer.restart()
 
         if to_install_casa:
-
             print("Starting Casa")
             config_api_installer.start(setup_casa.service_name)
 
