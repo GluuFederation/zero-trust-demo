@@ -108,7 +108,6 @@ class SetupCasa:
 
         debugpy.breakpoint();
 
-        print("jans_auth_installer.web_app_xml_fn:", jans_auth_installer.web_app_xml_fn)
         jans_auth_web_app_xml = jans_auth_installer.readFile(jans_auth_installer.web_app_xml_fn)
 
         if os.path.basename(self.casa_config_fpath) not in jans_auth_web_app_xml:
@@ -461,9 +460,6 @@ def main():
 
         argsp,nargs = parser.parse_known_args()
 
-        print("argsp = {}".format(argsp))
-        print("nargs = {}".format(nargs))
-
         if argsp.install_casa and argsp.uninstall_casa:
             print("Options:")
             print("-install-casa = {}".format(argsp.install_casa))
@@ -647,7 +643,7 @@ def main():
 
         setup_casa = SetupCasa(cur_dpath)
 
-        # creating SetupCasa (new class SetupCasaInstaller), that is delivered 
+        # creating SetupCasa (new class SetupCasaInstaller), that is delivered from JettyInstaller 
         class SetupCasaInstaller(setup_casa.__class__, JettyInstaller):
             pass
 
