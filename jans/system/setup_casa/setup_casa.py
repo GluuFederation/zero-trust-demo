@@ -83,6 +83,7 @@ class SetupCasa:
         self.source_files = [(self.casa_war_fpath,)]
 
     def download_files(self):
+
         for dwnl_url, target_fpath in self.dwnl_files:
             if not os.path.exists(target_fpath):
                 target_dpath = os.path.dirname(os.path.realpath(target_fpath))
@@ -103,6 +104,7 @@ class SetupCasa:
                         break
 
     def install_casa(self):
+    
         print ("Installing Casa")
 
         debugpy.breakpoint();
@@ -374,6 +376,7 @@ class SetupCasa:
             return False
 
 def download_jans_installer(setup_branch):
+
     debugpy.breakpoint();
 #    jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
     jans_archieve_url = 'http://192.168.64.4/jans/jans.2278.zip'
@@ -393,6 +396,7 @@ def download_jans_installer(setup_branch):
         jans_zip.close()
 
 def download_flex(flex_version):
+
     debugpy.breakpoint();
     flex_archieve_url = 'https://github.com/GluuFederation/flex/archive/refs/tags/v{}.zip'.format(flex_version)
     with tempfile.TemporaryDirectory() as tmp_dir:
@@ -413,15 +417,38 @@ def download_flex(flex_version):
         if not os.path.exists(casa_dist_pylib_dpath):
             os.makedirs(casa_dist_pylib_dpath)
 
+        if not os.path.exists(casa_dist_templates_dpath):
+            os.makedirs(casa_dist_templates_dpath)
+
         for fpath in glob.glob(os.path.join(unpack_dir, parent_dir, 'casa/extras/*.py')):
             print("Copying", fpath, "to", casa_dist_pylib_dpath)
             shutil.copyfile(fpath, os.path.join(casa_dist_pylib_dpath, os.path.basename(fpath)))
 
         shutil.copyfile(os.path.join(unpack_dir, parent_dir, 'casa/extras/{}'.format(casa_web_resources_fname)), os.path.join(casa_dist_dpath, casa_web_resources_fname))
+        
+        casa_setup_templates_fnames = ( 'casa.default', 'casa.service', 'casa_apache_directive',
+                    'casa_client.ldif casa_config.ldif', 'casa_person_authentication_script.ldif', )
+
+        for fname in casa_setup_templates_fnames:
+            fpath = os.path.join(unpack_dir, parent_dir, 'flex-linux-setup/flex_linux_setup/templates', fname)
+            print("Copying", fpath, "to", casa_dist_templates_dpath)
+            shutil.copyfile(fpath, os.path.join(casa_dist_templates_dpath, fname))
 
         flex_zip.close()
 
+def download_templates():
+
+    pass
+
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa.default
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa.service
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_apache_directive
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_client.ldif
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_config.ldif
+# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_person_authentication_script.ldif
+
 def get_casa_setup_parser():
+
     parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
 
     parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
@@ -435,6 +462,7 @@ def get_casa_setup_parser():
     return parser
 
 def is_string_blank(in_string):
+
     return not (in_string and in_string.strip())
 
 def main():
@@ -474,6 +502,7 @@ def main():
         jans_dist_dpath = os.path.join(dist_dpath, 'jans')
         casa_dist_dpath = os.path.join(jans_dist_dpath, 'gluu-casa')
         casa_dist_pylib_dpath = os.path.join(casa_dist_dpath, 'pylib')
+        casa_dist_templates_dpath = os.path.join(casa_dist_dpath, 'templates')
 
         casa_web_resources_fname = 'casa_web_resources.xml'
 
