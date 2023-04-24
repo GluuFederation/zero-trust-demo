@@ -74,7 +74,6 @@ class SetupCasa:
 
         self.source_dpath = cur_dpath
 
-        self.templates_dpath = os.path.join(self.source_dpath, 'templates')
         self.output_dpath = os.path.join(self.source_dpath, 'output')
 
         Config.templateRenderingDict['admin_ui_apache_root'] = os.path.join(httpd_installer.server_root, 'admin')
@@ -143,17 +142,17 @@ class SetupCasa:
         self.run([paths.cmd_chown, '-R', '{0}:{0}'.format(Config.jetty_user), self.py_lib_dpath])
 
         # prepare casa scipt ldif
-        casa_auth_script_fpath = os.path.join(self.templates_dpath, 'casa_person_authentication_script.ldif')
+        casa_auth_script_fpath = os.path.join(casa_dist_templates_dpath, 'casa_person_authentication_script.ldif')
         base64_script_file = self.generate_base64_file(self.casa_script_fpath, 1)
         Config.templateRenderingDict['casa_person_authentication_script'] = base64_script_file
-        self.renderTemplateInOut(casa_auth_script_fpath, self.templates_dpath, self.output_dpath)
+        self.renderTemplateInOut(casa_auth_script_fpath, casa_dist_templates_dpath, self.output_dpath)
 
         Config.templateRenderingDict['casa_redirect_uri'] = 'https://{}/casa'.format(Config.hostname)
         Config.templateRenderingDict['casa_redirect_logout_uri'] = 'https://{}/casa/bye.zul'.format(Config.hostname)
         Config.templateRenderingDict['casa_frontchannel_logout_uri'] = 'https://{}/casa/autologout'.format(Config.hostname)
 
-        self.casa_client_fpath = os.path.join(self.templates_dpath, 'casa_client.ldif')
-        self.casa_config_fpath = os.path.join(self.templates_dpath, 'casa_config.ldif')
+        self.casa_client_fpath = os.path.join(casa_dist_templates_dpath, 'casa_client.ldif')
+        self.casa_config_fpath = os.path.join(casa_dist_templates_dpath, 'casa_config.ldif')
 
         if not is_string_blank(base.argsp.casa_client_id):
             setattr(Config, 'casa_client_id', base.argsp.casa_client_id)
@@ -173,8 +172,8 @@ class SetupCasa:
 
         print("Importing LDIF Files")
 
-        self.renderTemplateInOut(self.casa_client_fpath, self.templates_dpath, self.output_dpath)
-        self.renderTemplateInOut(self.casa_config_fpath, self.templates_dpath, self.output_dpath)
+        self.renderTemplateInOut(self.casa_client_fpath, casa_dist_templates_dpath, self.output_dpath)
+        self.renderTemplateInOut(self.casa_config_fpath, casa_dist_templates_dpath, self.output_dpath)
         self.dbUtils.import_ldif([
                 os.path.join(self.output_dpath, os.path.basename(self.casa_client_fpath)),
                 os.path.join(self.output_dpath, os.path.basename(self.casa_config_fpath)),
@@ -183,7 +182,7 @@ class SetupCasa:
 
         Config.installCasa = True
 
-        self.copyFile(os.path.join(self.templates_dpath, 'casa.default'), os.path.join(Config.templateFolder, 'jetty/casa'))
+        self.copyFile(os.path.join(casa_dist_templates_dpath, 'casa.default'), os.path.join(Config.templateFolder, 'jetty/casa'))
 
         self.jetty_app_configuration[SetupCasa.service_name] = {
                     "memory": {
@@ -219,7 +218,7 @@ class SetupCasa:
 
         print("Deploying casa as Jetty application")
         self.installJettyService(self.jetty_app_configuration[SetupCasa.service_name], True)
-        self.copyFile(os.path.join(self.templates_dpath, 'casa.service'), '/etc/systemd/system')
+        self.copyFile(os.path.join(casa_dist_templates_dpath, 'casa.service'), '/etc/systemd/system')
         jetty_service_dpath = os.path.join(Config.jetty_base, SetupCasa.service_name)
         jetty_service_webapps_dpath = os.path.join(jetty_service_dpath, 'webapps')
 
@@ -239,7 +238,7 @@ class SetupCasa:
         debugpy.breakpoint();
 
         print("Updating apache configuration")
-        apache_directive_template_text = self.readFile(os.path.join(self.templates_dpath, template))
+        apache_directive_template_text = self.readFile(os.path.join(casa_dist_templates_dpath, template))
         apache_directive_text = self.fomatWithDict(apache_directive_template_text, Config.templateRenderingDict)
 
         https_jans_text = self.readFile(httpd_installer.https_jans_fn)
@@ -427,7 +426,7 @@ def download_flex(flex_version):
         shutil.copyfile(os.path.join(unpack_dir, parent_dir, 'casa/extras/{}'.format(casa_web_resources_fname)), os.path.join(casa_dist_dpath, casa_web_resources_fname))
         
         casa_setup_templates_fnames = ( 'casa.default', 'casa.service', 'casa_apache_directive',
-                    'casa_client.ldif casa_config.ldif', 'casa_person_authentication_script.ldif', )
+                    'casa_client.ldif', 'casa_config.ldif', 'casa_person_authentication_script.ldif', )
 
         for fname in casa_setup_templates_fnames:
             fpath = os.path.join(unpack_dir, parent_dir, 'flex-linux-setup/flex_linux_setup/templates', fname)
@@ -489,6 +488,7 @@ def main():
         global jans_dist_dpath
         global casa_dist_dpath
         global casa_dist_pylib_dpath
+        global casa_dist_templates_dpath
         global casa_web_resources_fname
         global jans_setup_dpath
         global app_versions
