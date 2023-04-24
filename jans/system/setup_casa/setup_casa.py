@@ -508,9 +508,6 @@ def main():
         install_casa = argsp.install_casa
         uninstall_casa = argsp.uninstall_casa
 
-        print("install_casa = {}".format(install_casa))
-        print("uninstall_casa = {}".format(uninstall_casa))
-
         profile = argsp.profile
         os.environ['JANS_PROFILE'] = profile
 

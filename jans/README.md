@@ -243,6 +243,98 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
   have done this already (see above.)</dd>
 </dl>
 
+## Gluu Casa Installation
+
+For installing of Casa with Janssen Server, please use the **setup_casa.py** script.
+
+```bash
+usage: setup_casa.py [-h] [-jans-branch JANS_BRANCH] [-install-casa]
+                     [-uninstall-casa] [-profile {jans,openbanking,disa-stig}]
+                     [-casa-version CASA_VERSION]
+                     [-casa-client-id CASA_CLIENT_ID]
+                     [-casa-client-pw CASA_CLIENT_PW]
+
+This script downloads Csas components and installs them
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -jans-branch JANS_BRANCH
+                        Janssen github branch
+  -install-casa         Install casa
+  -uninstall-casa       Remove casa
+  -profile {jans,openbanking,disa-stig}
+                        Setup profile
+  -casa-version CASA_VERSION
+                        Casa version
+  -casa-client-id CASA_CLIENT_ID
+                        Casa client id
+  -casa-client-pw CASA_CLIENT_PW
+                        Casa client password
+```
+
+Example of installing command:
+
+```bash
+python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-12' -install-casa
+```
+
+or
+
+```bash
+python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-12' -casa-client-id='3000.21C12DDA-8542-423E-9501-DF49328A60B3' -casa-client-pw='12345678900$' -install-casa
+```
+
+.
+
+If **-casa-client-id** and/or **-casa-client-pw** are defined, these values will be used as **Casa Client ID** and **Casa Client Secret**.
+Example of output:
+
+```text
+...
+Log Files:
+/root/setup_casa/logs/casa-setup.log
+/root/setup_casa/logs/casa-setup-error.log
+
+Please wait while collecting properties...
+Installing Casa
+Adding casa config to jans-auth
+Copying /opt/dist/jans/gluu-casa/pylib/casa-external_fido2.py to /opt/jans/python/libs
+Copying /opt/dist/jans/gluu-casa/pylib/casa-external_super_gluu.py to /opt/jans/python/libs
+Copying /opt/dist/jans/gluu-casa/pylib/casa-external_otp.py to /opt/jans/python/libs
+Copying /opt/dist/jans/gluu-casa/pylib/casa-external_twilio_sms.py to /opt/jans/python/libs
+Copying /opt/dist/jans/gluu-casa/pylib/Casa.py to /opt/jans/python/libs
+
+Casa Client ID: 3000.21C12DDA-8542-423E-9501-DF49328A60B3
+Casa Client Secret: 12345678900$
+
+Importing LDIF Files
+Calculating application memory
+Deploying casa as Jetty application
+Updating apache configuration
+Restarting Apache
+Restarting Jans Auth
+Restarting Janssen Config Api
+Starting Casa
+Installation was completed
+
+Casa https://gluu-1.smansoft.net/casa
+
+Exit Setup Casa
+```
+
+.
+
+If **-casa-client-id** and/or **-casa-client-pw** are not defined, random values **Casa Client ID** and **Casa Client Secret** will be generated.
+Default **Casa Client ID** prefix is follow: **3000.**.
+
+Example of uninstalling:
+
+```bash
+python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -uninstall-casa
+```
+
+.
+
 ## PostgreSQL Server Configuration
 
 During launching **install.py** (**jans-linux-setup**), please  
