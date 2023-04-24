@@ -435,17 +435,6 @@ def download_flex(flex_version):
 
         flex_zip.close()
 
-def download_templates():
-
-    pass
-
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa.default
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa.service
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_apache_directive
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_client.ldif
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_config.ldif
-# https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/setup_casa/templates/casa_person_authentication_script.ldif
-
 def get_casa_setup_parser():
 
     parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
