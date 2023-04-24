@@ -20,71 +20,6 @@ from urllib.request import urlretrieve
 from urllib import request
 from pathlib import Path
 
-debugpy.listen(("0.0.0.0", 5678));
-debugpy.wait_for_client();
-
-debugpy.breakpoint();
-
-cur_dpath = os.path.dirname(os.path.realpath(__file__))
-
-dist_dpath = '/opt/dist/'
-
-jans_dist_dpath = os.path.join(dist_dpath, 'jans')
-casa_dist_dpath = os.path.join(jans_dist_dpath, 'gluu-casa')
-casa_dist_pylib_dpath = os.path.join(casa_dist_dpath, 'pylib')
-
-casa_web_resources_fname = 'casa_web_resources.xml'
- 
-jans_setup_dpath = '/opt/jans/jans-setup/'
-
-JANS_PROFILE = 'jans'
-OPENBANKING_PROFILE = 'openbanking'
-DISA_STIG_PROFILE = 'disa-stig'
-
-def get_casa_setup_parser():
-    parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
-
-    parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
-    parser.add_argument('-casa-version', help="Casa version", default='5.0.0-12')
-    parser.add_argument('-install-casa', help="Install casa", action='store_true')
-    parser.add_argument('-uninstall-casa', help="Remove casa", action='store_true')
-    parser.add_argument('-profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
-
-    return parser
-   
-parser = get_casa_setup_parser()   
-
-argsp,nargs = parser.parse_known_args()
-
-print("argsp = {}".format(argsp))
-print("nargs = {}".format(nargs))
-
-if argsp.install_casa and argsp.uninstall_casa:
-    print("Options:")
-    print("-install-casa = {}".format(argsp.install_casa))
-    print("-uninstall-casa = {}".format(argsp.uninstall_casa))
-    print("Incompatible Options...")
-    sys.exit();
-    
-app_versions = {
-    "BASE_SERVER": "http://192.168.64.4/jans",
-    "BASE_SERVER_JANS": "http://192.168.64.4/jans",
-    "BASE_SERVER_CASA": "http://192.168.64.4/casa"
-}
-
-#app_versions = {
-#    "GLUU_MAVEN": "https://maven.gluu.org"
-#}
-
-install_casa = argsp.install_casa
-uninstall_casa = argsp.uninstall_casa
-
-print("install_casa = {}".format(install_casa))
-print("uninstall_casa = {}".format(uninstall_casa))
-
-profile = argsp.profile
-os.environ['JANS_PROFILE'] = profile
-
 def download_jans_installer(setup_branch):
     debugpy.breakpoint();
 #    jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
@@ -132,6 +67,76 @@ def download_flex(flex_version):
         shutil.copyfile(os.path.join(unpack_dir, parent_dir, 'casa/extras/{}'.format(casa_web_resources_fname)), os.path.join(casa_dist_dpath, casa_web_resources_fname))
 
         flex_zip.close()
+        
+def get_casa_setup_parser():
+    parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
+
+    parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
+    parser.add_argument('-install-casa', help="Install casa", action='store_true')
+    parser.add_argument('-uninstall-casa', help="Remove casa", action='store_true')
+    parser.add_argument('-profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
+    parser.add_argument('-casa-version', help="Casa version", default='5.0.0-12')
+    parser.add_argument('-casa-client-id', help="Casa client id")
+    parser.add_argument('-casa-client-pw', help="Casa client password")
+
+    return parser  
+
+def is_string_blank(in_string):
+    return not (in_string and in_string.strip())
+
+debugpy.listen(("0.0.0.0", 5678));
+debugpy.wait_for_client();
+
+debugpy.breakpoint();
+
+cur_dpath = os.path.dirname(os.path.realpath(__file__))
+
+dist_dpath = '/opt/dist/'
+
+jans_dist_dpath = os.path.join(dist_dpath, 'jans')
+casa_dist_dpath = os.path.join(jans_dist_dpath, 'gluu-casa')
+casa_dist_pylib_dpath = os.path.join(casa_dist_dpath, 'pylib')
+
+casa_web_resources_fname = 'casa_web_resources.xml'
+ 
+jans_setup_dpath = '/opt/jans/jans-setup/'
+
+JANS_PROFILE = 'jans'
+OPENBANKING_PROFILE = 'openbanking'
+DISA_STIG_PROFILE = 'disa-stig'
+   
+parser = get_casa_setup_parser()   
+
+argsp,nargs = parser.parse_known_args()
+
+print("argsp = {}".format(argsp))
+print("nargs = {}".format(nargs))
+
+if argsp.install_casa and argsp.uninstall_casa:
+    print("Options:")
+    print("-install-casa = {}".format(argsp.install_casa))
+    print("-uninstall-casa = {}".format(argsp.uninstall_casa))
+    print("Incompatible Options...")
+    sys.exit();
+    
+app_versions = {
+    "BASE_SERVER": "http://192.168.64.4/jans",
+    "BASE_SERVER_JANS": "http://192.168.64.4/jans",
+    "BASE_SERVER_CASA": "http://192.168.64.4/casa"
+}
+
+#app_versions = {
+#    "GLUU_MAVEN": "https://maven.gluu.org"
+#}
+
+install_casa = argsp.install_casa
+uninstall_casa = argsp.uninstall_casa
+
+print("install_casa = {}".format(install_casa))
+print("uninstall_casa = {}".format(uninstall_casa))
+
+profile = argsp.profile
+os.environ['JANS_PROFILE'] = profile
 
 debugpy.breakpoint();
 
@@ -232,8 +237,6 @@ debugpy.breakpoint();
 httpd_installer = HttpdInstaller()
 config_api_installer = ConfigApiInstaller()
 jans_auth_installer = JansAuthInstaller()
-
-setup_properties = {}
 
 debugpy.breakpoint();
 
@@ -377,10 +380,12 @@ class SetupCasa (JettyInstaller):
 
         self.casa_client_fpath = os.path.join(self.templates_dpath, 'casa_client.ldif')
         self.casa_config_fpath = os.path.join(self.templates_dpath, 'casa_config.ldif')
+        
+        if not is_string_blank(base.argsp.casa_client_id):
+            setattr(Config, 'casa_client_id', base.argsp.casa_client_id)
 
-        for casa_prop in ('casa_client_id', 'casa_client_pw'):
-            if casa_prop in setup_properties:
-                setattr(Config, casa_prop, setup_properties[casa_prop])
+        if not is_string_blank(base.argsp.casa_client_pw):
+            setattr(Config, 'casa_client_pw', base.argsp.casa_client_pw)
 
         self.check_clients([('casa_client_id', self.casa_client_id_prefix)])
 
