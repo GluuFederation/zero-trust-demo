@@ -20,10 +20,10 @@ from urllib.request import urlretrieve
 from urllib import request
 from pathlib import Path
 
-debugpy.listen(("0.0.0.0", 5678));
-debugpy.wait_for_client();
+#debugpy.listen(("0.0.0.0", 5678));
+#debugpy.wait_for_client();
 
-debugpy.breakpoint();
+#debugpy.breakpoint();
 
 class SetupCasa:
 # inherited from JettyInstaller
@@ -47,27 +47,27 @@ class SetupCasa:
 
         self.casa_script_fpath = os.path.join(casa_dist_dpath, 'pylib', SetupCasa.casa_python_libs[0])
 
-        self.dwnl_files = [
-                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
-                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
-                (os.path.join(downloads.base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(downloads.base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
-                (os.path.join(app_versions['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath)
-            ]
-
 #        self.dwnl_files = [
-#                ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fpath),
-#                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(argsp.casa_version)), self.casa_config_fpath),
-#                (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
-#                (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(base.current_app.app_info['JANS_APP_VERSION'], base.current_app.app_info['JANS_BUILD'])), self.fido2_client_fpath),
+#                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
+#                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
+#                (os.path.join(downloads.base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(downloads.base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
+#                (os.path.join(app_versions['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath)
 #            ]
 
+        self.dwnl_files = [
+                ('https://raw.githubusercontent.com/GluuFederation/flex/main/casa/extras/casa_web_resources.xml', self.casa_web_resources_fpath),
+                (os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa-config/{0}/casa-config-{0}.jar'.format(base.argsp.casa_version)), self.casa_config_fpath),
+                (os.path.join(base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
+                (os.path.join(base.current_app.app_info['JANS_MAVEN'], 'maven/io/jans/jans-fido2-client/{0}{1}/jans-fido2-client-{0}{1}.jar'.format(base.current_app.app_info['JANS_APP_VERSION'], base.current_app.app_info['JANS_BUILD'])), self.fido2_client_fpath),
+            ]
+
         if base.argsp.profile == DISA_STIG_PROFILE:
-            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath))
-#            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-fips-{0}.war'.format(argsp.casa_version)), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath))
+            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-fips-{0}.war'.format(base.argsp.casa_version)), self.casa_war_fpath))
 
         else:
-            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-5.0.0-12.war'), self.casa_war_fpath))
-#            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(argsp.casa_version)), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-5.0.0-12.war'), self.casa_war_fpath))
+            self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(base.argsp.casa_version)), self.casa_war_fpath))
 
         self.jans_auth_dpath = os.path.join(Config.jetty_base, jans_auth_installer.service_name)
         self.jans_auth_custom_lib_dpath = os.path.join(self.jans_auth_dpath, 'custom/libs')
@@ -106,7 +106,7 @@ class SetupCasa:
     
         print ("Installing Casa")
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         jans_auth_web_app_xml = jans_auth_installer.readFile(jans_auth_installer.web_app_xml_fn)
 
@@ -234,7 +234,7 @@ class SetupCasa:
 
     def add_apache_directive(self, check_str, template):
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         print("Updating apache configuration")
         apache_directive_template_text = self.readFile(os.path.join(casa_dist_templates_dpath, template))
@@ -257,7 +257,7 @@ class SetupCasa:
 
     def enable_apache_mod_dir(self):
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         # Enable mod_dir for apache
 
@@ -287,7 +287,7 @@ class SetupCasa:
 
     def remove_apache_directive(self, directive):
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         https_jans_current = self.readFile(httpd_installer.https_jans_fn)
         tmp_ = directive.lstrip('<').rstrip('>').strip()
@@ -313,7 +313,7 @@ class SetupCasa:
 
     def uninstall_casa(self):
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         print("Uninstalling Gluu Casa")
         for fpath in (os.path.join(Config.os_default, 'casa'), os.path.join(Config.unit_files_path, 'casa.service')):
@@ -375,9 +375,9 @@ class SetupCasa:
 
 def download_jans_installer(setup_branch):
 
-    debugpy.breakpoint();
-#    jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
-    jans_archieve_url = 'http://192.168.64.4/jans/jans.2278.zip'
+    #debugpy.breakpoint();
+    jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
+#    jans_archieve_url = 'http://192.168.64.4/jans/jans.2278.zip'
     with tempfile.TemporaryDirectory() as tmp_dir:
         jans_zip_fpath = os.path.join(tmp_dir, os.path.basename(jans_archieve_url))
         print("Downloading {} as {}".format(jans_archieve_url, jans_zip_fpath))
@@ -395,7 +395,7 @@ def download_jans_installer(setup_branch):
 
 def download_flex(flex_version):
 
-    debugpy.breakpoint();
+    #debugpy.breakpoint();
     flex_archieve_url = 'https://github.com/GluuFederation/flex/archive/refs/tags/v{}.zip'.format(flex_version)
     with tempfile.TemporaryDirectory() as tmp_dir:
         flex_zip_fpath = os.path.join(tmp_dir, os.path.basename(flex_archieve_url))
@@ -454,7 +454,7 @@ def is_string_blank(in_string):
 
 def main():
 
-    debugpy.breakpoint();
+    #debugpy.breakpoint();
     try:
         parser = get_casa_setup_parser()
 
@@ -495,15 +495,15 @@ def main():
 
         DISA_STIG_PROFILE = 'disa-stig'
 
-        app_versions = {
-            "BASE_SERVER": "http://192.168.64.4/jans",
-            "BASE_SERVER_JANS": "http://192.168.64.4/jans",
-            "BASE_SERVER_CASA": "http://192.168.64.4/casa"
-        }
+#        app_versions = {
+#            "BASE_SERVER": "http://192.168.64.4/jans",
+#            "BASE_SERVER_JANS": "http://192.168.64.4/jans",
+#            "BASE_SERVER_CASA": "http://192.168.64.4/casa"
+#        }
 
-        #global app_versions = {
-        #    "GLUU_MAVEN": "https://maven.gluu.org"
-        #}
+        app_versions = {
+            "GLUU_MAVEN": "https://maven.gluu.org"
+        }
 
         install_casa = argsp.install_casa
         uninstall_casa = argsp.uninstall_casa
@@ -511,7 +511,7 @@ def main():
         profile = argsp.profile
         os.environ['JANS_PROFILE'] = profile
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         if os.path.exists(jans_setup_dpath):
             print("Backing up old Janssen setup directory")
@@ -522,7 +522,7 @@ def main():
         if install_casa:
             download_flex(argsp.casa_version)
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         if os.path.exists(jans_setup_dpath):
             sys.path.append(jans_setup_dpath)
@@ -586,7 +586,7 @@ def main():
         from setup_app.utils.properties_utils import propertiesUtils
         from setup_app.utils.ldif_utils import myLdifParser
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         logs_dpath = os.path.join(cur_dpath, 'logs')
 
@@ -621,13 +621,13 @@ def main():
         collectProperties = CollectProperties()
         collectProperties.collect()
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         Config.outputFolder = os.path.join(jans_setup_dpath, 'output')
         if not os.path.join(Config.outputFolder):
             os.makedirs(Config.outputFolder)
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         global httpd_installer
         global jans_auth_installer
@@ -636,7 +636,7 @@ def main():
         config_api_installer = ConfigApiInstaller()
         jans_auth_installer = JansAuthInstaller()
 
-        debugpy.breakpoint();
+        #debugpy.breakpoint();
 
         setup_casa = SetupCasa(cur_dpath)
 
@@ -687,14 +687,12 @@ def main():
         print(ex)
         print(traceback.format_exc())
 
-    debugpy.breakpoint();
+    #debugpy.breakpoint();
 
     print()
     print("Exit Setup Casa")
 
 if __name__ == '__main__':
 
-    debugpy.breakpoint();
+    #debugpy.breakpoint();
     main()
-
-#    sys.exit()
