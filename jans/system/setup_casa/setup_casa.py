@@ -377,7 +377,7 @@ def download_jans_installer(setup_branch):
 
     #debugpy.breakpoint();
     jans_archieve_url = 'https://github.com/JanssenProject/jans/archive/refs/heads/{}.zip'.format(setup_branch)
-#    jans_archieve_url = 'http://192.168.64.4/jans/jans.2278.zip'
+#    jans_archieve_url = 'https://ws-4.smansoft.net/jans/jans.2278.zip'
     with tempfile.TemporaryDirectory() as tmp_dir:
         jans_zip_fpath = os.path.join(tmp_dir, os.path.basename(jans_archieve_url))
         print("Downloading {} as {}".format(jans_archieve_url, jans_zip_fpath))
@@ -496,9 +496,9 @@ def main():
         DISA_STIG_PROFILE = 'disa-stig'
 
 #        app_versions = {
-#            "BASE_SERVER": "http://192.168.64.4/jans",
-#            "BASE_SERVER_JANS": "http://192.168.64.4/jans",
-#            "BASE_SERVER_CASA": "http://192.168.64.4/casa"
+#            "BASE_SERVER": "https://ws-4.smansoft.net/jans",
+#            "BASE_SERVER_JANS": "https://ws-4.smansoft.net/jans",
+#            "BASE_SERVER_CASA": "https://ws-4.smansoft.net/casa"
 #        }
 
         app_versions = {
