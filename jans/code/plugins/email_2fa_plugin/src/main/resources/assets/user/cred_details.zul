@@ -1,0 +1,34 @@
+<?page language="xhtml"?>
+<?init class="org.zkoss.zk.ui.util.Composition" template="/general.zul"?>
+<zk:zk xmlns:z="http://www.zkoss.org/2005/zul" xmlns:h="xhtml" 
+        xmlns:zk="zk" xmlns:w="client" xmlns:ca="client/attribute"
+        xmlns="native">
+    <h:title self="@define(title)">${zkService.appName} - ${labels.email.title}</h:title>
+    <z:div if="${empty pageScope.error}" viewModel="@id('vm') @init('org.gluu.casa.plugins.emailenroll.EmailEnrollVM')"
+           self="@define(maincontent)">
+        <z:include src="/back-home.zul" />
+        <div class="ph4 mb2">
+            <div class="alert alert-success dn" id="feedback-cert-edit" role="alert" />
+        </div>
+        <div class="${css['sectionsWrapper']} pt3">
+            <section class="${css.section}">
+                <div class="${css.panel}">
+                    <h2 class="f3 dark-blue2">${labels.email.title}</h2>
+                    <div class="mb2" >
+                        Email enrolled for the 2FA Email OTP login.
+                        <z:div class="${css.panel}" >
+                            Enrolled email:    <z:label class="f4 dark-blue2" value="@load(vm.email)" />
+                        </z:div>
+                    </div>
+                    <div class="mb2">
+                        <label>
+                            Update email:
+                            <z:textbox class="${css.textInput} ml2" value="@bind(vm.message)" onOK="@command('setMail')" />
+                        </label>
+                    </div>
+                    <z:button label="${labels.email.button_label}" class="${css.primaryButton}" w:onClick="alertRef = $('#feedback-cert-edit')" onClick="@command('setMail')" />
+                </div>
+            </section>
+        </div>
+    </z:div>
+</zk:zk>
