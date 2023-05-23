@@ -8,12 +8,12 @@ import io.jans.orm.annotation.ObjectClass;
 import java.util.List;
 
 @DataEntry
-@ObjectClass("gluuPerson")
+@ObjectClass("jansPerson")
 public class CertPerson extends IdentityPerson {
 
     private static final long serialVersionUID = -2595965993119714773L;
 
-    @AttributeName(name = "oxTrustx509Certificate")
+    @AttributeName(name = "jans509Certificate")
     private List<String> x509Certificates;
     
     @AttributeName(name = "userCertificate")
