@@ -1,0 +1,255 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	template="/WEB-INF/incl/layout/login-template.xhtml">
+	<f:metadata>
+		<f:viewAction action="#{authenticator.prepareAuthenticationForStep}" />
+		<f:viewParam name="login_hint" value="#{loginAction.loginHint}" />
+	</f:metadata>
+	<ui:define name="head">
+		<meta name="description" content="Gluu, Inc." />
+	</ui:define>
+	<ui:define name="pageTitle">
+		<h:outputText value="#{msgs['login.pageTitle']}" />
+	</ui:define>
+	<ui:define name="body">
+		<div class="container" style="text-align: center">
+			<h:panelGroup rendered="true">
+			<!--
+				<div class="login_bx_1"
+					style="border-radius: 10px; margin-top: 0px; background: white; border: 1px solid #008b8b;">-->
+					<div class="loginBox">
+					<div class="logo"></div>
+					<div style="height:100px"></div>
+					<!--
+					<div class="row">
+						<h:messages class="text-center"
+							style="color:#8b0000;margin:5px;margin-left:20px; font-size:2vw;"
+							infoClass="text-center" errorClass="text-center" />
+					</div>-->
+					<b:form horizontal="true" id="loginForm" style="padding-top:30px; padding-left:70px;">
+						<b:inputText placeholder="Email" fieldId="loginForm:username" name="loginForm:username"
+							required="true" colMd="10" labelColMd="2" autocomplete="off"
+							value="#{credentials.username}" styleClass="form-control"
+							style="width:100%;">
+							<f:facet name="prepend">
+								<b:icon name="user" />
+							</f:facet>
+						</b:inputText>
+						<b:inputSecret placeholder="#{msgs['login.password']}" colMd="10"
+							fieldId="loginForm:password" name="loginForm:password" labelColMd="2" value="#{credentials.password}"
+							autocomplete="off" styleClass="form-control" tyle="width:100%">
+							<f:facet name="prepend">
+								<b:iconAwesome name="key" />
+							</f:facet>
+						</b:inputSecret>
+						<div style="height:20px"></div>
+						<!--<div class="row">
+							<div class="col-sm-5 col-md-5">
+								<h:outputLabel styleClass="col-form-label"
+									for="rememberme" value="#{msgs['login.rememberMe']}" />
+							</div>
+							<div class="col-sm-2 col-md-2">
+								<input type="checkbox" value="rememberme" id="rememberme" name="rememberme" />
+							</div>
+						</div>-->
+						<div class="form-group row">
+							<div class="col-sm-offset-1 offset-md-1 col-sm-8 col-md-8">
+								<b:commandButton id="loginButton"
+									style="background-color: #00BE79; color:white;"
+									styleClass="btn col-sm-12" value="    #{msgs['login.login']}"
+									onclick="checkRemembeMe()" iconAwesome="fa-sign-in"
+									action="#{authenticator.authenticate}" />
+							</div>
+						</div>
+						<!--<div class="form-group row">
+							<div class="col-sm-offset-3 offset-md-3 col-sm-7 col-md-7">
+								<div class="forgot_link">
+									<a href="/identity/person/passwordReminder.htm"
+										style="color: blue;"> <h:outputText
+											value="#{msgs['login.forgotYourPassword']}" />
+									</a>
+								</div>
+							</div>
+						</div>-->
+						
+						<div class="form-group row">
+								<div class="forgot_link col-sm-offset-1 offset-md-1 col-sm-8 col-md-8">
+									<a href="restv1/authorize?client_id=${param.client_id}&amp;scope=${param.scope}&amp;&amp;redirect_uri=${param.redirect_uri}&amp;response_type=code&amp;state=${param.state}&amp;nonce=${param.nonce}&amp;acr_values=ztrust-forgot_password" style="color: gray;">
+										<h:outputText value="#{msgs['login.forgotYourPassword']}" />
+									</a>
+									&nbsp;&nbsp;
+									<a href="restv1/authorize?client_id=${param.client_id}&amp;scope=${param.scope}&amp;redirect_uri=${param.redirect_uri}&amp;response_type=code&amp;state=${param.state}&amp;nonce=${param.nonce}&amp;acr_values=ztrust-register" style="color: gray;">
+										<h:outputText value="#{msgs['login.register']}" />
+									</a>
+								</div>
+						</div>
+						<h:inputHidden id="platform" />
+					</b:form>
+					<div style="padding-left:7px;">
+						<div class="row">
+							<div class="col-md-5">
+								<hr style="margin-top: 5px; height: 2px;margin: 2px;" />
+							</div>
+							<strong>//openSAS</strong>
+							<div class="col-md-5">
+								<hr style="margin-top: 5px; height: 2px;margin: 2px;" />
+							</div>
+						</div>
+					</div>
+					<!--<a href="https://gluuserver.com/oxauth/restv1/authorize?client_id=aca9bc72-7e18-47bb-a9e3-13540180d400&amp;scope=openid%20profile%20email%20user_name&amp;redirect_uri=https://gluuserver.com&amp;response_type=token%20id_token&amp;state=hbdbsd&amp;nonce=hfsklj&amp;acr_values=external_cert" style="color: gray;">
+						<h:outputText value="Smart Card login" />
+					</a>-->
+					<div class="row" style="padding-top: 20px;">
+                        <div class="col-sm-8"></div>
+                        <div class="col-md-12">
+                            <b:form id="smartCardLogin" style="padding-left:60px;">
+                                <div class="form-group row">
+                                    <div class="offset-md-1 col-sm-12 col-md-12">
+                                        <b:commandButton  id="smartCardButton" style="background-color: #F55E3C; color:white;"
+                                            styleClass="btn col-sm-8" iconAwesome="fas fa-id-card" type="button" onclick="window.location='restv1/authorize?client_id=${param.client_id}&amp;scope=${param.scope}&amp;redirect_uri=${param.redirect_uri}&amp;response_type=code&amp;state=${param.state}&amp;nonce=${param.nonce}&amp;acr_values=ztrust-cert';"
+                                            value="Smart Card Login" />
+                                    </div>
+                                </div>
+                                <h:inputHidden id="platform" />
+                            </b:form>
+                        </div>
+                        <div class="col-sm-4"></div>
+                    </div>
+					
+					<div class="row">
+							<div align="center" class="col-sm-offset-4 col-sm-9">
+								<ui:repeat value="#{identity.getWorkingParameter('download_url').entrySet().toArray()}"
+									var="_entry">
+									<ui:param name="app_name" value="#{_entry.key}" />
+									<ui:param name="app_link" value="#{_entry.value}" />
+									<h:outputLink style="margin-right:5px;" value="#{app_link}" title="#{app_name}">
+										<h:graphicImage value="img/#{app_name}.png" />
+									</h:outputLink>
+								</ui:repeat>
+							</div>
+							<h:panelGroup layout="block" rendered="#{external_registration_uri != Null}">
+								<div class="reg_link">
+									<a href="#{external_registration_uri}">
+										<h:outputText value="Register Now " />
+									</a>
+								</div>
+							</h:panelGroup>
+                    </div>
+
+					<div class="row">
+                        <div>
+                            <a href="https://github.com/GluuFederation/zero-trust-demo/" target="_blank">
+                                <img src="/oxauth/ext/resources/img/zero_trust.png" class="logo-footer"/>
+                            </a>
+                        </div>
+                    </div>                        
+				</div>
+			</h:panelGroup>
+		</div>
+		<div style="height:100px"></div>
+		<style>
+			
+		.loginBox{
+			display:inline-block;
+			height:640px;
+			width:440px;
+			background:white;
+			position:relative;
+			top:120px;
+			bottom:2px;
+			border-radius: 10px; 
+			margin-top: 0px;
+			border: 1px solid #008b8b;
+			}
+		.logo{
+			position:absolute;
+			height:200px;
+			width:200px;
+			border:3px solid white;
+			left:50%;
+			margin-left:-96px;
+			top: -100px;
+			background-size: contain;
+			background-image: url("/oxauth/ext/resources/img/logo.png");
+			}
+		.logo-footer{
+			position:relative;
+			height:200px;
+			width:400px;
+			border:3px solid white;
+			margin-left:35px;
+			}	
+               
+		</style>
+		<script type="text/javascript">
+
+            window.onload = function () {
+                var userNameField = document.getElementById("loginForm:username");
+                var passwordField = document.getElementById("loginForm:password");
+
+                passwordField.value = "";
+                var userName = '#{!empty loginAction.loginHint ? loginAction.loginHint : ""}';
+                if (userName) {
+                    userNameField.value = userName;
+                    passwordField.focus();
+                } else {
+                    userNameField.focus();
+                }
+
+                var displayRegister = #{display_register_action or identity.sessionId.sessionAttributes['display_register_action']};
+                if (displayRegister) {
+                    var registerButton = document.getElementById("loginForm:registerId");
+                    if (registerButton != null) {
+                        registerButton.style.display = 'inline';
+                    }
+                }
+            };
+
+    		$(document).ready(function () {
+    			$('.other').click(function(){
+    				$('#social_new').toggle();
+    			});
+                if (localStorage.chkbx &amp;&amp; localStorage.chkbx != '') {
+                    $('#rememberme').attr('checked', 'checked')
+                    document.getElementById("loginForm:username").value = localStorage.usrname;
+                } else {
+                    $('#rememberme').removeAttr('checked');
+                    document.getElementById("loginForm:username").value = "";
+                }
+
+                $('#rememberme').click(function() {
+                    checkRemembeMe();
+                });
+
+                fillPlatformField();
+    		});
+
+    		function checkRemembeMe() {
+                if ($('#rememberme').is(':checked')) {
+                    localStorage.usrname = document.getElementById("loginForm:username").value;
+                    localStorage.chkbx = $('#rememberme').val();
+                } else {
+                    localStorage.usrname = '';
+                    localStorage.chkbx = '';
+                }
+			}
+
+            function fillPlatformField() {
+                try {
+                    re = /^([^\.]+\.[^\.]+)\..+/;
+                    result = re.exec(platform.version);
+                    if (result != null) {
+                        platform.version=result[1];
+                    }
+    			    document.getElementById("loginForm:platform").value = JSON.stringify(platform);
+                } catch (e) {
+                }
+            }
+        </script>
+	</ui:define>
+</ui:composition>
