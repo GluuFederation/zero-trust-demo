@@ -1,16 +1,52 @@
+
 # Linux Foundation Janssen Project: Zero Trust Demo
 
 Zero Trust Demo for Janssen 1.0.7 with OpenID
 
 # Table of Contents
 
+<!-- vscode-markdown-toc -->
+* 1. [Use Cases](#UseCases)
+	* 1.1. [Registration](#Registration)
+	* 1.2. [Authentication](#Authentication)
+	* 1.3. [Credential Management](#CredentialManagement)
+	* 1.4. [Restrict to single sessions](#Restricttosinglesessions)
+	* 1.5. [Logout](#Logout)
+* 2. [RHEL 8 installation](#RHEL8installation)
+	* 2.1. [Base installation with DISA STIG Security Profile](#BaseinstallationwithDISASTIGSecurityProfile)
+	* 2.2. [RHEL 8 Server Firewall](#RHEL8ServerFirewall)
+* 3. [Janssen Server Installation](#JanssenServerInstallation)
+	* 3.1. [Install Janssen GPG Key](#InstallJanssenGPGKey)
+	* 3.2. [Install Janssen Server RPM](#InstallJanssenServerRPM)
+	* 3.3. [Janssen Server setup](#JanssenServersetup)
+	* 3.4. [Janssen Server Verification](#JanssenServerVerification)
+* 4. [Gluu Casa Installation](#GluuCasaInstallation)
+* 5. [PostgreSQL Server Configuration](#PostgreSQLServerConfiguration)
+* 6. [jans-auth configuration](#jans-authconfiguration)
+	* 6.1. [jans-auth properties](#jans-authproperties)
+	* 6.2. [Custom assets](#Customassets)
+	* 6.3. [jans-auth Email 2FA Script](#jans-authEmail2FAScript)
+		* 6.3.1. [Generating private keys and certificates for signing emails](#Generatingprivatekeysandcertificatesforsigningemails)
+		* 6.3.2. [Properties of Email 2FA Script](#PropertiesofEmail2FAScript)
+	* 6.4. [jans-auth User Registration Script](#jans-authUserRegistrationScript)
+	* 6.5. [jans-auth CAC Card Script](#jans-authCACCardScript)
+	* 6.6. [jans-auth App Session Audit Script](#jans-authAppSessionAuditScript)
+	* 6.7. [jans-auth Extension ztrust-ext](#jans-authExtensionztrust-ext)
+* 7. [Casa Configuration](#CasaConfiguration)
+	* 7.1. [Activation Casa plug-in](#ActivationCasaplug-in)
+	* 7.2. [Password Policy Casa plug-in](#PasswordPolicyCasaplug-in)
+	* 7.3. [Certificate Authentication plug-in](#CertificateAuthenticationplug-in)
+* 8. [HTTPD configuration](#HTTPDconfiguration)
+	* 8.1. [httpd SSL configuration](#httpdSSLconfiguration)
+	* 8.2. [httpd Enabling TLS v1.3 Protocol](#httpdEnablingTLSv1.3Protocol)
+	* 8.3. [httpd Java application proxy configuration](#httpdJavaapplicationproxyconfiguration)
+	* 8.4. [httpd Development load balancer](#httpdDevelopmentloadbalancer)
 
-
-
-
-
-
-
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
 
 # Solution Overview
 
@@ -30,9 +66,9 @@ number.
 
 ![Diagram 1 -- Single Sign-On Overview](./img/Diagram-1-sso_overview.png)
 
-## Use Cases
+##  1. <a name='UseCases'></a>Use Cases
 
-### Registration
+###  1.1. <a name='Registration'></a>Registration
 
 1. **Register for new account with CAC/PIV card**  If a person has a smart card,
 they can present it during the registration process, and we should pick up the
@@ -53,7 +89,7 @@ one uppercase letter, one number, and one special character".
 restrict enrollment to certain domains.
 1. **Redirect from Smart Card Login for unregistered person**.
 
-### Authentication
+###  1.2. <a name='Authentication'></a>Authentication
 
 1. **FIDO**.
 1. **email identifier** The end-user's email address is used for identification
@@ -61,7 +97,7 @@ restrict enrollment to certain domains.
 1. **Smart Card**  The end user clicks on a button, which should prompt their
 browser to enable the selection of an X.509 certificate.
 
-### Credential Management
+###  1.3. <a name='CredentialManagement'></a>Credential Management
 
 1. **FIDO**.
 1. **Smart Card** The end user should be able to enroll a CAC/PIV card, and to
@@ -71,7 +107,7 @@ phone number to receive SMS notifications.
 1. **Change Password** End users should be able to change their password,
 provided the new password meets the associated password complexity.
 
-### Restrict to single sessions
+###  1.4. <a name='Restricttosinglesessions'></a>Restrict to single sessions
 
 The Janssen Server should only allow an end-user to have one active session (web
 or mobile). If an end-user logs in, previous sessions should be terminated in
@@ -80,7 +116,7 @@ end-user at that time. However, if an OpenID Relying Party attempts to obtain a
 token after the session has been revoked, the Janssen Server will re-authenticated
 the person.
 
-### Logout
+###  1.5. <a name='Logout'></a>Logout
 
 1. **Logout from Casa**  On hitting the logout button, the person's browser
 should logout.
@@ -91,9 +127,9 @@ of the website.
 
 # Installation
 
-## RHEL 8 installation
+##  2. <a name='RHEL8installation'></a>RHEL 8 installation
 
-### Base installation with DISA STIG Security Profile
+###  2.1. <a name='BaseinstallationwithDISASTIGSecurityProfile'></a>Base installation with DISA STIG Security Profile
 
 If you are installing RHEL 8 from media:
 
@@ -128,7 +164,7 @@ If you are using a cloud image, you can also apply the
 settings by running the shell script provided by Red Hat,
 `# bash rhel8-script-stig.sh`, and then rebooting.
 
-### RHEL 8 Server Firewall
+###  2.2. <a name='RHEL8ServerFirewall'></a>RHEL 8 Server Firewall
 
 The RHEL 8 system firewall should be running. You can check with this
 command:
@@ -155,12 +191,12 @@ To get the current state of the firewall:
 firewall-cmd --list-all
 ```
 
-## Janssen Server Installation
+##  3. <a name='JanssenServerInstallation'></a>Janssen Server Installation
 
 This initial base configuration happens on Server 1-1. After the configuration
 of 1-1 is complete, you will initialize the other servers.
 
-### Install Janssen GPG Key
+###  3.1. <a name='InstallJanssenGPGKey'></a>Install Janssen GPG Key
 
 * Download **Janssen** key:
 
@@ -186,7 +222,7 @@ rpm -qa gpg-pubkey*
 rpm -qi gpg-pubkey-0544ba38-572aa647
 ```
 
-### Install Janssen Server RPM
+###  3.2. <a name='InstallJanssenServerRPM'></a>Install Janssen Server RPM
 
 You can always find the latest Gluu Server packages here (for all linux
 distributions): [Janssen Releases](https://github.com/JanssenProject/jans/releases/).
@@ -194,12 +230,12 @@ distributions): [Janssen Releases](https://github.com/JanssenProject/jans/releas
 Please, use follow doc for installing RHEL packages:
 [Red Hat EL Janssen Installation](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/).
 
-### Janssen Server setup
+###  3.3. <a name='JanssenServersetup'></a>Janssen Server setup
 
 Please, use follow doc for running setup:
 [Run the Setup Script](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/#run-the-setup-script).
 
-### Janssen Server Verification
+###  3.4. <a name='JanssenServerVerification'></a>Janssen Server Verification
 
 1. Check the version of the installed Jannsen components
 
@@ -243,7 +279,7 @@ Build: a798e35dcf82de58a75d2299639b355300a79042
   have done this already (see above.)</dd>
 </dl>
 
-## Gluu Casa Installation
+##  4. <a name='GluuCasaInstallation'></a>Gluu Casa Installation
 
 For installing of Casa with Janssen Server, please use the **setup_casa.py** script.
 
@@ -335,7 +371,7 @@ python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -uninstall-casa
 
 .
 
-## PostgreSQL Server Configuration
+##  5. <a name='PostgreSQLServerConfiguration'></a>PostgreSQL Server Configuration
 
 During launching **install.py** (**jans-linux-setup**), please  
 
@@ -466,9 +502,9 @@ FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson'
 
 .
 
-## jans-auth configuration
+##  6. <a name='jans-authconfiguration'></a>jans-auth configuration
 
-### jans-auth properties
+###  6.1. <a name='jans-authproperties'></a>jans-auth properties
 
 Make these changes to the default jans-auth JSON configuration properties:
 
@@ -476,7 +512,7 @@ Make these changes to the default jans-auth JSON configuration properties:
 * `disableU2fEndpoint` : `True`
 * `bruteForceProtectionEnabled` : `True`
 
-### Custom assets
+###  6.2. <a name='Customassets'></a>Custom assets
 
 * For installing assets use script **ztrust_install_jans_auth_assets.py**:
 
@@ -502,7 +538,7 @@ and will be deployed to gluu diorectory (default: **/opt/jans**).
 systemctl restart jans-auth  
 ```
 
-### jans-auth Email 2FA Script
+###  6.3. <a name='jans-authEmail2FAScript'></a>jans-auth Email 2FA Script
 
 This script asks the user to enter a password in step 1, sends a signed
 email to the user with an OTP, and asks the user to enter the OTP in step 2.
@@ -538,7 +574,7 @@ Website<->Browser: HTTP/HTTPS requests/responces
 Browser<->End User: Website content
 ```
 
-#### Generating private keys and certificates for signing emails
+####  6.3.1. <a name='Generatingprivatekeysandcertificatesforsigningemails'></a>Generating private keys and certificates for signing emails
 
 The Email 2FA Script needs a private key to sign the email. The example
 `keytool` commands show how to generate a self-signed certificate and
@@ -688,7 +724,7 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
-#### Properties of Email 2FA Script
+####  6.3.2. <a name='PropertiesofEmail2FAScript'></a>Properties of Email 2FA Script
 
 Navigate to  *Configuration --> Person Authentication Scripts*, scroll to the
 bottom of the page and click **Add custom script configuration**
@@ -715,7 +751,7 @@ bottom of the page and click **Add custom script configuration**
 
 * Don't forget to check *Enabled* and click **Update**.
 
-### jans-auth User Registration Script
+###  6.4. <a name='jans-authUserRegistrationScript'></a>jans-auth User Registration Script
 
 ![Diagram 4 Registration Otp Sequence](./img/Diagram-4-register_otp_sequence.png)
 
@@ -927,7 +963,7 @@ This template can use follow variables:
 
 * Don't forget to check *Enabled* and click **Update**.
 
-### jans-auth CAC Card Script
+###  6.5. <a name='jans-authCACCardScript'></a>jans-auth CAC Card Script
 
 * Navigate to  *Configuration --> Person Authentication Scripts*, scroll
 to the bottom of the page and click **Add custom script configuration**
@@ -1012,7 +1048,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Don't forget to check *Enabled* and click **Update**.
 
-### jans-auth App Session Audit Script
+###  6.6. <a name='jans-authAppSessionAuditScript'></a>jans-auth App Session Audit Script
 
 * Navigate to  *Configuration --> Other Custom Scripts*,
 using the horizontal slider, find the "Application Session"
@@ -1024,7 +1060,7 @@ script and click **Add custom script configuration**
 |---------------------------- | ------------------- |
 | metric_audit_ou_name | |
 
-### jans-auth Extension ztrust-ext
+###  6.7. <a name='jans-authExtensionztrust-ext'></a>jans-auth Extension ztrust-ext
 
 * Build extension **ztrust-ext**.
 
@@ -1044,7 +1080,7 @@ script and click **Add custom script configuration**
 service jans-auth restart  
 ```
 
-## Casa Configuration
+##  7. <a name='CasaConfiguration'></a>Casa Configuration
 
 Before configuring the Casa script, confirm that you are able to login to the
 Casa console by navigating to https://**server-1-1**/casa. You should see the
@@ -1094,7 +1130,7 @@ Enabled plug-ins:
 
 ![enabled plugins](./img/screenshot-4-casa-auth-methods.png)
 
-### Activation Casa plug-in
+###  7.1. <a name='ActivationCasaplug-in'></a>Activation Casa plug-in
 
 ![Activation Casa plug-in](./img/screenshot-5-casa-activation.png)
 
@@ -1107,7 +1143,7 @@ Using this plug-in, user(s) state can be setup in follow states:
 
 Also **pending** users can be activated.  
 
-### Password Policy Casa plug-in
+###  7.2. <a name='PasswordPolicyCasaplug-in'></a>Password Policy Casa plug-in
 
 ![Password Policy Casa plug-in 1](./img/screenshot-6-casa-password-policy-1.png)
 
@@ -1129,7 +1165,7 @@ file **/etc/jans/conf/ztrust-regex.json**.
 
 After that scripts **ztrust-register** and **ztrust-forgot_password**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/jans/conf/ztrust-regex.json**.
 
-### Certificate Authentication plug-in
+###  7.3. <a name='CertificateAuthenticationplug-in'></a>Certificate Authentication plug-in
 
 **Certificate Authentication plug-in**  allows enrollment and authentication via client certificates.
 
@@ -1148,7 +1184,7 @@ Proceeding of new certificate:
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
 
-## HTTPD configuration
+##  8. <a name='HTTPDconfiguration'></a>HTTPD configuration
 
 Root configuration file: **/etc/httpd/conf/httpd.conf**
 contains:
@@ -1233,7 +1269,7 @@ Configuration contains definitions of directve:
 * **\<VirtualHost \*:80\>** - redirect of **http** (port **80**) requests to **https** (port **443**);  
 * **\<VirtualHost \*:443\>** - definintion of processing of **https** requests.  
 
-### httpd SSL configuration
+###  8.1. <a name='httpdSSLconfiguration'></a>httpd SSL configuration
 
 Apache server should use module **ssl**.
 
@@ -1420,7 +1456,7 @@ V 271010190333Z   1004  unknown /CN=Gluu.OCSP.ECDSA/ST=Texas/C=US/emailAddress=o
 **./ocsp.crt** - OCSP certificate;  
 **./ocsp.chain** - CA (Root and Intermediate) of OCSP certificate.  
 
-### httpd Enabling TLS v1.3 Protocol
+###  8.2. <a name='httpdEnablingTLSv1.3Protocol'></a>httpd Enabling TLS v1.3 Protocol
 
 Optional feature. For enabling **TLS v1.3** protocol you should update httpd configuration files:
 
@@ -1488,7 +1524,7 @@ You can see follow **httpd** logs (**TLS v1.3** and **HTTP/2.0**):
 
 At the current moment we can recommend to use **Client Authentication** (**cert** Authenticate method) with **TLS v1.3** and **HTTP/2.0**, using only **Mozilla Firefox** browser.
 
-### httpd Java application proxy configuration
+###  8.3. <a name='httpdJavaapplicationproxyconfiguration'></a>httpd Java application proxy configuration
 
 After installing **Jansssen Suite** on the server (full configuring), follow servers are launched:
 
@@ -1575,7 +1611,7 @@ Suite of **Reverse Proxies** for getting access to the localhosted resources:
     ProxyPass   /device-code http://localhost:8081/jans-auth/device_authorization.htm
 ```
 
-### httpd Development load balancer
+###  8.4. <a name='httpdDevelopmentloadbalancer'></a>httpd Development load balancer
 
 This configuration was used to test the customer in the development environment.
 
