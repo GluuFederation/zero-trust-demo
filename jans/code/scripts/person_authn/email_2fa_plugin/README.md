@@ -52,4 +52,4 @@ This template can use follow variables:
     + nonrequired parameter;
     + default value: value, defined in **Janssen** (**/opt/jans/jans-cli/config-cli-tui.py**): *SMTP*/*KeyStore Algorithm*;
     + by default algirithm is used by signing of certificate from the Keystore;
-        * for example: *SHA256withECDSA*
+        * for example: *SHA256withECDSA*.
