@@ -152,7 +152,7 @@ public class CertService {
                 String fingerprint =  getFingerPrint(certificate);
                 String externalUid = String.format("%s%s", CERT_PREFIX, fingerprint);
 
-                Filter filter = Filter.createEqualityFilter("oxExternalUid", externalUid);
+                Filter filter = Filter.createEqualityFilter("jansExtUid", externalUid);
                 List<BasePerson> people = persistenceService.find(BasePerson.class, persistenceService.getPeopleDn(), filter);
 
                 //The list should be singleton at most
