@@ -1,10 +1,13 @@
 package org.gluu.casa.plugins.approval.model;
 
+import io.jans.orm.annotation.AttributeName;
+import io.jans.orm.annotation.DataEntry;
+import io.jans.orm.annotation.ObjectClass;
 
-import org.gluu.persist.annotation.AttributeName;
-import org.gluu.persist.annotation.DataEntry;
-import org.gluu.persist.annotation.ObjectClass;
-
+/**
+ * @author Sergey Manoylo
+ * @version Sept 8, 2022
+ */
 @DataEntry
 @ObjectClass(value = "ztrustPerson")
 public class ZTrustPerson extends GluuPerson {

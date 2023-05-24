@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.gluu.casa.plugins.approval.model.ZTrustPerson;
 import org.gluu.casa.service.IPersistenceService;
-import org.gluu.oxauth.model.common.User;
-import org.gluu.search.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.jans.as.common.model.common.User;
+import io.jans.orm.search.filter.Filter;
 
 public class UserService {
 

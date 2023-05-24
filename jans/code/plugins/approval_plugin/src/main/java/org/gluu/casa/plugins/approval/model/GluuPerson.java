@@ -6,17 +6,17 @@ package org.gluu.casa.plugins.approval.model;
 import java.util.HashSet;
 import java.util.Optional;
 
-import org.gluu.persist.annotation.AttributeName;
-import org.gluu.persist.annotation.DataEntry;
-import org.gluu.persist.annotation.ObjectClass;
-import org.gluu.persist.model.base.SimpleUser;
+import io.jans.orm.annotation.AttributeName;
+import io.jans.orm.annotation.DataEntry;
+import io.jans.orm.annotation.ObjectClass;
+import io.jans.orm.model.base.SimpleUser;
 
 /**
- * @author SMan
- *
+ * @author Sergey Manoylo
+ * @version Sept 8, 2022
  */
 @DataEntry
-@ObjectClass(value = "gluuPerson")
+@ObjectClass(value = "jansPerson")
 public class GluuPerson extends SimpleUser {
 
     /**
