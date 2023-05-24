@@ -1,0 +1,138 @@
+<?page language="xhtml"?>
+<?init class="org.gluu.casa.core.navigation.AdminProtectionInitiator"?>
+<?init class="org.zkoss.zk.ui.util.Composition" template="/general.zul"?>
+
+<zk:zk xmlns:z="http://www.zkoss.org/2005/zul" xmlns:h="xhtml"
+	xmlns:zk="zk" xmlns:w="client" xmlns:ca="client/attribute"
+	xmlns="native">
+
+	<z:div if="${empty pageScope.error}" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.gluu.casa.plugins.approval.ApprovalVM')"
+		self="@define(maincontent)">
+		<h:title self="@define(title)">
+			${zkService.appName} - ${labels.approval.title}
+		</h:title>
+
+		<z:include src="/back-home.zul" />
+
+		<div class="ph4 mb2">
+			<div class="alert alert-success dn" id="feedback-cert-edit"
+				role="alert" />
+		</div>
+		
+		<div class="${css['sectionsWrapper']} pt3">
+			<section class="${css.section}">
+				<div class="${css.panel} flex justify-between">
+					<h2 class="f4 dark-blue2">
+						${labels.approval.title}
+					</h2>
+				</div>
+				
+				<!-- Title Container -->
+				<div class="flex justify-between">
+                
+                    <div class="col">
+
+                        <div class="${css.panel}">
+                                <div class="row db pt1-ns ml1-l">
+                                    <z:selectbox class="dropdown-toggle v-mid-l" id="typesSelectbox"
+                                        model="@load(vm.userTypes)"
+                                        onSelect="@command('selectUserType',userType=self.selectedIndex)" selectedIndex = "@load(vm.currentSelectedUserTypeIndex)">
+                                        <zk:template name="model">
+                                            ${each}
+                                        </zk:template>
+                                    </z:selectbox>
+                                </div>
+                                <div class="row db pt1-ns ml1-l">
+                                    <z:label class="dark-blue2 v-mid-l" value='Current selected user type:' />
+                                    <z:label class="b dark-blue2 v-mid-l" value='@load(vm.currentSelectedUserType)' />
+                                </div>
+                                <!-- Search Bar -->
+                                <div class="row db pt1-ns ml1-l">
+                                    <z:textbox class="${css.textInput} w4 w5-ns mr2 v-mid-l" placeholder="Search Users" value="@bind(vm.keyword)" onOK="@command('search')" />
+                                    <z:button label="Search" class="${css.primaryButton} v-mid-l" onClick="@command('search')" />
+                                </div>
+                        </div>
+                        
+                        <div class="${css.panel}"> 
+                            <div class="pl2 ml1-l">
+                                <z:button class="${css.primaryButton} v-mid-l mr2-l"
+                                    w:onClick="alertRef = $('#feedback-cert-edit')"
+                                    onClick="@command('activateSelected')">
+                                    Activate Selected
+                                </z:button>
+                                <z:button class="${css.primaryButton} v-mid-l mr2-l"
+                                    w:onClick="alertRef = $('#feedback-cert-edit')"
+                                    onClick="@command('deleteSelected')">
+                                    Delete Selected
+                                </z:button>
+                                <z:button class="${css.primaryButton} v-mid-l"
+                                    w:onClick="alertRef = $('#feedback-cert-edit')"
+                                    onClick="@command('deactivateSelected')">
+                                    Deactivate Selected
+                                </z:button>
+                            </div>                
+                        </div>                           
+                    
+                    </div>                    
+ 
+				</div>
+                <!-- Data Container -->
+				<z:grid id="grid" class="${css.panel}  justify-between" model="@load(vm.users)"  mold="paging" pageSize="4">
+					<zk:template name="model" var="user">
+						<z:row>
+                            <div class="card  ">
+                                <div class="card-header justify-between">
+                                    <div class="row">
+                                        <div class="col-md-auto "
+                                            style="margin-top:25px">
+                                            <z:checkbox onCheck="@command('pick', checked=self.checked, picked=user)"> </z:checkbox>
+                                        </div>
+                                        <div class="col">
+                                            <div class="well pull-left">
+                                                <p>
+                                                    <z:label
+                                                        sclass="f5 dark-blue2"
+                                                        value="@load(empty user.formattedName ? c:l('general.no_named') : user.formattedName)" />
+                                                    <br />
+                                                    <zk:zk unless="${empty user.mail}">
+                                                        <label>Email: ${user.mail}</label>
+                                                    </zk:zk>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col pl2 pt2">
+                                            <z:button
+                                                class="${css.primaryButton} v-mid-l mr2-l"
+                                                w:onClick="alertRef = $('#feedback-cert-edit')"
+                                                onClick="@command('deactivate', user=user)"
+                                                style="float:right;margin-left:10px"
+                                                if="${user.userActive}">
+                                                Deactivate
+                                            </z:button>
+                                            <z:button
+                                                class="${css.primaryButton} v-mid-l mr2-l"
+                                                w:onClick="alertRef = $('#feedback-cert-edit')"
+                                                onClick="@command('activate', user=user)"
+                                                style="float:right;margin-left:10px"
+                                                if="${!user.userActive}">
+                                                Activate
+                                            </z:button>
+                                            <z:button
+                                                class="${css.primaryButton} v-mid-l mr2-l"
+                                                w:onClick="alertRef = $('#feedback-cert-edit')"
+                                                onClick="@command('delete', user=user)"
+                                                style="float:right;margin-left:10px">
+                                                Delete
+                                            </z:button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </z:row>
+					</zk:template>
+				</z:grid>
+			</section>
+		</div>
+	</z:div>
+</zk:zk>
