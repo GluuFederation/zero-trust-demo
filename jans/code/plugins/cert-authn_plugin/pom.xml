@@ -66,7 +66,6 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.gluu</groupId>
             <artifactId>casa-shared</artifactId>
@@ -83,13 +82,13 @@
             <groupId>io.jans</groupId>
             <artifactId>jans-core-util</artifactId>
             <version>${jans.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.jans</groupId>
             <artifactId>jans-orm-annotation</artifactId>
             <version>${jans.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.jans</groupId>
@@ -103,44 +102,6 @@
             <version>0.1.5</version>
             <scope>compile</scope>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>oxauth-common</artifactId>
-            <version>${plugin.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>scim-model</artifactId>
-            <version>${plugin.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>oxcore-util</artifactId>
-            <version>${plugin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>casa-shared</artifactId>
-            <version>${plugin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>oxauth-model</artifactId>
-            <version>${plugin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jmimemagic</groupId>
-            <artifactId>jmimemagic</artifactId>
-            <version>0.1.5</version>
-            <scope>compile</scope>
-        </dependency>
--->
     </dependencies>
 
 </project>
