@@ -1,0 +1,4 @@
+{
+    "email_subject": "Janssen Authentication Token",
+    "email_msg_template": "Here is your token : %%otp%%"
+}
