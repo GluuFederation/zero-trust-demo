@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.emailenroll.model.UserPerson;
+import org.gluu.casa.plugins.emailenroll.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class EmailEnrollService {
 	public static Map<String, String> properties;
 
 	private IPersistenceService persistenceService;
-	private UserPerson person;
+	private EmailPerson person;
 
 	private EmailEnrollService() {
 		persistenceService = Utils.managedBean(IPersistenceService.class);
@@ -63,7 +63,7 @@ public class EmailEnrollService {
 		// Write the code to connect to the 3rd party API and fetch credentials against
 		// the user
 		
-		person = new UserPerson();
+		person = new EmailPerson();
 		person.setBaseDn(persistenceService.getPeopleDn());
 		person.setUid(uniqueIdOfTheUser);
 		person = persistenceService.find(person).stream().findFirst().orElse(null);

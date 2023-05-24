@@ -2,7 +2,7 @@ package org.gluu.casa.plugins.emailenroll;
 
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.emailenroll.model.UserPerson;
+import org.gluu.casa.plugins.emailenroll.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.gluu.casa.service.ISessionContext;
 import org.gluu.casa.ui.UIUtils;
@@ -29,7 +29,7 @@ public class EmailEnrollVM {
     private IPersistenceService persistenceService;
     @WireVariable
     private ISessionContext sessionContext;
-    private UserPerson person;
+    private EmailPerson person;
     private User user;
     private Pattern pattern;
     
@@ -68,7 +68,7 @@ public class EmailEnrollVM {
         persistenceService = Utils.managedBean(IPersistenceService.class);
 //        persistenceService.initialize();
         user = sessionContext.getLoggedUser();
-        person = new UserPerson();
+        person = new EmailPerson();
         person.setBaseDn(persistenceService.getPeopleDn());
         person.setUid(user.getUserName());
         person = persistenceService.find(person).stream().findFirst().orElse(null);
