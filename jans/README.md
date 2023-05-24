@@ -1160,7 +1160,7 @@ For example, **pass_regex** can contain:
 User can update this property, using plug-in. Also, user can generate a new Regular Expression, that can be coipied and saved in the
 file **/etc/jans/conf/ztrust-regex.json**.
 
-After that scripts **ztrust-register** and **ztrust-forgot_password**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/jans/conf/ztrust-regex.json**.
+After that script **ztrust-register**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/jans/conf/ztrust-regex.json**.
 
 ###  7.3. Certificate Authentication plug-in
 
