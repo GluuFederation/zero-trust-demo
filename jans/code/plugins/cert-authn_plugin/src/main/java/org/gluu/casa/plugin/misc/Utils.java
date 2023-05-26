@@ -34,7 +34,7 @@ public final class Utils {
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String SALT_FILE_LOCATION = "/etc/gluu/conf/salt";
+    private static final String SALT_FILE_LOCATION = "/etc/jans/conf/salt";
 
     private Utils() { }
 

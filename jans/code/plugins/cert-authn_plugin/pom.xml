@@ -40,8 +40,8 @@
                         <configuration>
                             <artifactSet>
                                     <includes>
-                                        <include>org.gluu:oxauth-common</include>
-                                        <include>org.gluu:scim-model</include>
+                                        <include>io.jans:jans-auth-common</include>
+                                        <include>io.jans:jans-scim-model</include>
                                         <include>net.sf.jmimemagic:jmimemagic</include>
                                     </includes>
                             </artifactSet>
