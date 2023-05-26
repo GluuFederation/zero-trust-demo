@@ -962,10 +962,13 @@ This template can use follow variables:
 
 ###  6.5. jans-auth CAC Card Script
 
-* Navigate to  *Configuration --> Person Authentication Scripts*, scroll
-to the bottom of the page and click **Add custom script configuration**
+* launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
-* Specify the name as `ztrust-cert` and add these properties:
+* Navigate to  *Scripts*, and click **Add Script**;
+
+* **Script Type**: Select **Person Authentication**;
+
+* Specify the name as `ztrust-cert` and add these **Configuration properties** (**Conf. properties**):
 
 |key                          | value               |
 |---------------------------- | ------------------- |
@@ -978,7 +981,7 @@ to the bottom of the page and click **Add custom script configuration**
 | use_path_validator |  enable/disable specific certificate validation.  |
 | chain_cert_file_path |  mandatory property pointing to certificate chains in [PEM] format.  |
 
-Example of the attributes json file (defined by **credentials_file**):
+Example of the attributes json file (defined by **credentials_file**) (**/etc/certs/cert_creds.json**):
 
 ```json
 {
@@ -994,6 +997,7 @@ Example of the attributes json file (defined by **credentials_file**):
 **use_path_validator** - if this property is **true**, certificate path (validity of CA(s) of certificate) is provided;  
 **use_ocsp_validator** - if this property is **true**, OCSP check of client certificate (OCSP info (URI,...) is extracted is checked certificate) is provided;  
 **use_crl_validator** - CLR lists are not used by ZTrust, so **false** value should be used;  
+**chain_cert_file_path** - chain of CA (root, intermediate,...) certificate(s), for example, can be placed here: **/etc/certs/ztrust.chain**;
 
 Example of some part of **openssl** configuration file, that allows to generate certificate with OCSP info during signing:
 
@@ -1014,7 +1018,7 @@ authorityInfoAccess = @ocsp_section
 ...
 
 [ ocsp_section ]
-caIssuers;URI.0 = http://<ocsp.domain>/gluu.chain
+caIssuers;URI.0 = http://<ocsp.domain>/ztrust.chain
 OCSP;URI.0 = http://<ocsp.domain>:8080
 ```
 
@@ -1037,11 +1041,11 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
             X509v3 Subject Alternative Name:
                 DNS:Gluu ECDSA Client, DNS:Gluu Client ECDSA
             Authority Information Access:
-                CA Issuers - URI:http://<ocsp.domain>/gluu.chain
+                CA Issuers - URI:http://<ocsp.domain>/ztrust.chain
                 OCSP - URI:http://<ocsp.domain>:8080
 ```
 
-* Copy and paste the text of `cert.py` into the *Script* text area.
+* Copy and paste the text of `cert-authn_plugin.py` into the *Script* text area.
 
 * Don't forget to check *Enabled* and click **Update**.
 
