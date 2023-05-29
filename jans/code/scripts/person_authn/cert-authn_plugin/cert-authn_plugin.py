@@ -21,7 +21,7 @@ from io.jans.as.model.util import CertUtils
 from io.jans.as.server.service.net import HttpService
 
 from java.util import Arrays
-from javax.faces.context import FacesContext
+from jakarta.faces.context import FacesContext
 from org.apache.http.params import CoreConnectionPNames
 
 import sys
@@ -115,10 +115,10 @@ class PersonAuthentication(PersonAuthenticationType):
 
         if step == 1:
             print "Cert (ZTrust). Authenticate for step 1"
-            login_button = ServerUtil.getFirstValue(requestParameters, "loginForm:loginButton")
-            if StringHelper.isEmpty(login_button):
-                print "Cert. Authenticate for step 1. Form were submitted incorrectly"
-                return False
+#            login_button = ServerUtil.getFirstValue(requestParameters, "loginForm:loginButton")
+#            if StringHelper.isEmpty(login_button):
+#                print "Cert. Authenticate for step 1. Form were submitted incorrectly"
+#                return False
             return True
         elif step == 2:
             print "Cert (ZTrust). Authenticate for step 2"
