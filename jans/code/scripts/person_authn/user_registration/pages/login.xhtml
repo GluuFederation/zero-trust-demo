@@ -19,9 +19,6 @@
 	<ui:define name="body">
 		<div class="container" style="text-align: center">
 			<h:panelGroup rendered="true">
-			<!--
-				<div class="login_bx_1"
-					style="border-radius: 10px; margin-top: 0px; background: white; border: 1px solid #008b8b;">-->
 					<div class="loginBox">
 					<div class="logo"></div>
 					<div style="height:100px"></div>
@@ -66,17 +63,6 @@
 									action="#{authenticator.authenticate}" />
 							</div>
 						</div>
-						<!--<div class="form-group row">
-							<div class="col-sm-offset-3 offset-md-3 col-sm-7 col-md-7">
-								<div class="forgot_link">
-									<a href="/identity/person/passwordReminder.htm"
-										style="color: blue;"> <h:outputText
-											value="#{msgs['login.forgotYourPassword']}" />
-									</a>
-								</div>
-							</div>
-						</div>-->
-						
 						<div class="form-group row">
 								<div class="forgot_link col-sm-offset-1 offset-md-1 col-sm-8 col-md-8">
 									<a href="restv1/authorize?client_id=${param.client_id}&amp;scope=${param.scope}&amp;&amp;redirect_uri=${param.redirect_uri}&amp;response_type=code&amp;state=${param.state}&amp;nonce=${param.nonce}&amp;acr_values=ztrust-forgot_password" style="color: gray;">
