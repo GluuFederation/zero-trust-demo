@@ -51,14 +51,12 @@ public class CertService {
     private List<X509Certificate> chainCerts;
     private boolean hasValidProperties;
 
-   
-    public static CertService getInstance() {
 
+    public static CertService getInstance() {
         if (singleton == null) {
             singleton = new CertService();
         }
         return singleton;
-
     }
 
     public boolean isHasValidProperties() {
@@ -92,14 +90,13 @@ public class CertService {
                 logger.error(e.getMessage(), e);
             }
         }
-
     }
+
     public String getScriptPropertyValue(String value) {
-		return scriptProperties.get(value);
-	}
+        return scriptProperties.get(value);
+    }
 
     public boolean validate(X509Certificate cert) {
-
         boolean valid = true;
         Date date = new Date();
         logger.info("Validating certificate");
@@ -118,7 +115,7 @@ public class CertService {
                     case PATH:
                         verifier = new PathCertificateVerifier(true);
                         break;
-                    case OSCP:
+                    case OCSP:
                         verifier = new OCSPCertificateVerifier();
                         break;
                     case CRL:
@@ -135,11 +132,9 @@ public class CertService {
             }
         }
         return valid;
-
     }
 
     public UserCertificateMatch processMatch(X509Certificate certificate, String userInum, boolean enroll) {
-
         UserCertificateMatch status = null;
         try {
             logger.info("Matching certificate and user. Enrollment is {}", enroll);
@@ -186,11 +181,9 @@ public class CertService {
             status = UNKNOWN_ERROR;
         }
         return status;
-
     }
 
     public List<Certificate> getUserCerts(String userId) {
-
         List<Certificate> certs = new ArrayList<>();
         try {
             CertPerson person = persistenceService.get(CertPerson.class, persistenceService.getPersonDn(userId));
@@ -201,25 +194,29 @@ public class CertService {
             certs = person.getJansExtUid().stream().filter(uid -> uid.startsWith(CERT_PREFIX))
                     .map(uid -> getExtraCertsInfo(uid, x509Certificates)).collect(Collectors.toList());
 
-            logger.info("Certificates:"+certs.get(0).toString());
+            if (certs != null && certs.size() > 0 ) {
+                for (Certificate cert: certs) {
+                    logger.info(String.format("Certificates: %s", cert));
+                }
+            }
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-
         return certs;
-
     }
+
     public List<BasicCredential> getCredentials(String uniqueIdOfTheUser) {
-		// Write the code to connect to the 3rd party API and fetch credentials against
-		// the user
-		List<BasicCredential> list = new ArrayList<BasicCredential>();
-		List<Certificate> certs = getUserCerts(uniqueIdOfTheUser);
-		for(Certificate cert:certs) {
-		    list.add(new BasicCredential(cert.getFormattedName(), System.currentTimeMillis()/1000));
-		}
-		return list;
-	}
+        // Write the code to connect to the 3rd party API and fetch credentials against
+        // the user
+        List<BasicCredential> list = new ArrayList<BasicCredential>();
+        List<Certificate> certs = getUserCerts(uniqueIdOfTheUser);
+        for(Certificate cert:certs) {
+            list.add(new BasicCredential(cert.getFormattedName(), System.currentTimeMillis()/1000));
+        }
+        return list;
+    }
+
     public int getDevicesTotal(String userId) {
 
         int total = 0;
@@ -230,7 +227,6 @@ public class CertService {
             logger.error(e.getMessage(), e);
         }
         return total;
-
     }
 
     private Certificate getExtraCertsInfo(final String dn) {
@@ -332,7 +328,6 @@ public class CertService {
 
         }
         return subjectCertificate;
-
     }
 
     public boolean removeFromUser(String fingerPrint, String userId) throws Exception {
@@ -410,7 +405,6 @@ public class CertService {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-
     }
 
     private String getFingerPrint(X509Certificate certificate) throws Exception {
@@ -423,6 +417,5 @@ public class CertService {
 //        persistenceService.initialize();
         reloadConfiguration();
     }
-
 
 }
