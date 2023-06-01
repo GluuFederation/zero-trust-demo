@@ -101,6 +101,9 @@ class PersonAuthentication(PersonAuthenticationType):
     def isValidAuthenticationMethod(self, usageType, configurationAttributes):
         return True
 
+    def getAuthenticationMethodClaims(self, configurationAttributes):
+        return None
+
     def getAlternativeAuthenticationMethod(self, usageType, configurationAttributes):
         return None
 
@@ -263,22 +266,30 @@ class PersonAuthentication(PersonAuthenticationType):
             return 3
 
     def getPageForStep(self, configurationAttributes, step):
+        print "Cert (ZTrust). getPageForStep(): step = '%s'" % step
         if step == 1:
             return "/auth/cert/login.xhtml"
         if step == 2:
             return "/auth/cert/cert-login.xhtml"
         elif step == 3:
             cert_selected = self.getSessionAttribute("cert_selected")
+            print "Cert (ZTrust). getPageForStep(): cert_selected = '%s'" % cert_selected
             if True != cert_selected:
                 return "/auth/cert/cert-not-selected.xhtml"
 
             cert_valid = self.getSessionAttribute("cert_valid")
+            print "Cert (ZTrust). getPageForStep(): cert_valid = '%s'" % cert_valid
             if True != cert_valid:
                 return "/auth/cert/cert-invalid.xhtml"
+
+            print "Cert (ZTrust). getPageForStep(): '/login.xhtml'"
             
             return "/login.xhtml"
 
         return ""
+
+    def getNextStep(self, configurationAttributes, requestParameters, step):
+        return -1
 
     def logout(self, configurationAttributes, requestParameters):
         return True
