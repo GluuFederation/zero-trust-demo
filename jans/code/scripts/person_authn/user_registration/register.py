@@ -741,11 +741,11 @@ class PersonAuthentication(PersonAuthenticationType):
 
                     return True
 
-            # Try to get certificate from attribute javax.servlet.request.X509Certificate
-            x509Certificates = request.getAttribute('javax.servlet.request.X509Certificate')
+            # Try to get certificate from attribute jakarta.servlet.request.X509Certificate
+            x509Certificates = request.getAttribute('jakarta.servlet.request.X509Certificate')
             if (x509Certificates != None) and (len(x509Certificates) > 0):
                 identity.setWorkingParameter("cert_x509", self.certToString(x509Certificates[0]))
-                print "Register. Prepare for step 2. Storing user certificate obtained from 'javax.servlet.request.X509Certificate' attribute"
+                print "Register. Prepare for step 2. Storing user certificate obtained from 'jakarta.servlet.request.X509Certificate' attribute"
                 return True
 
         elif step == 3:

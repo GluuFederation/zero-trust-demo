@@ -99,58 +99,77 @@ class PersonAuthentication(PersonAuthenticationType):
         return 11
 
     def isValidAuthenticationMethod(self, usageType, configurationAttributes):
+        print "Cert (ZTrust). isValidAuthenticationMethod()."
+        print "Cert (ZTrust). isValidAuthenticationMethod(). result: True"
         return True
 
     def getAuthenticationMethodClaims(self, configurationAttributes):
+        print "Cert (ZTrust). getAuthenticationMethodClaims(). result: None"
         return None
 
     def getAlternativeAuthenticationMethod(self, usageType, configurationAttributes):
+        print "Cert (ZTrust). getAlternativeAuthenticationMethod(). result: None"    
         return None
 
     def authenticate(self, configurationAttributes, requestParameters, step):
+    
+        print "Cert (ZTrust). authenticate(). ------------------------------------------------------ >>"
+        print "Cert (ZTrust). authenticate(). step = '%d'" % step
+    
         identity = CdiUtil.bean(Identity)
         credentials = identity.getCredentials()
 
         user_name = credentials.getUsername()
+        
+        print "Cert (ZTrust). authenticate(). user_name = '%s'" % user_name
 
         userService = CdiUtil.bean(UserService)
         authenticationService = CdiUtil.bean(AuthenticationService)
 
         if step == 1:
             print "Cert (ZTrust). Authenticate for step 1"
-#            login_button = ServerUtil.getFirstValue(requestParameters, "loginForm:loginButton")
-#            if StringHelper.isEmpty(login_button):
-#                print "Cert. Authenticate for step 1. Form were submitted incorrectly"
-#                return False
+            login_button = ServerUtil.getFirstValue(requestParameters, "loginForm:loginButton")
+            if StringHelper.isEmpty(login_button):
+                print "Cert. Authenticate for step 1. Form were submitted incorrectly"
+                print "Cert (ZTrust). Authenticate for step 1. result = False"
+                return False
+            print "Cert (ZTrust). Authenticate for step 1. result = True"
             return True
         elif step == 2:
             print "Cert (ZTrust). Authenticate for step 2"
 
             # Validate if user selected certificate
             cert_x509 = self.getSessionAttribute("cert_x509")
+            print "Cert (ZTrust). Authenticate for step 2. cert_x509 = %s" % cert_x509
             if cert_x509 == None:
                 print "Cert (ZTrust). Authenticate for step 2. User not selected any certs"
                 identity.setWorkingParameter("cert_selected", False)
-                    
+                print "Cert (ZTrust). Authenticate for step 2. result = True"
                 # Return True to inform user how to reset workflow
                 return True
             else:
                 identity.setWorkingParameter("cert_selected", True)
                 x509Certificate = self.certFromString(cert_x509)
+                print "Cert (ZTrust). Authenticate for step 2. x509Certificate = %s" % x509Certificate
 
             subjectX500Principal = x509Certificate.getSubjectX500Principal()
             print "Cert (ZTrust). Authenticate for step 2. User selected certificate with DN '%s'" % subjectX500Principal
             
             # Validate certificates which user selected
             valid = self.validateCertificate(x509Certificate)
+            
+            print "Cert (ZTrust). Authenticate for step 2. valid = %s" % valid
+            
             if not valid:
                 print "Cert (ZTrust). Authenticate for step 2. Certificate DN '%s' is not valid" % subjectX500Principal
                 identity.setWorkingParameter("cert_valid", False)
-                
+                print "Cert (ZTrust). Authenticate for step 2. cert_valid = False"
+                print "Cert (ZTrust). Authenticate for step 2. result = True"
                 # Return True to inform user how to reset workflow
                 return True
 
             identity.setWorkingParameter("cert_valid", True)
+            print "Cert (ZTrust). Authenticate for step 2. cert_valid = True"
             
             # Calculate certificate fingerprint
             x509CertificateFingerprint = self.calculateCertificateFingerprint(x509Certificate)
@@ -180,9 +199,11 @@ class PersonAuthentication(PersonAuthenticationType):
             logged_in = False
             userService = CdiUtil.bean(UserService)
             logged_in = authenticationService.authenticate(foundUserName)
+            
+            print "Cert (ZTrust). Authenticate for step 2. logged_in = %s" % logged_in
         
-            print "Cert (ZTrust). Authenticate for step 2. Setting count steps to 2"
-            identity.setWorkingParameter("cert_count_login_steps", 2)
+            print "Cert (ZTrust). Authenticate for step 2. Setting count steps to 3"
+            identity.setWorkingParameter("cert_count_login_steps", 3)
 
             return logged_in
         elif step == 3:
@@ -195,11 +216,15 @@ class PersonAuthentication(PersonAuthenticationType):
 
             user_password = credentials.getPassword()
 
+            print "Cert (ZTrust). Authenticate for step 3. user_password = %s" % user_password
+
             logged_in = False
             if (StringHelper.isNotEmptyString(user_name) and StringHelper.isNotEmptyString(user_password)):
                 logged_in = authenticationService.authenticate(user_name, user_password)
 
             if (not logged_in):
+                print "Cert (ZTrust). Authenticate for step 3. logged_in = %s" % logged_in
+                print "Cert (ZTrust). Authenticate for step 3. result = False"
                 return False
 
             # Double check just to make sure. We did checking in previous step
@@ -211,101 +236,143 @@ class PersonAuthentication(PersonAuthenticationType):
                 find_user_by_external_uid = userService.addUserAttribute(user_name, "jansExtUid", cert_user_external_uid)
                 if find_user_by_external_uid == None:
                     print "Cert (ZTrust). Authenticate for step 3. Failed to update current user"
+                    print "Cert (ZTrust). Authenticate for step 3. result = False"
                     return False
-
+                print "Cert (ZTrust). Authenticate for step 3. find_user_by_external_uid != None (2)"
+                print "Cert (ZTrust). Authenticate for step 3. result = True"
                 return True
-        
+
+            print "Cert (ZTrust). Authenticate for step 3. find_user_by_external_uid != None (1)"
+            print "Cert (ZTrust). Authenticate for step 3. result = True"
             return True
         else:
+            print "Cert (ZTrust). Authenticate for step 3. result = False"
             return False
 
     def prepareForStep(self, configurationAttributes, requestParameters, step):
+        print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ >>"    
         print "Cert (ZTrust). Prepare for step %d" % step
         identity = CdiUtil.bean(Identity)
         
         if step == 1:
+            print "Cert (ZTrust). prepareForStep(): step == 1"
             if self.enabled_recaptcha:
                 identity.setWorkingParameter("recaptcha_site_key", self.recaptcha_creds['site_key'])
+            print "Cert (ZTrust). prepareForStep(): step == 1. result: True"
+            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
             return True    
         elif step == 2:
+            print "Cert (ZTrust). prepareForStep(): step == 2"
             # Store certificate in session
             facesContext = CdiUtil.bean(FacesContext)
             externalContext = facesContext.getExternalContext()
             request = externalContext.getRequest()
-
             # Try to get certificate from header X-ClientCert
             clientCertificate = externalContext.getRequestHeaderMap().get("X-ClientCert")
             if clientCertificate != None:
                 x509Certificate = self.certFromPemString(clientCertificate)
+                print "Cert (ZTrust). Prepare for step 2. x509Certificate = %s" % x509Certificate
                 identity.setWorkingParameter("cert_x509",  self.certToString(x509Certificate))
                 print "Cert (ZTrust). Prepare for step 2. Storing user certificate obtained from 'X-ClientCert' header"
+                print "Cert (ZTrust). prepareForStep(): step == 2. result: True"
+                print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
                 return True
-
-            # Try to get certificate from attribute javax.servlet.request.X509Certificate
-            x509Certificates = request.getAttribute('javax.servlet.request.X509Certificate')
+                
+            print "Cert (ZTrust). prepareForStep(): step == 2. clientCertificate == None"
+            # Try to get certificate from attribute jakarta.servlet.request.X509Certificate
+            x509Certificates = request.getAttribute('jakarta.servlet.request.X509Certificate')
+            print "Cert (ZTrust). prepareForStep(): step == 2. x509Certificates = %s" % x509Certificates
             if (x509Certificates != None) and (len(x509Certificates) > 0):
                 identity.setWorkingParameter("cert_x509", self.certToString(x509Certificates[0]))
-                print "Cert (ZTrust). Prepare for step 2. Storing user certificate obtained from 'javax.servlet.request.X509Certificate' attribute"
+                print "Cert (ZTrust). Prepare for step 2. Storing user certificate obtained from 'jakarta.servlet.request.X509Certificate' attribute"
+                print "Cert (ZTrust). prepareForStep(): step == 2. result: True"
+                print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"                
                 return True
 
         if step < 4:
+            print "Cert (ZTrust). Prepare for step %d (step < 4). result: True" % step
+            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
             return True
         else:
+            print "Cert (ZTrust). Prepare for step %d. result: False" % step
+            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
             return False
 
     def getExtraParametersForStep(self, configurationAttributes, step):
-        if step == 1:
-            return None
+        print "Cert (ZTrust). getExtraParametersForStep(): step %d." % step                    
+#        if step == 1:
+#            return None
+        print "Cert (ZTrust). getExtraParametersForStep(): step %d. result = '%s'" % (step, Arrays.asList("cert_selected", "cert_valid", "cert_x509", "cert_x509_fingerprint", "cert_count_login_steps", "cert_user_external_uid"))
         return Arrays.asList("cert_selected", "cert_valid", "cert_x509", "cert_x509_fingerprint", "cert_count_login_steps", "cert_user_external_uid")
 
     def getCountAuthenticationSteps(self, configurationAttributes):
+        print "Cert (ZTrust). getCountAuthenticationSteps()"
         cert_count_login_steps = self.getSessionAttribute("cert_count_login_steps")
+        print "Cert (ZTrust). getCountAuthenticationSteps(): cert_count_login_steps = %s" % cert_count_login_steps
         if cert_count_login_steps != None:
+            print "Cert (ZTrust). getCountAuthenticationSteps(): result = %d" % cert_count_login_steps
             return cert_count_login_steps
         else:
+            print "Cert (ZTrust). getCountAuthenticationSteps(): result = 3"
             return 3
 
     def getPageForStep(self, configurationAttributes, step):
         print "Cert (ZTrust). getPageForStep(): step = '%s'" % step
         if step == 1:
+            print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/auth/cert/login.xhtml'" % step
             return "/auth/cert/login.xhtml"
         if step == 2:
+            print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/auth/cert/cert-login.xhtml'" % step
             return "/auth/cert/cert-login.xhtml"
         elif step == 3:
             cert_selected = self.getSessionAttribute("cert_selected")
             print "Cert (ZTrust). getPageForStep(): cert_selected = '%s'" % cert_selected
             if True != cert_selected:
+                print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/auth/cert/cert-not-selected.xhtml'" % step
                 return "/auth/cert/cert-not-selected.xhtml"
 
             cert_valid = self.getSessionAttribute("cert_valid")
             print "Cert (ZTrust). getPageForStep(): cert_valid = '%s'" % cert_valid
             if True != cert_valid:
+                print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/auth/cert/cert-invalid.xhtml'" % step
                 return "/auth/cert/cert-invalid.xhtml"
 
+            print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/login.xhtml'" % step
             print "Cert (ZTrust). getPageForStep(): '/login.xhtml'"
             
             return "/login.xhtml"
 
+        print "Cert (ZTrust). getPageForStep(): step = '%s'. result = ''" % step
         return ""
 
     def getNextStep(self, configurationAttributes, requestParameters, step):
+        print "Cert (ZTrust). getNextStep(): step = '%s'. result = -1" % step    
         return -1
 
     def logout(self, configurationAttributes, requestParameters):
+        print "Cert (ZTrust). logout(): result = True"
         return True
 
     def processBasicAuthentication(self, credentials):
+    
+        print "Cert (ZTrust). processBasicAuthentication()"
+    
         userService = CdiUtil.bean(UserService)
         authenticationService = CdiUtil.bean(AuthenticationService)
 
         user_name = credentials.getUsername()
         user_password = credentials.getPassword()
+        
+        print "Cert (ZTrust). processBasicAuthentication(): user_name     = '%s'" % user_name
+        print "Cert (ZTrust). processBasicAuthentication(): user_password = '%s'" % user_password
 
         logged_in = False
         if (StringHelper.isNotEmptyString(user_name) and StringHelper.isNotEmptyString(user_password)):
             logged_in = authenticationService.authenticate(user_name, user_password)
 
+        print "Cert (ZTrust). processBasicAuthentication(): logged_in     = '%s'" % logged_in
         if (not logged_in):
+            print "Cert (ZTrust). processBasicAuthentication(): return None"
             return None
 
         find_user_by_uid = authenticationService.getAuthenticatedUser()
@@ -313,9 +380,13 @@ class PersonAuthentication(PersonAuthenticationType):
             print "Cert (ZTrust). Process basic authentication. Failed to find user '%s'" % user_name
             return None
         
+        print "Cert (ZTrust). processBasicAuthentication(): find_user_by_uid = '%s'" % find_user_by_uid
         return find_user_by_uid
 
     def getSessionAttribute(self, attribute_name):
+    
+        print "Cert (ZTrust). getSessionAttribute(): attribute_name = '%s'" % attribute_name
+    
         identity = CdiUtil.bean(Identity)
 
         # Try to get attribute value from Seam event context
@@ -332,6 +403,7 @@ class PersonAuthentication(PersonAuthenticationType):
             return None
 
         if session_attributes.containsKey(attribute_name):
+            print "Cert (ZTrust). getSessionAttribute(): attribute_name = '%s'. result = '%s'" % (attribute_name, session_attributes.get(attribute_name))
             return session_attributes.get(attribute_name)
 
         return None
@@ -344,7 +416,9 @@ class PersonAuthentication(PersonAuthenticationType):
         # Use Janssen implementation
         fingerprint = FingerprintHelper.getPublicKeySshFingerprint(publicKey)
         
-        return fingerprint      
+        print "Cert (ZTrust). Calculate fingerprint for certificate DN '%s'. fingerprint = '%s'" % (x509Certificate.getSubjectX500Principal(), fingerprint)
+        
+        return fingerprint
 
     def validateCertificate(self, x509Certificate):
         subjectX500Principal = x509Certificate.getSubjectX500Principal()
@@ -361,6 +435,8 @@ class PersonAuthentication(PersonAuthenticationType):
                 if (result.getValidity() != ValidationStatus.CertificateValidity.VALID):
                     print "Cert (ZTrust). Certificate: '%s' is invalid" % subjectX500Principal
                     return False
+        
+        print "Cert (ZTrust). validateCertificate(): '%s' result: True" % subjectX500Principal       
         
         return True
 
@@ -478,4 +554,5 @@ class PersonAuthentication(PersonAuthenticationType):
         return response["success"]
 
     def hasEnrollments(self, configurationAttributes, user):
+        print "Cert (ZTrust). hasEnrollments(): result: True"
         return True
