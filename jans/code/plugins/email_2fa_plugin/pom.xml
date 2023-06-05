@@ -48,7 +48,7 @@
                                         <Plugin-Id>${plugin.id}</Plugin-Id>
                                         <Plugin-Version>${plugin.version}</Plugin-Version>
                                         <Plugin-Provider>Gluu Inc.</Plugin-Provider>
-                                        <Plugin-Class>org.gluu.casa.plugins.email_plugin.Email2faPlugin</Plugin-Class>
+                                        <Plugin-Class>org.gluu.casa.plugins.email_2fa_plugin.vm.Email2faPlugin</Plugin-Class>
                                         <Plugin-Description> plugin to enroll Email as a 2FA Credential for EmailOTP 2FA.</Plugin-Description>
                                         <Plugin-License>Visit https://gluu.org/docs/casa/#license</Plugin-License>
                                         <Logger-Name>org.gluu.casa.plugins</Logger-Name>
