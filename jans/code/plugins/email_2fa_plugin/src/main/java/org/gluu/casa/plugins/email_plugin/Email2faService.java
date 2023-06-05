@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.emailenroll;
+package org.gluu.casa.plugins.email_plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,34 +6,34 @@ import java.util.Map;
 
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.emailenroll.model.EmailPerson;
+import org.gluu.casa.plugins.email_plugin.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class EmailEnrollService {
+public class Email2faService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EmailEnrollService.class);
+	private static final Logger logger = LoggerFactory.getLogger(Email2faService.class);
 
 	public static String ACR = "ztrust-email_2fa_plugin";
 
-	private static EmailEnrollService SINGLE_INSTANCE = null;
+	private static Email2faService SINGLE_INSTANCE = null;
 	public static Map<String, String> properties;
 
 	private IPersistenceService persistenceService;
 	private EmailPerson person;
 
-	private EmailEnrollService() {
+	private Email2faService() {
 		persistenceService = Utils.managedBean(IPersistenceService.class);
 		reloadConfiguration();
 	}
 
-	public static EmailEnrollService getInstance() {
+	public static Email2faService getInstance() {
 		if (SINGLE_INSTANCE == null) {
-			synchronized (EmailEnrollService.class) {
-				SINGLE_INSTANCE = new EmailEnrollService();
+			synchronized (Email2faService.class) {
+				SINGLE_INSTANCE = new Email2faService();
 			}
 		}
 		return SINGLE_INSTANCE;

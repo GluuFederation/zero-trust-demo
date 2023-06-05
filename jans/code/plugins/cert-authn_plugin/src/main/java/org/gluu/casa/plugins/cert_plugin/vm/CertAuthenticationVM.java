@@ -1,11 +1,11 @@
-package org.gluu.casa.plugins.cert.vm;
+package org.gluu.casa.plugins.cert_plugin.vm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.plugin.misc.Utils;
 import org.gluu.casa.plugin.misc.WebUtils;
-import org.gluu.casa.plugins.cert.service.CertService;
-import org.gluu.casa.plugins.cert.service.UserCertificateMatch;
+import org.gluu.casa.plugins.cert_plugin.service.CertService;
+import org.gluu.casa.plugins.cert_plugin.service.UserCertificateMatch;
 import org.gluu.casa.service.IPersistenceService;
 import org.gluu.casa.service.ISessionContext;
 import io.jans.as.model.util.CertUtils;
@@ -135,7 +135,7 @@ public class CertAuthenticationVM {
 
         try {
             if (Utils.isEmpty(clientCertString)) {
-                String attribute = "javax.servlet.request.X509Certificate";
+                String attribute = "jakarta.servlet.request.X509Certificate";
                 Optional<?> optAttr = Optional.ofNullable(WebUtils.getServletRequest().getAttribute(attribute));
    
             

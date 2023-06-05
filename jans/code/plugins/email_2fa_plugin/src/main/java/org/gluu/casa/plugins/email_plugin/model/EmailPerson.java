@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.emailenroll.model;
+package org.gluu.casa.plugins.email_plugin.model;
 
 import java.util.Objects;
 

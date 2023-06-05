@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.credentials.extensions;
+package org.gluu.casa.plugins.email_plugin.extensions;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,20 +8,19 @@ import java.util.stream.Collectors;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.extension.AuthnMethod;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.emailenroll.EmailEnrollService;
-
+import org.gluu.casa.plugins.email_plugin.Email2faService;
 import org.gluu.casa.service.ISessionContext;
 import org.pf4j.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Extension
-public class EmailEnrollAuthnMethod implements AuthnMethod{
+public class Email2faPluginAuthnMethod implements AuthnMethod{
 
-	private Logger logger = LoggerFactory.getLogger(EmailEnrollAuthnMethod.class);
+	private Logger logger = LoggerFactory.getLogger(Email2faPluginAuthnMethod.class);
 	private ISessionContext sessionContext;
 
-	public EmailEnrollAuthnMethod() {
+	public Email2faPluginAuthnMethod() {
 		sessionContext = Utils.managedBean(ISessionContext.class);
 	}
 	
@@ -33,13 +32,13 @@ public class EmailEnrollAuthnMethod implements AuthnMethod{
 	@Override
 	public boolean mayBe2faActivationRequisite() {
 		return Boolean.parseBoolean(Optional
-				.ofNullable(EmailEnrollService.getInstance().getScriptPropertyValue("2fa_requisite")).orElse("false"));
+				.ofNullable(Email2faService.getInstance().getScriptPropertyValue("2fa_requisite")).orElse("false"));
 	}
 
 	@Override
 	public List<BasicCredential> getEnrolledCreds(String arg0) {
 		try {
-			return EmailEnrollService.getInstance().getCredentials(sessionContext.getLoggedUser().getUserName()).stream()
+			return Email2faService.getInstance().getCredentials(sessionContext.getLoggedUser().getUserName()).stream()
 					.map(dev -> new BasicCredential(dev.getNickName(), 0)).collect(Collectors.toList());
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -49,7 +48,7 @@ public class EmailEnrollAuthnMethod implements AuthnMethod{
 	
     @Override
     public String getAcr() {
-        return EmailEnrollService.ACR;
+        return Email2faService.ACR;
     }
 
 	@Override
@@ -80,12 +79,12 @@ public class EmailEnrollAuthnMethod implements AuthnMethod{
 	@Override
 	public int getTotalUserCreds(String arg0) {
 		String userName = sessionContext.getLoggedUser().getUserName();
-		return EmailEnrollService.getInstance().getCredentialsTotal(userName);
+		return Email2faService.getInstance().getCredentialsTotal(userName);
 	}
 
 	@Override
 	public void reloadConfiguration() {
-		EmailEnrollService.getInstance().reloadConfiguration();
+		Email2faService.getInstance().reloadConfiguration();
 	}
 
 }

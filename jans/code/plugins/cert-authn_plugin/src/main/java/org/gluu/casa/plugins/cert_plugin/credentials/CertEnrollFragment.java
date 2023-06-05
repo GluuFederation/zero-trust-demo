@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert.credentials;
+package org.gluu.casa.plugins.cert_plugin.credentials;
 
 import org.gluu.casa.extension.PreferredMethodFragment;
 

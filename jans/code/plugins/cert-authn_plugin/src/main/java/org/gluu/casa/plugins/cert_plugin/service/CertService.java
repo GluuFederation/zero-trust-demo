@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert.service;
+package org.gluu.casa.plugins.cert_plugin.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -6,10 +6,9 @@ import org.gluu.casa.core.model.BasePerson;
 import org.gluu.casa.core.model.IdentityPerson;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.cert.CertAuthenticationExtension;
-import org.gluu.casa.plugins.cert.model.CertPerson;
-import org.gluu.casa.plugins.cert.model.Certificate;
-
+import org.gluu.casa.plugins.cert_plugin.CertAuthenticationExtension;
+import org.gluu.casa.plugins.cert_plugin.model.CertPerson;
+import org.gluu.casa.plugins.cert_plugin.model.Certificate;
 import org.gluu.casa.service.IPersistenceService;
 import io.jans.as.common.cert.fingerprint.FingerprintHelper;
 import io.jans.as.common.cert.validation.CRLCertificateVerifier;
@@ -23,6 +22,8 @@ import io.jans.orm.search.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.gluu.casa.plugins.cert_plugin.service.UserCertificateMatch.*;
+
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -31,8 +32,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.gluu.casa.plugins.cert.service.UserCertificateMatch.*;
 
 public class CertService {
 

@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert.service;
+package org.gluu.casa.plugins.cert_plugin.service;
 
 public enum VerifierType {
 

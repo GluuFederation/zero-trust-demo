@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert;
+package org.gluu.casa.plugins.cert_plugin;
 
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;

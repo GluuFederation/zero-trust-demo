@@ -1,8 +1,8 @@
-package org.gluu.casa.plugins.emailenroll;
+package org.gluu.casa.plugins.email_plugin;
 
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.emailenroll.model.EmailPerson;
+import org.gluu.casa.plugins.email_plugin.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.gluu.casa.service.ISessionContext;
 import org.gluu.casa.ui.UIUtils;
@@ -18,9 +18,9 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EmailEnrollVM {
+public class Email2faEnrollVM {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmailEnrollVM.class);
+    private static final Logger logger = LoggerFactory.getLogger(Email2faEnrollVM.class);
 
     private static final String DEF_EMAIL_REGEX = "(?!^[.+&'_-]*@.*$)(^[_\\w\\d+&'-]+(\\.[_\\w\\d+&'-]*)*@[\\w\\d-]+(\\.[\\w\\d-]+)*\\.(([\\d]{1,3})|([\\w]{2,}))$)";  
 
