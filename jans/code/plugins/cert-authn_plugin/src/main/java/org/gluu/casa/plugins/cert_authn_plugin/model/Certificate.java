@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert_plugin.model;
+package org.gluu.casa.plugins.cert_authn_plugin.model;
 
 import java.util.ArrayList;
 import java.util.List;

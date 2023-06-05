@@ -5,7 +5,7 @@
 
     <h:title self="@define(title)">${zkService.appName} - ${labels.usrcert.cert_title}</h:title>
 
-    <z:div if="${empty pageScope.error}" viewModel="@id('vm') @init('org.gluu.casa.plugins.cert.vm.CertAuthenticationSummaryVM')"
+    <z:div if="${empty pageScope.error}" viewModel="@id('vm') @init('org.gluu.casa.plugins.cert_authn_plugin.vm.CertAuthenticationSummaryVM')"
            self="@define(maincontent)">
 
         <z:include src="/back-home.zul" />
@@ -34,64 +34,64 @@
                                 </span>
 
                                 <p class="ml3 mb0 mt0">
-                                	<z:label sclass="f5 ml1 nb1 bb" value="Subject:"/>
-                                	<br/>
-                                	<z:label sclass="f5 mh3 mv0 dib dark-blue2 nb1" value="@load(empty each.formattedCommonName ? c:l('general.no_named') : each.formattedCommonName)"/>
+                                    <z:label sclass="f5 ml1 nb1 bb" value="Subject:"/>
+                                    <br/>
+                                    <z:label sclass="f5 mh3 mv0 dib dark-blue2 nb1" value="@load(empty each.formattedCommonName ? c:l('general.no_named') : each.formattedCommonName)"/>
                                     <br/>
 
-										<zk:zk unless="${empty each.commonName}">
-											<zk:zk forEach="${each.commonName}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Common Name</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.commonName}">
+                                        <zk:zk forEach="${each.commonName}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Common Name</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.organizationUnit}">
-											<zk:zk forEach="${each.organizationUnit}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Organization Unit</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<br/>
-											</zk:zk>
-										</zk:zk>
-										
-										<zk:zk unless="${empty each.organization}">
-											<zk:zk forEach="${each.organization}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Organization</label>
-												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.organizationUnit}">
+                                        <zk:zk forEach="${each.organizationUnit}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Organization Unit</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
+                                    
+                                    <zk:zk unless="${empty each.organization}">
+                                        <zk:zk forEach="${each.organization}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Organization</label>
+                                            <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.location}">
-											<zk:zk forEach="${each.location}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Location</label>
-												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.location}">
+                                        <zk:zk forEach="${each.location}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Location</label>
+                                            <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.state}">
-											<zk:zk forEach="${each.state}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">State</label>
-												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.state}">
+                                        <zk:zk forEach="${each.state}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">State</label>
+                                            <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.country}">
-											<zk:zk forEach="${each.country}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
-												<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
-												<zk:zk if="${vm.isCountryValid(each)}">
-													<img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
-												</zk:zk>
-												<zk:zk unless="${vm.isCountryValid(each)}">
-													<z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
-												</zk:zk>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.country}">
+                                        <zk:zk forEach="${each.country}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Country</label>
+                                            <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
+                                            <zk:zk if="${vm.isCountryValid(each)}">
+                                                <img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
+                                            </zk:zk>
+                                            <zk:zk unless="${vm.isCountryValid(each)}">
+                                                <z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
+                                            </zk:zk>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
                                     <zk:zk unless="${empty each.formattedCommonName}">
                                         <label class="w4 ml3 mv0 dib truncate nb1">${labels.usercert.expires}</label>
@@ -107,67 +107,67 @@
                                         </span>
                                     </zk:zk>
                                     <zk:zk unless="${each.expired}">
-										<br/>                                    
+                                        <br/>                                    
                                     </zk:zk>
                                     
-									<z:label sclass="f5 ml1 nb1 bb" value="Issuer:"/>
-                                	<br/>
-                                	<z:label sclass="f5 mh3 mv0 dib dark-blue2 nb1" value="@load(empty each.issuerCertificate.formattedCommonName ? c:l('general.no_named') : each.issuerCertificate.formattedCommonName)"/>
-                                	<br/>								
-								
-										<zk:zk unless="${empty each.issuerCertificate.commonName}">
-											<zk:zk forEach="${each.issuerCertificate.commonName}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Common Name</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <z:label sclass="f5 ml1 nb1 bb" value="Issuer:"/>
+                                    <br/>
+                                    <z:label sclass="f5 mh3 mv0 dib dark-blue2 nb1" value="@load(empty each.issuerCertificate.formattedCommonName ? c:l('general.no_named') : each.issuerCertificate.formattedCommonName)"/>
+                                    <br/>                                
 
-										<zk:zk unless="${empty each.issuerCertificate.organizationUnit}">
-											<zk:zk forEach="${each.issuerCertificate.organizationUnit}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Organization Unit</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
-												<br/>
-											</zk:zk>
-										</zk:zk>
-										
-										<zk:zk unless="${empty each.issuerCertificate.organization}">
-											<zk:zk forEach="${each.issuerCertificate.organization}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Organization</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.issuerCertificate.commonName}">
+                                        <zk:zk forEach="${each.issuerCertificate.commonName}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Common Name</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>                                            
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.issuerCertificate.location}">
-											<zk:zk forEach="${each.issuerCertificate.location}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Location</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.issuerCertificate.organizationUnit}">
+                                        <zk:zk forEach="${each.issuerCertificate.organizationUnit}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Organization Unit</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>                                            
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
+                                    
+                                    <zk:zk unless="${empty each.issuerCertificate.organization}">
+                                        <zk:zk forEach="${each.issuerCertificate.organization}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Organization</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>                                            
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.issuerCertificate.state}">
-											<zk:zk forEach="${each.issuerCertificate.state}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">State</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>											
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.issuerCertificate.location}">
+                                        <zk:zk forEach="${each.issuerCertificate.location}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Location</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>                                            
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
 
-										<zk:zk unless="${empty each.issuerCertificate.country}">
-											<zk:zk forEach="${each.issuerCertificate.country}">
-											 	<label class="w4 ml3 mv0 dib truncate nb1">Country</label>
-											 	<z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
-												<zk:zk if="${vm.isCountryValid(each)}">
-													<img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
-												</zk:zk>
-												<zk:zk unless="${vm.isCountryValid(each)}">
-													<z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
-												</zk:zk>
-												<br/>
-											</zk:zk>
-										</zk:zk>
+                                    <zk:zk unless="${empty each.issuerCertificate.state}">
+                                        <zk:zk forEach="${each.issuerCertificate.state}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">State</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${forEachStatus.current}"/>                                            
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
+
+                                    <zk:zk unless="${empty each.issuerCertificate.country}">
+                                        <zk:zk forEach="${each.issuerCertificate.country}">
+                                             <label class="w4 ml3 mv0 dib truncate nb1">Country</label>
+                                             <z:label sclass="ml4 mv0 dib dark-blue2 nb1" value="${each}"/>
+                                            <zk:zk if="${vm.isCountryValid(each)}">
+                                                <img alt="${each}" style="height: 1.2rem; margin-bottom: 0.1rem; margin-left: 0.2rem;" src="img/flags_32/${each.toLowerCase()}_32.png"/>
+                                            </zk:zk>
+                                            <zk:zk unless="${vm.isCountryValid(each)}">
+                                                <z:label sclass="mv0 dib text-danger nb1" value="No Flag"/>
+                                            </zk:zk>
+                                            <br/>
+                                        </zk:zk>
+                                    </zk:zk>
                                 </p>
                             </div>
                             <div class="pl2 pt2">

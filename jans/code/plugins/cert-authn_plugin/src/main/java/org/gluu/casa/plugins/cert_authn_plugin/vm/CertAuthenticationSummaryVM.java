@@ -1,13 +1,12 @@
-package org.gluu.casa.plugins.cert_plugin.vm;
+package org.gluu.casa.plugins.cert_authn_plugin.vm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.gluu.casa.core.pojo.User;
-import org.gluu.casa.credential.CredentialRemovalConflict;
-import org.gluu.casa.plugins.cert_plugin.CertAuthenticationExtension;
-import org.gluu.casa.plugins.cert_plugin.CertAuthenticationPlugin;
-import org.gluu.casa.plugins.cert_plugin.model.Certificate;
-import org.gluu.casa.plugins.cert_plugin.service.CertService;
+import org.gluu.casa.plugins.cert_authn_plugin.CertAuthenticationExtension;
+import org.gluu.casa.plugins.cert_authn_plugin.CertAuthenticationPlugin;
+import org.gluu.casa.plugins.cert_authn_plugin.model.Certificate;
+import org.gluu.casa.plugins.cert_authn_plugin.service.CertService;
 import org.gluu.casa.service.ISessionContext;
 import org.gluu.casa.ui.UIUtils;
 import org.zkoss.bind.BindUtils;

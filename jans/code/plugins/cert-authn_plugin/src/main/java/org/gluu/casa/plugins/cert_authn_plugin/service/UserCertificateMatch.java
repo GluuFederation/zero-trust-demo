@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert_plugin.service;
+package org.gluu.casa.plugins.cert_authn_plugin.service;
 
 public enum UserCertificateMatch {
     SUCCESS,

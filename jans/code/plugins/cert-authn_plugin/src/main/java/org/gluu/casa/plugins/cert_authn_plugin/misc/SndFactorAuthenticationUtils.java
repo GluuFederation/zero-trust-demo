@@ -1,8 +1,8 @@
-package org.gluu.casa.plugin.misc;
+package org.gluu.casa.plugins.cert_authn_plugin.misc;
 
 
 import org.gluu.casa.core.pojo.User;
-import org.gluu.casa.credential.CredentialRemovalConflict;
+import org.gluu.casa.plugins.cert_authn_plugin.vm.CredentialRemovalConflict;
 import org.zkoss.util.Pair;
 
 /**

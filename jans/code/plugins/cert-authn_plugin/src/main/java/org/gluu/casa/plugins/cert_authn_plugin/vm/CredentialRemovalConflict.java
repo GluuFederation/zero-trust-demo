@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert_plugin.vm;
+package org.gluu.casa.plugins.cert_authn_plugin.vm;
 
 public enum CredentialRemovalConflict {
     /**

@@ -1,4 +1,4 @@
-package org.gluu.casa.plugin.misc;
+package org.gluu.casa.plugins.cert_authn_plugin.misc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.jmimemagic.Magic;

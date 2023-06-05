@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.cert_plugin.model;
+package org.gluu.casa.plugins.cert_authn_plugin.model;
 
 import org.gluu.casa.core.model.IdentityPerson;
 import io.jans.orm.annotation.AttributeName;

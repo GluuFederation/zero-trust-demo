@@ -1,4 +1,4 @@
-package org.gluu.casa.plugin.misc;
+package org.gluu.casa.plugins.cert_authn_plugin.misc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

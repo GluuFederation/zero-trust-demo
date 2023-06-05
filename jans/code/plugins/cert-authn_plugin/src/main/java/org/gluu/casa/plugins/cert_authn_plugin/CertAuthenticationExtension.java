@@ -1,8 +1,8 @@
-package org.gluu.casa.plugins.cert_plugin;
+package org.gluu.casa.plugins.cert_authn_plugin;
 
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.extension.AuthnMethod;
-import org.gluu.casa.plugins.cert_plugin.service.CertService;
+import org.gluu.casa.plugins.cert_authn_plugin.service.CertService;
 import org.pf4j.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
