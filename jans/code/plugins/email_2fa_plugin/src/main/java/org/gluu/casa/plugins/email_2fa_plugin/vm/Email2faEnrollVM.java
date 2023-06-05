@@ -1,8 +1,8 @@
-package org.gluu.casa.plugins.email_plugin;
+package org.gluu.casa.plugins.email_2fa_plugin.vm;
 
 import org.gluu.casa.core.pojo.User;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.email_plugin.model.EmailPerson;
+import org.gluu.casa.plugins.email_2fa_plugin.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.gluu.casa.service.ISessionContext;
 import org.gluu.casa.ui.UIUtils;

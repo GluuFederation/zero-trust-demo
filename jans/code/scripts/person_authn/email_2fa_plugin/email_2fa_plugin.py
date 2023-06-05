@@ -9,14 +9,14 @@ from io.jans.as.server.util import ServerUtil
 from io.jans.as.common.service.common import ConfigurationService
 from io.jans.as.common.service.common import EncryptionService
 from io.jans.jsf2.message import FacesMessages
-from javax.faces.application import FacesMessage
+from jakarta.faces.application import FacesMessage
 from io.jans.orm.exception import AuthenticationException
 
 from datetime import datetime, timedelta
 from java.util import GregorianCalendar, TimeZone
 from javax.activation import CommandMap
 from io.jans.model import SmtpConnectProtectionType
-from io.jans.as.model.util import SecurityProviderUtility
+from io.jans.util.security import SecurityProviderUtility
 
 #Email Signing
 from org.bouncycastle.asn1 import ASN1EncodableVector
@@ -430,8 +430,9 @@ class PersonAuthentication(PersonAuthenticationType):
             return True
 
     def prepareForStep(self, configurationAttributes, requestParameters, step):
-
+        print "Email 2FA. prepareForStep(). ------------------------------------------------------ >>"
         print "Email 2FA - Preparing for step %s" % step
+        print "Email 2FA. prepareForStep(). ------------------------------------------------------ <<"
 
         return True
 

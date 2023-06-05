@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.email_plugin.extensions;
+package org.gluu.casa.plugins.email_2fa_plugin.credentials;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.extension.AuthnMethod;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.email_plugin.Email2faService;
+import org.gluu.casa.plugins.email_2fa_plugin.service.Email2faService;
 import org.gluu.casa.service.ISessionContext;
 import org.pf4j.Extension;
 import org.slf4j.Logger;

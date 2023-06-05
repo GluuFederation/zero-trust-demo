@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.email_plugin;
+package org.gluu.casa.plugins.email_2fa_plugin;
 
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;

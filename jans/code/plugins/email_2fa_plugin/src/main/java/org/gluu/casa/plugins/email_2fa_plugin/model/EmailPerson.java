@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.email_plugin.model;
+package org.gluu.casa.plugins.email_2fa_plugin.model;
 
 import java.util.Objects;
 

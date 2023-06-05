@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.email_plugin.extensions;
+package org.gluu.casa.plugins.email_2fa_plugin.credentials;
 
 import org.gluu.casa.extension.PreferredMethodFragment;
 

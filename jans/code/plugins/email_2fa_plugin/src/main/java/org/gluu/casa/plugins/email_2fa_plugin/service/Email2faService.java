@@ -1,4 +1,4 @@
-package org.gluu.casa.plugins.email_plugin;
+package org.gluu.casa.plugins.email_2fa_plugin.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.gluu.casa.credential.BasicCredential;
 import org.gluu.casa.misc.Utils;
-import org.gluu.casa.plugins.email_plugin.model.EmailPerson;
+import org.gluu.casa.plugins.email_2fa_plugin.model.EmailPerson;
 import org.gluu.casa.service.IPersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
