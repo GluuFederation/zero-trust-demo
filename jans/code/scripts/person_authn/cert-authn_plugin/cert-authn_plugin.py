@@ -554,5 +554,14 @@ class PersonAuthentication(PersonAuthenticationType):
         return response["success"]
 
     def hasEnrollments(self, configurationAttributes, user):
-        print "Cert (ZTrust). hasEnrollments(): result: True"
-        return True
+        result = False
+        values = user.getAttributeValues("jansExtUid")
+
+        if values != None:
+            for extUid in values:
+                if not result:
+                    result = extUid.find("cert:") != -1
+                    
+        print "Cert (ZTrust). hasEnrollments(): result = %s" % result
+
+        return result
