@@ -1065,14 +1065,14 @@ script and click **Add custom script configuration**
 
 * Build extension **ztrust-ext**.
 
-* Copy built jar (**ztrust-ext-4.4.2.Final.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
+* Copy built jar (**ztrust-ext-1.0.14-SNAPSHOT.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
 
 * Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
 
-* Add extension lib: **./custom/libs/ztrust-ext-4.4.2.Final.jar**:
+* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar**:
 
 ```text
-<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-4.4.2.Final.jar</Set></Configure>
+<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
 ```
 
 * Restart jans-auth:
@@ -1080,6 +1080,9 @@ script and click **Add custom script configuration**
 ```bash
 service jans-auth restart  
 ```
+
+
+
 
 ##  7. Casa Configuration
 
@@ -1105,10 +1108,10 @@ see the Casa Admin Console menu option.
 * Copy files to the directory */opt/gluu/casa/plugins*:
 
 ```bash
-        cp approval_plugin-4.4.2.Final.jar \
-        cert-authn_plugin-4.4.2.Final.jar \
-        email_2fa_plugin-4.4.2.Final.jar \
-        passw-policy_plugin-4.4.2.Final.jar \
+        cp approval_plugin-1.0.14-SNAPSHOT.jar \
+        cert-authn_plugin-1.0.14-SNAPSHOT.jar \
+        email_2fa_plugin-1.0.14-SNAPSHOT.jar \
+        passw-policy_plugin-1.0.14-SNAPSHOT.jar \
         /opt/gluu/casa/plugins
 ```
 
