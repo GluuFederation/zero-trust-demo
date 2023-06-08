@@ -28,7 +28,7 @@ def init(argv):
     opt_parser = optparse.OptionParser();
 
     in_arch_fpath_default = "./zero-trust-demo-main.zip";
-    out_base_dpath_default = "/etc/gluu/conf";
+    out_base_dpath_default = "/etc/jans/conf";
 
     opt_parser.add_option("-i", "--in_arch_fpath", dest="in_arch_fpath", default=in_arch_fpath_default, help="input archive file path (default: '%s')" % in_arch_fpath_default);
     opt_parser.add_option("-o", "--out_base_dpath", dest="out_base_dpath", default=out_base_dpath_default, help="base output directory path (default: '%s')" % out_base_dpath_default);
@@ -49,11 +49,11 @@ def init(argv):
    
     process_files = [
     
-            # <root-dir>/gluu/code/scripts/person_authn/sys_assets
-            # /etc/gluu/conf
+            # <root-dir>/jans/code/scripts/person_authn/sys_assets
+            # /etc/jans/conf
             (
                 ("ztrust-attributes.json", "ztrust-email-email_2fa.json", "ztrust-email-forgot_password.json", "ztrust-email-register.json", "ztrust-regex.json"),
-                "%s/gluu/code/scripts/person_authn/assets_sys/etc" % cust_root,
+                "%s/jans/code/scripts/person_authn/assets_sys/etc" % cust_root,
                 "."
             )            
         ];
