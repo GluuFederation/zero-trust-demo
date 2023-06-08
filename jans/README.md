@@ -1600,20 +1600,32 @@ Suite of **Reverse Proxies** for getting access to the localhosted resources:
         Allow from all
     </Location>
 
-    <Location /jans-auth/auth/cert/cert-login.htm>
-        SSLVerifyClient optional_no_ca
+    <LocationMatch /jans-auth/auth/cert/cert-login.htm>
+        SSLVerifyClient require
         SSLVerifyDepth 10
         SSLOptions -StdEnvVars +StrictRequire +ExportCertData
 
-        # Check for client cert revocation via OCSP
-        # SSLOCSPEnable on
-        # SSLOCSPDefaultResponder "{OCSP Responder URL}"
-        # SSLOCSPOverrideResponder on
-        # SSLOCSPResponderCertificateFile "{OCSP certificate path}"
+        # Forward certificate to destination server
+        RequestHeader set X-ClientCert %{SSL_CLIENT_CERT}s
+    </LocationMatch>
+
+    <LocationMatch /jans-auth/auth/regtr.htm>
+        SSLVerifyClient require
+        SSLVerifyDepth 10
+        SSLOptions -StdEnvVars +StrictRequire +ExportCertData
 
         # Forward certificate to destination server
         RequestHeader set X-ClientCert %{SSL_CLIENT_CERT}s
-    </Location>
+    </LocationMatch>
+
+    <LocationMatch /casa/pl/cert-authn_plugin/index.zul>
+        SSLVerifyClient require
+        SSLVerifyDepth 10
+        SSLOptions -StdEnvVars +StrictRequire +ExportCertData
+
+        # Forward certificate to destination server
+        RequestHeader set X-ClientCert %{SSL_CLIENT_CERT}s
+    </LocationMatch>
 
     ProxyPass   /.well-known/openid-configuration http://localhost:8081/jans-auth/.well-known/openid-configuration
     ProxyPass   /.well-known/webfinger http://localhost:8081/jans-auth/.well-known/webfinger
