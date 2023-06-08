@@ -537,7 +537,26 @@ Options:
 ```
 
 During installing, set of resources (templates, images,...) will be extracted from archive and
-and will be deployed to gluu diorectory (default: **/opt/jans**).
+and will be deployed to the Janssen diorectory (default: **/opt/jans**).
+
+* For installing assets use script **ztrust_install_jans_auth_assets_sys.py**:
+
+```bash
+python3 ./ztrust_install_jans_auth_assets_sys.py --help
+
+Usage: ztrust_install_jans_auth_assets_sys.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -i IN_ARCH_FPATH, --in_arch_fpath=IN_ARCH_FPATH
+                        input archive file path (default: './zero-trust-demo-
+                        main.zip')
+  -o OUT_BASE_DPATH, --out_base_dpath=OUT_BASE_DPATH
+                        base output directory path (default: '/etc/jans/conf')
+```
+
+During installing, set of resources (json configuration files) will be extracted from archive and
+and will be deployed to the global Janssen configuration directory (default: **/etc/jans/conf**).
 
 * Restart jans-auth
 
