@@ -35,10 +35,12 @@ Zero Trust Demo for Janssen 1.0.7 with OpenID
     + [6.5. jans-auth CAC Card Script](#65-jans-auth-cac-card-script)
     + [6.6. jans-auth App Session Audit Script](#66-jans-auth-app-session-audit-script)
     + [6.7. jans-auth Extension ztrust-ext](#67-jans-auth-extension-ztrust-ext)
+    + [6.8. jans-auth Extension fido2](#68-jans-auth-extension-fido2)
   * [7. Casa Configuration](#7-casa-configuration)
     + [7.1. Activation Casa plug-in](#71-activation-casa-plug-in)
     + [7.2. Password Policy Casa plug-in](#72-password-policy-casa-plug-in)
     + [7.3. Certificate Authentication plug-in](#73-certificate-authentication-plug-in)
+    + [7.4. Fido2 Authentication service](#74-fido2-authentication-service)
   * [8. HTTPD configuration](#8-httpd-configuration)
     + [8.1. httpd SSL configuration](#81-httpd-ssl-configuration)
     + [8.2. httpd Enabling TLS v1.3 Protocol](#82-httpd-enabling-tls-v13-protocol)
@@ -1204,7 +1206,9 @@ Proceeding of new certificate:
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
 
-###  7.4. Certificate Authentication plug-in
+###  7.4. Fido2 Authentication service
+
+Initializing of fido2 trusted credentials:
 
 1. Activate **fido2** authentication method in **casa**:  
 ![FIDO2 Authentication 1](./img/screenshot-14-casa-fido2-1.png)
