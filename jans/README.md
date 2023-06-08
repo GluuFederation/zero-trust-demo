@@ -88,7 +88,7 @@ restrict enrollment to certain domains.
 
 ###  1.2. Authentication
 
-1. **FIDO2** .
+1. **FIDO2** The end user's FIDO2 device is used for identification.
 1. **email identifier** The end-user's email address is used for identification
 (i.e. the email is the username).
 1. **Smart Card**  The end user clicks on a button, which should prompt their
@@ -96,7 +96,8 @@ browser to enable the selection of an X.509 certificate.
 
 ###  1.3. Credential Management
 
-1. **FIDO2**.
+1. **FIDO2** The end user should be able to enroll FIDO2 device(s), wihich can be
+used during authentication.
 1. **Smart Card** The end user should be able to enroll a CAC/PIV card, and to
 view the details of an associated X.509 certificate.
 1. **SMS**  The end user should be able to view, add, and remove an associated
@@ -1125,6 +1126,18 @@ see the Casa Admin Console menu option.
 
 1. In the Casa Admin Console, navigate to the **Enabled authentication methods**
 menu and select the ones you need.
+
+**jans-cli-tui** (jython scripts):
+
+![Janssen scripts ](./img/screenshot-3-janssen-scrtips.png)
+
+Enabled scripts:
+
+- fido2
+- ztrust-register
+- ztrust-cert
+- ztrust-forgot-password
+- ztrust-email_2fa_plugin
 
 Enabled plug-ins:
 
