@@ -102,8 +102,8 @@ def main(argv):
 
                 run_cmd([cp_cmp, "-f", in_fpath, out_dpath]);
 
-                run_cmd([chown_cmd, "root:gluu", get_full_dpath(out_dpath, process_fname)]);
-                run_cmd([chmod_cmd, "660", get_full_dpath(out_dpath, process_fname)]);
+                run_cmd([chown_cmd, "jetty:jetty", get_full_dpath(out_dpath, process_fname)]);
+                run_cmd([chmod_cmd, "640", get_full_dpath(out_dpath, process_fname)]);
 
                 print("-------------------------------------------------------");
 
