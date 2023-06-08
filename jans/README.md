@@ -1107,7 +1107,7 @@ touch /opt/jans/jetty/casa/.administrable
 ```
 
 ```bash
-chown casa:gluu /opt/jans/jetty/casa/.administrable
+chown jetty:jetty /opt/jans/jetty/casa/.administrable
 ```
 
 If your Casa browser session is already open, logout / login and you should
@@ -1126,7 +1126,7 @@ see the Casa Admin Console menu option.
 ```
 
 ```bash
-        chown casa:gluu /opt/jans/casa/plugins/*
+        chown -R jetty:jetty /opt/jans/casa/plugins/*
 ```
 
 * Upload **jar** files, using ("**Add a plugin...**"):
