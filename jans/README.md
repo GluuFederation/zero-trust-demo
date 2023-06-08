@@ -1086,10 +1086,11 @@ service jans-auth restart
 
 * launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
-* Navigate to  *Scripts*, select **fido2** script and enable it;
+* Navigate to  *Scripts*, select **fido2** script and enable it:
 
+![Janssen fido2 script](./img/screenshot-13-janssen-fido2-script.png)
 
-
+.
 
 ##  7. Casa Configuration
 
@@ -1203,7 +1204,51 @@ Proceeding of new certificate:
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
 
-###  7.3. Certificate Authentication plug-in
+###  7.4. Certificate Authentication plug-in
+
+1. Activate **fido2** authentication method in **casa**:  
+![FIDO2 Authentication 1](./img/screenshot-14-casa-fido2-1.png)
+
+1. Security Keys and built-in Platform Authenticators:  
+![FIDO2 Authentication 2](./img/screenshot-14-casa-fido2-2.png)
+
+1. Adding of a new valid **fido2** device (**step 1**):  
+![FIDO2 Authentication 3 (step 1)](./img/screenshot-14-casa-fido2-3.png)
+
+1. Adding of a new valid **fido2** device (**step 2**):  
+![FIDO2 Authentication 3 (step 2)](./img/screenshot-14-casa-fido2-4.png)
+
+1. Adding of a new valid **fido2** device (**step 3**):  
+![FIDO2 Authentication 3 (step 3)](./img/screenshot-14-casa-fido2-5.png)
+
+1. Adding of a new valid **fido2** device (**step 4**):  
+![FIDO2 Authentication 3 (step 4)](./img/screenshot-14-casa-fido2-6.png)
+
+1. Adding of a new valid **fido2** device (**step 5**):  
+![FIDO2 Authentication 3 (step 5)](./img/screenshot-14-casa-fido2-7.png)
+
+1. Adding of a new valid **fido2** device (**step 6**):  
+![FIDO2 Authentication 3 (step 6)](./img/screenshot-14-casa-fido2-8.png)
+
+1. Added devices:  
+![FIDO2 Authentication 4](./img/screenshot-14-casa-fido2-9.png)
+
+1. Enabled 2FA Authentication:  
+![FIDO2 Authentication 5](./img/screenshot-14-casa-fido2-10.png)
+
+1. Enabled **fido2** as preffered authentication method:  
+![FIDO2 Authentication 6](./img/screenshot-14-casa-fido2-11.png)
+
+1. 2FA authenication during Login (**step 1**):  
+![FIDO2 Authentication 7 (step 1)](./img/screenshot-14-casa-fido2-12.png)
+
+1. 2FA authenication during Login (**step 2**):  
+![FIDO2 Authentication 7 (step 2)](./img/screenshot-14-casa-fido2-13.png)
+
+1. **fido2** device records in **jansdb**:  
+![FIDO2 Authentication 8](./img/screenshot-14-casa-fido2-14.png)
+
+.
 
 ##  8. HTTPD configuration
 
