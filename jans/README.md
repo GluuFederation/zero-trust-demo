@@ -1084,6 +1084,12 @@ service jans-auth restart
 
 ###  6.8. jans-auth Extension fido2
 
+* launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+
+* Navigate to  *Scripts*, select **fido2** script and enable it;
+
+
+
 
 ##  7. Casa Configuration
 
@@ -1129,7 +1135,7 @@ menu and select the ones you need.
 
 **jans-cli-tui** (jython scripts):
 
-![Janssen scripts ](./img/screenshot-3-janssen-scrtips.png)
+![Janssen scripts ](./img/screenshot-3-janssen-scrtipts.png)
 
 Enabled scripts:
 
