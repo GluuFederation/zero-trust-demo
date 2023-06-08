@@ -88,7 +88,7 @@ restrict enrollment to certain domains.
 
 ###  1.2. Authentication
 
-1. **FIDO**.
+1. **FIDO2** .
 1. **email identifier** The end-user's email address is used for identification
 (i.e. the email is the username).
 1. **Smart Card**  The end user clicks on a button, which should prompt their
@@ -96,7 +96,7 @@ browser to enable the selection of an X.509 certificate.
 
 ###  1.3. Credential Management
 
-1. **FIDO**.
+1. **FIDO2**.
 1. **Smart Card** The end user should be able to enroll a CAC/PIV card, and to
 view the details of an associated X.509 certificate.
 1. **SMS**  The end user should be able to view, add, and remove an associated
@@ -1081,7 +1081,7 @@ script and click **Add custom script configuration**
 service jans-auth restart  
 ```
 
-
+###  6.8. jans-auth Extension fido2
 
 
 ##  7. Casa Configuration
@@ -1093,11 +1093,11 @@ Casa login page.
 1. Unlock the Casa Administration feature
 
 ```bash
-touch /opt/gluu/jetty/casa/.administrable
+touch /opt/jans/jetty/casa/.administrable
 ```
 
 ```bash
-chown casa:gluu /opt/gluu/jetty/casa/.administrable
+chown casa:gluu /opt/jans/jetty/casa/.administrable
 ```
 
 If your Casa browser session is already open, logout / login and you should
@@ -1105,18 +1105,18 @@ see the Casa Admin Console menu option.
 
 1. Install the plugin jar files. Plugin files can be installed, using 2 ways:
 
-* Copy files to the directory */opt/gluu/casa/plugins*:
+* Copy files to the directory */opt/jans/casa/plugins*:
 
 ```bash
         cp approval_plugin-1.0.14-SNAPSHOT.jar \
         cert-authn_plugin-1.0.14-SNAPSHOT.jar \
         email_2fa_plugin-1.0.14-SNAPSHOT.jar \
         passw-policy_plugin-1.0.14-SNAPSHOT.jar \
-        /opt/gluu/casa/plugins
+        /opt/jans/casa/plugins
 ```
 
 ```bash
-        chown casa:gluu /opt/gluu/casa/plugins/*
+        chown casa:gluu /opt/jans/casa/plugins/*
 ```
 
 * Upload **jar** files, using ("**Add a plugin...**"):
@@ -1187,6 +1187,8 @@ Proceeding of new certificate:
 
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
+
+###  7.3. Certificate Authentication plug-in
 
 ##  8. HTTPD configuration
 
