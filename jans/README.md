@@ -28,7 +28,7 @@ Zero Trust Demo for Janssen 1.0.7 with OpenID
   * **(*)**[5. PostgreSQL Server Configuration](#5-postgresql-server-configuration)
   * [6. jans-auth configuration](#6-jans-auth-configuration)
     + **(+)**[6.1. jans-auth properties](#61-jans-auth-properties)
-    + **(+)**[6.2. Custom assets](#62-custom-assets)
+    + **(*)**[6.2. Custom assets](#62-custom-assets)
     + **(-)**[6.3. jans-auth Email 2FA Script](#63-jans-auth-email-2fa-script)
       - **(-)**[6.3.1. Generating private keys and certificates for signing emails](#631-generating-private-keys-and-certificates-for-signing-emails)
       - **(-)**[6.3.2. Properties of Email 2FA Script](#632-properties-of-email-2fa-script)
