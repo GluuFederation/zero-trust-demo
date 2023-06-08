@@ -1126,10 +1126,6 @@ see the Casa Admin Console menu option.
 1. In the Casa Admin Console, navigate to the **Enabled authentication methods**
 menu and select the ones you need.
 
-Enabled scripts (in identity/oxtrust):
-
-![enabled scripts](./img/screenshot-3-identity-enabled-scrtips.png)
-
 Enabled plug-ins:
 
 ![enabled plugins](./img/screenshot-4-casa-auth-methods.png)
@@ -1661,7 +1657,9 @@ LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so
 
     SSLEngine on
     SSLProtocol -all +TLSv1.2
-    SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256
+
+    SSLCipherSuite ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-CCM:ECDHE-ECDSA-AES256-CCM:ECDHE-ECDSA-AES128-CCM8:ECDHE-ECDSA-AES256-CCM8
+
     SSLHonorCipherOrder On
 
     # SetEnv proxy-nokeepalive 1
