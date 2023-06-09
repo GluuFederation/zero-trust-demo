@@ -46,7 +46,7 @@ Zero Trust Demo for Janssen 1.0.7 with OpenID
       * [8.2. httpd Enabling TLS v1.3 Protocol](#82-httpd-enabling-tls-v13-protocol)
       * [8.3. httpd Java application proxy configuration](#83-httpd-java-application-proxy-configuration)
       * [8.4. httpd Development load balancer](#84-httpd-development-load-balancer)
-* [Current Status:](#current-status)
+* [Current Status](#current-status)
 
 # Solution Overview
 
