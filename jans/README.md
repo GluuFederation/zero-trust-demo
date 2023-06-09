@@ -1824,7 +1824,7 @@ for example, **SSL Session Cache**, **Usage of SSL OCSP Stapling**.
     + **(*)**[3.4. Janssen Server Verification]
   * **(*)**[4. Gluu Casa Installation]
   * **(*)**[5. PostgreSQL Server Configuration]
-  * [6. jans-auth configuration]
+  * **(+)**[6. jans-auth configuration]
     + **(+)**[6.1. jans-auth properties]
     + **(*)**[6.2. Custom assets]
     + **(-)**[6.3. jans-auth Email 2FA Script]
