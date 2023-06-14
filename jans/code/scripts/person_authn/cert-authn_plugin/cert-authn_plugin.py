@@ -202,8 +202,8 @@ class PersonAuthentication(PersonAuthenticationType):
             
             print "Cert (ZTrust). Authenticate for step 2. logged_in = %s" % logged_in
         
-            print "Cert (ZTrust). Authenticate for step 2. Setting count steps to 3"
-            identity.setWorkingParameter("cert_count_login_steps", 3)
+            print "Cert (ZTrust). Authenticate for step 2. Setting count steps to 2"
+            identity.setWorkingParameter("cert_count_login_steps", 2)
 
             return logged_in
         elif step == 3:
@@ -300,8 +300,8 @@ class PersonAuthentication(PersonAuthenticationType):
 
     def getExtraParametersForStep(self, configurationAttributes, step):
         print "Cert (ZTrust). getExtraParametersForStep(): step %d." % step                    
-#        if step == 1:
-#            return None
+        if step == 1:
+            return None
         print "Cert (ZTrust). getExtraParametersForStep(): step %d. result = '%s'" % (step, Arrays.asList("cert_selected", "cert_valid", "cert_x509", "cert_x509_fingerprint", "cert_count_login_steps", "cert_user_external_uid"))
         return Arrays.asList("cert_selected", "cert_valid", "cert_x509", "cert_x509_fingerprint", "cert_count_login_steps", "cert_user_external_uid")
 
