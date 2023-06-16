@@ -343,7 +343,6 @@ public class CertService {
         }
         if (found) {
             person.getX509Certificates().remove(i - 1);
-            person.setUserCertificate("");
         }
 
         Optional<String> externalUid = person.getJansExtUid().stream()
@@ -397,9 +396,6 @@ public class CertService {
                 logger.debug("Updating user's jans509Certificate attribute");
                 stringCerts.add(mapper.writeValueAsString(scimX509Cert));
                 person.setX509Certificates(stringCerts);
-                logger.debug("Updating user's userCertificate attribute");
-                person.setUserCertificate(new String(Base64.getEncoder().encode(DEREncoded), StandardCharsets.UTF_8));
-
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

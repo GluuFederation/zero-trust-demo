@@ -15,17 +15,6 @@ public class CertPerson extends IdentityPerson {
 
     @AttributeName(name = "jans509Certificate")
     private List<String> x509Certificates;
-    
-    @AttributeName(name = "userCertificate")
-    private String userCertificate;
-
-    public String getUserCertificate() {
-		return userCertificate;
-	}
-
-	public void setUserCertificate(String userCertificate) {
-		this.userCertificate = userCertificate;
-	}
 
 	public List<String> getX509Certificates() {
         return x509Certificates;
@@ -34,5 +23,4 @@ public class CertPerson extends IdentityPerson {
     public void setX509Certificates(List<String> x509Certificates) {
         this.x509Certificates = x509Certificates;
     }
-
 }

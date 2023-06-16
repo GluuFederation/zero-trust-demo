@@ -230,15 +230,24 @@ class PersonAuthentication(PersonAuthenticationType):
             # Double check just to make sure. We did checking in previous step
             # Check if there is user which has cert_user_external_uid
             # Avoid mapping user cert to more than one IDP account
-            find_user_by_external_uid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid)
+            find_user_by_external_uid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid, True)
             if find_user_by_external_uid == None:
                 # Add cert_user_external_uid to user's external GUID list
                 find_user_by_external_uid = userService.addUserAttribute(user_name, "jansExtUid", cert_user_external_uid)
                 if find_user_by_external_uid == None:
-                    print "Cert (ZTrust). Authenticate for step 3. Failed to update current user"
+                    print "Cert (ZTrust). Authenticate for step 3. Failed to update current user (jansExtUid)"
                     print "Cert (ZTrust). Authenticate for step 3. result = False"
                     return False
                 print "Cert (ZTrust). Authenticate for step 3. find_user_by_external_uid != None (2)"
+                cert_x509 = self.getSessionAttribute("cert_x509")
+                print "Cert (ZTrust). Authenticate for step 3. cert_x509 = %s" % cert_x509
+                cert_x509_value = '{"value":"%s"}' % cert_x509
+                print "Cert (ZTrust). Authenticate for step 3. cert_x509_value = %s" % cert_x509_value
+                find_user_by_cert_x509_value = userService.addUserAttribute(user_name, "jans509Certificate", cert_x509_value)
+                if find_user_by_cert_x509_value == None:
+                    print "Cert (ZTrust). Authenticate for step 3. Failed to update current user (jans509Certificate)"
+                    print "Cert (ZTrust). Authenticate for step 3. result = False"
+                    return False
                 print "Cert (ZTrust). Authenticate for step 3. result = True"
                 return True
 
