@@ -180,7 +180,7 @@ class PersonAuthentication(PersonAuthenticationType):
             cert_user_external_uid = "cert:%s" % x509CertificateFingerprint
             print "Cert (ZTrust). Authenticate for step 2. Attempting to find user by jansExtUid attribute value %s" % cert_user_external_uid
 
-            find_user_by_external_uid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid)
+            find_user_by_external_uid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid, True)
             if find_user_by_external_uid == None:
                 print "Cert (ZTrust). Authenticate for step 2. Failed to find user"
                 
