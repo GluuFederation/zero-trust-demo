@@ -569,9 +569,9 @@ class EmailSender():
             smtp_config = {
                 'host' : smtpconfig.getHost(),
                 'port' : smtpconfig.getPort(),
-                'user' : smtpconfig.getUserName(),
+                'user' : smtpconfig.getSmtpAuthenticationAccountUsername(),
                 'from' : smtpconfig.getFromEmailAddress(),
-                'pwd_decrypted' : encryptionService.decrypt(smtpconfig.getPassword()),
+                'pwd_decrypted' : encryptionService.decrypt(smtpconfig.getSmtpAuthenticationAccountPassword()),
                 'connect_protection' : smtpconfig.getConnectProtection(),
                 'requires_authentication' : smtpconfig.isRequiresAuthentication(),
                 'server_trust' : smtpconfig.isServerTrust(),

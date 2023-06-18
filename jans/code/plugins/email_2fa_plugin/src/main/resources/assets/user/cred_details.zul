@@ -4,8 +4,7 @@
         xmlns:zk="zk" xmlns:w="client" xmlns:ca="client/attribute"
         xmlns="native">
     <h:title self="@define(title)">${zkService.appName} - ${labels.email.title}</h:title>
-    <z:div if="${empty pageScope.error}" viewModel="@id('vm') @init('org.gluu.casa.plugins.email_plugin.Email2faEnrollVM')"
-           self="@define(maincontent)">
+    <z:div if="${empty pageScope.error}" viewModel="@id('vm') @init('org.gluu.casa.plugins.email_2fa_plugin.vm.Email2faEnrollVM')" self="@define(maincontent)">
         <z:include src="/back-home.zul" />
         <div class="ph4 mb2">
             <div class="alert alert-success dn" id="feedback-cert-edit" role="alert" />
