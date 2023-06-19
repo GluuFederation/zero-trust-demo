@@ -1,30 +1,33 @@
-from org.gluu.oxauth.model.common import ZTrustPerson, WebKeyStorage
-from org.gluu.service.cdi.util import CdiUtil
-from org.gluu.oxauth.security import Identity
-from org.gluu.model import GluuStatus
+from io.jans.as.common.model.common import ZTrustPerson
+from io.jans.as.model.common import WebKeyStorage
 
-from org.gluu.model.custom.script.type.auth import PersonAuthenticationType
-from org.gluu.oxauth.service import UserService, AuthenticationService
+from io.jans.service.cdi.util import CdiUtil
+from io.jans.as.server.security import Identity
 
-from org.gluu.oxauth.service.common import ConfigurationService
-from org.gluu.oxauth.service.common import EncryptionService
+from io.jans.model import GluuStatus
+from io.jans.model.custom.script.type.auth import PersonAuthenticationType
+from io.jans.as.server.service import UserService, AuthenticationService
+from io.jans.as.common.service.common import ConfigurationService, EncryptionService
 
-from org.gluu.oxauth.util import ServerUtil
-from org.gluu.util import StringHelper, ArrayHelper
+from io.jans.as.server.util import ServerUtil
+from io.jans.util import StringHelper, ArrayHelper
 from java.util import Arrays
-from javax.faces.application import FacesMessage
-from org.gluu.jsf2.message import FacesMessages
-from org.gluu.jsf2.service import FacesService
+from jakarta.faces.context import FacesContext
+from io.jans.jsf2.message import FacesMessages
+from io.jans.jsf2.service import FacesService
 
 from org.gluu.service import MailService
 
 # cert
-from org.gluu.oxauth.cert.fingerprint import FingerprintHelper
-from org.gluu.oxauth.cert.validation import GenericCertificateVerifier, PathCertificateVerifier, OCSPCertificateVerifier, CRLCertificateVerifier
-from org.gluu.oxauth.cert.validation.model import ValidationStatus
-from org.gluu.oxauth.util import CertUtil
-from org.gluu.oxauth.model.util import CertUtils
-from org.gluu.oxauth.service.net import HttpService
+from io.jans.as.common.cert.fingerprint import FingerprintHelper
+from io.jans.as.common.cert.validation import GenericCertificateVerifier, PathCertificateVerifier, OCSPCertificateVerifier, CRLCertificateVerifier
+
+from io.jans.as.common.cert.validation.model import ValidationStatus
+
+from io.jans.as.server.util import CertUtil
+from io.jans.as.model.util import CertUtils
+
+from io.jans.as.server.service.net import HttpService
 from org.apache.http.params import CoreConnectionPNames
 from datetime import datetime, timedelta
 from java.util import GregorianCalendar, TimeZone
@@ -34,8 +37,8 @@ import org.codehaus.jettison.json.JSONArray as JSONArray
 
 from javax.activation import CommandMap
 
-from org.gluu.model import SmtpConnectProtectionType
-from org.gluu.util.security import SecurityProviderUtility
+from io.jans.model import SmtpConnectProtectionType
+from io.jans.util.security import SecurityProviderUtility
 
 import json
 import ast
