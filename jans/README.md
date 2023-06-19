@@ -818,25 +818,30 @@ Browser->End User: Access to the account of a registered user
 
 * Specify the Name as `ztrust-register` and add these properties:
 
-|key                          | value               |
-|---------------------------- | ------------------- |
-| attributes_json_file_path |  |
-| regex_json_file_path |  |
-| email_templates_json_file_path |  |
-| crl_max_response_size |  specifies the maximum allowed size of [CRL] response. |
-| use_crl_validator |  enable/disable specific certificate validation.  |
-| use_generic_validator |  enable/disable specific certificate validation  |
-| use_ocsp_validator |  enable/disable specific certificate validation.  |
-| use_path_validator |  enable/disable specific certificate validation.  |
-| chain_cert_file_path |  mandatory property pointing to certificate chains in [PEM] format.  |
-| token_length |  Determines the length of the characters of the OTP sent to the user. |
-| token_lifetime | Determines the time period for which the sent token is active. |
-| Signer_Cert_Alias |  Alias of the keystore. |
-| Signer_Cert_KeyStorePassword |  keystore password. |
-| Signer_Cert_KeyStore | Filename of the keystore. |
-| Signer_SignAlgorithm | Signature Algorithm. |
-| Enable_User |  Enables User account registration if true. |
-| Require_Email_Confirmation | If set, an OTP is sent before activating the registration. |
+
+|key                            | optional                    | value                                       | decription                                                          |
+|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
+|attributes_json_file_path      | no                          | /etc/certs/ztrust-attributes.json           | attributes json file                                                                    |
+|crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
+|use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_ocsp_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_path_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|chain_cert_file_path           | no                          | /etc/certs/ztrust.chain                     | mandatory property pointing to certificate chains in [PEM] format   |
+|token_length                   | no                          | 7                                           | determines the length of the characters of the OTP sent to the user |
+|token_lifetime                 | no                          | 15                                          | determines the time period for which the sent token is active       |
+|Signer_Cert_Alias              | yes (default: value from    | signer                                      | alias of the keystore                                               |
+|                               | SMTP properties )           |                                             |                                                                     |
+|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                     | filename of the keystore                                            |
+|                               | SMTP properties )           |                                             |                                                                     |
+|Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     | keystore password                                                   |
+|                               | SMTP properties )           |                                             |                                                                     |
+|Signer_SignAlgorithm           | yes (default: value from    | SHA256withECDSA                             | signature algorithm                                                 |
+|                               | SMTP properties )           |                                             |                                                                     |
+|regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json            | regex json file                                                     |
+|email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json  | contains parameters of generation of validation email               |
+|Enable_User                    | yes                         | False                                       | enables user account registration if true                           |
+|Require_Email_Confirmation     | yes                         | False                                       | If set, an OTP is sent before activating the registration           |
 
 **use_generic_validator** - if this property is **true**, common check of client certificate (that checked certificate is not exprired) is provided;  
 **use_path_validator** - if this property is **true**, certificate path (validity of CA(s) of certificate) is provided;  
@@ -894,7 +899,7 @@ You can customize array "ids", using necessary IDs, that should be filled/define
 
 **regex_json_file_path**:
 
-Example of the attributes json file (defined by **regex_json_file_path**):
+Example of the regex json file (defined by **regex_json_file_path**):
 
 ```json
 {
