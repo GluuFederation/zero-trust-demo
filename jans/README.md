@@ -746,8 +746,9 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 
 ####  6.3.2. Properties of Email 2FA Script
 
-Navigate to  *Configuration --> Person Authentication Scripts*, scroll to the
-bottom of the page and click **Add custom script configuration**
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+
+* Navigate to *Scripts*, and click **Add Script**;
 
 * Specify the name as `ztrust-email_2fa_plugin` and add these properties:
 
@@ -811,8 +812,9 @@ jans-auth->Browser: Redirecting to the account of a registered user
 Browser->End User: Access to the account of a registered user  
 ```
 
-* Navigate to  *Configuration --> Person Authentication Scripts*, scroll
-to the bottom of the page and click **Add custom script configuration**
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+
+* Navigate to *Scripts*, and click **Add Script**;
 
 * Specify the Name as `ztrust-register` and add these properties:
 
@@ -1074,9 +1076,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 ###  6.6. jans-auth App Session Audit Script
 
-* Navigate to  *Configuration --> Other Custom Scripts*,
-using the horizontal slider, find the "Application Session"
-script and click **Add custom script configuration**
+* Navigate to *Scripts*, and click **Add Script**
 
 * Specify the Name as `user_registration` and add these properties:
 
@@ -1106,9 +1106,9 @@ service jans-auth restart
 
 ###  6.8. jans-auth Extension fido2
 
-* launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
-* Navigate to  *Scripts*, select **fido2** script and enable it:
+* Navigate to *Scripts*, select **fido2** script and enable it:
 
 ![Janssen fido2 script](./img/screenshot-13-janssen-fido2-script.png)
 
