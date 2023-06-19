@@ -759,14 +759,14 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 |token_lifetime                 | no                          | 15                                          |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      |
 |                               | SMTP properties )           |                                             |
-|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                       |
+|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                     |
 |                               | SMTP properties )           |                                             |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     |
 |                               | SMTP properties )           |                                             |  
 |Signer_SignAlgorithm           | yes (default: value from    | SHA256withECDSA                             |
 |                               | SMTP properties )           |                                             |  
-|email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json    |
-|regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json              |
+|email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json  |
+|regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json            |
 
 * Copy and paste the text of `email_2fa_plugin.py` into the *Script* text area.
 
@@ -818,10 +818,9 @@ Browser->End User: Access to the account of a registered user
 
 * Specify the Name as `ztrust-register` and add these properties:
 
-
 |key                            | optional                    | value                                       | decription                                                          |
 |------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
-|attributes_json_file_path      | no                          | /etc/certs/ztrust-attributes.json           | attributes json file                                                                    |
+|attributes_json_file_path      | no                          | /etc/certs/ztrust-attributes.json           | attributes json file                                                |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
 |use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
 |use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
@@ -1000,16 +999,16 @@ This template can use follow variables:
 
 * Specify the name as `ztrust-cert` and add these **Configuration properties** (**Conf. properties**):
 
-|key                          | value               |
-|---------------------------- | ------------------- |
-| credentials_file |  mandatory property pointing to credentials file in [JSON] format.  |
-| crl_max_response_size |  specifies the maximum allowed size of [CRL] response.  |
-| map_user_cert |  specifies if the script should map new user to local account.  |
-| use_crl_validator |  enable/disable specific certificate validation.  |
-| use_generic_validator |  enable/disable specific certificate validation  |
-| use_ocsp_validator |  enable/disable specific certificate validation.  |
-| use_path_validator |  enable/disable specific certificate validation.  |
-| chain_cert_file_path |  mandatory property pointing to certificate chains in [PEM] format.  |
+|key                            | optional                    | value                                       | decription                                                          |
+|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
+|credentials_file               | no                          | /etc/certs/cert_creds.json                  | mandatory property pointing to credentials file in [JSON] format    |
+|crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
+|map_user_cert                  | yes                         | False                                       | specifies if the script should map new user to local account        |
+|use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_ocsp_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_path_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|chain_cert_file_path           | no                          | /etc/certs/ztrust.chain                     | mandatory property pointing to certificate chains in [PEM] format   |
 
 Example of the attributes json file (defined by **credentials_file**) (**/etc/certs/cert_creds.json**):
 
@@ -1100,7 +1099,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 * Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar**:
 
 ```text
-<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
+<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
 ```
 
 * Restart jans-auth:

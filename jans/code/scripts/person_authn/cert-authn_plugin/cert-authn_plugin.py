@@ -55,7 +55,7 @@ class PersonAuthentication(PersonAuthenticationType):
 
         print "Cert (ZTrust). Initialization. Loaded '%d' chain certificates" % self.chain_certs.size()
         
-        crl_max_response_size = 5 * 1024 * 1024  # 10Mb
+        crl_max_response_size = 5 * 1024 * 1024  # 5Mb
         if configurationAttributes.containsKey("crl_max_response_size"):
             crl_max_response_size = StringHelper.toInteger(configurationAttributes.get("crl_max_response_size").getValue2(), crl_max_response_size)
             print "Cert (ZTrust). Initialization. CRL max response size is '%d'" % crl_max_response_size
