@@ -16,7 +16,7 @@ from jakarta.faces.context import FacesContext
 from io.jans.jsf2.message import FacesMessages
 from io.jans.jsf2.service import FacesService
 
-from org.gluu.service import MailService
+from io.jans.service import MailService
 
 # cert
 from io.jans.as.common.cert.fingerprint import FingerprintHelper
@@ -32,7 +32,6 @@ from org.apache.http.params import CoreConnectionPNames
 from datetime import datetime, timedelta
 from java.util import GregorianCalendar, TimeZone
 
-from javax.faces.context import FacesContext
 import org.codehaus.jettison.json.JSONArray as JSONArray
 
 from javax.activation import CommandMap
@@ -186,6 +185,9 @@ class PersonAuthentication(PersonAuthenticationType):
 
     def isValidAuthenticationMethod(self, usageType, configurationAttributes):
         return True
+
+    def getAuthenticationMethodClaims(self, configurationAttributes):
+        return None
 
     def getAlternativeAuthenticationMethod(self, usageType, configurationAttributes):
         return None
@@ -405,20 +407,20 @@ class PersonAuthentication(PersonAuthenticationType):
                 newUser.setAttribute("uid", umail)
                 newUser.setAttribute("userPassword", upass)
                 newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                newUser.setAttribute("oxPasswordExpirationDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
                 newUser.setAttribute("userCertificate", userCertificate)
-                newUser.setAttribute("oxTrustx509Certificate", json.dumps(x509_json))
-                newUser.setAttribute("oxExternalUid", externalUID)
+                newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
+                newUser.setAttribute("jansExtUid", externalUID)
 
                 #### Enable user on Registration ####
                 enableUser = StringHelper.toBoolean(configurationAttributes.get("Enable_User").getValue2(), False)
 
                 if not enableUser:
                     newUser.setAttribute("userStatus", "pending")
-                    newUser.setAttribute("gluuStatus", "inactive")
+                    newUser.setAttribute("jansStatus", "inactive")
                 else:
                     newUser.setAttribute("userStatus", "active")
-                    newUser.setAttribute("gluuStatus", "active") 
+                    newUser.setAttribute("jansStatus", "active") 
 
                 userService.addUser(newUser, enableUser)
 
@@ -427,12 +429,12 @@ class PersonAuthentication(PersonAuthenticationType):
                 if enableUser:
                     logged_in = authenticationService.authenticate(umail, upass)
                 else:
-                    newUser.setAttribute("gluuStatus", "inactive")
+                    newUser.setAttribute("jansStatus", "inactive")
                     userService.updateUser(newUser)
 
                 if not logged_in:
                     status_msg = "User %s %s with status: %s has been created" % (newUser.getAttribute("givenName"),
-                            newUser.getAttribute("sn"), newUser.getAttribute("gluuStatus"))
+                            newUser.getAttribute("sn"), newUser.getAttribute("jansStatus"))
                     status_msg += ". Login isn't success"
                     facesMessages.add(FacesMessage.SEVERITY_INFO, status_msg)
                     facesService.redirect("/auth/reg_status.xhtml")
@@ -551,10 +553,10 @@ class PersonAuthentication(PersonAuthenticationType):
                     newUser.setAttribute("uid", rumail)
                     newUser.setAttribute("userPassword", rupass)
                     newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                    newUser.setAttribute("oxPasswordExpirationDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
                     newUser.setAttribute("userCertificate", userCertificate)
-                    newUser.setAttribute("oxTrustx509Certificate", json.dumps(x509_json))
-                    newUser.setAttribute("oxExternalUid", externalUID)
+                    newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
+                    newUser.setAttribute("jansExtUid", externalUID)
                     #newUser.setAttribute("oxPreferredMethod", "1")
 
                     #### Enable user on Registration ####
@@ -562,15 +564,15 @@ class PersonAuthentication(PersonAuthenticationType):
 
                     if not enableUser:
                         newUser.setAttribute("userStatus", "pending")
-                        newUser.setAttribute("gluuStatus", "inactive")
+                        newUser.setAttribute("jansStatus", "inactive")
                     else:
                         newUser.setAttribute("userStatus", "active")
-                        newUser.setAttribute("gluuStatus", "active")
+                        newUser.setAttribute("jansStatus", "active")
 
                     userService.addUser(newUser, enableUser)
 
                     if not enableUser:
-                        newUser.setAttribute("gluuStatus", "inactive")
+                        newUser.setAttribute("jansStatus", "inactive")
                         userService.updateUser(newUser)
 
                     logged_in = False
@@ -578,12 +580,12 @@ class PersonAuthentication(PersonAuthenticationType):
                     if enableUser:
                         logged_in = authenticationService.authenticate(rumail, rupass)
                     else:
-                        newUser.setAttribute("gluuStatus", "inactive")
+                        newUser.setAttribute("jansStatus", "inactive")
                         userService.updateUser(newUser)
 
                     if not logged_in:
                         status_msg = "User %s %s with status: %s has been created" % (newUser.getAttribute("givenName"),
-                                newUser.getAttribute("sn"), newUser.getAttribute("gluuStatus"))
+                                newUser.getAttribute("sn"), newUser.getAttribute("jansStatus"))
                         status_msg += ". Login isn't success"
                         facesMessages.add(FacesMessage.SEVERITY_INFO, status_msg)
                         facesService.redirect("/auth/reg_status.xhtml")
@@ -604,25 +606,25 @@ class PersonAuthentication(PersonAuthenticationType):
                     newUser.setAttribute("uid", rumail)
                     newUser.setAttribute("userPassword", rupass)
                     newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                    newUser.setAttribute("oxPasswordExpirationDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
                     newUser.setAttribute("userCertificate", userCertificate)
-                    newUser.setAttribute("oxTrustx509Certificate", json.dumps(x509_json))
-                    newUser.setAttribute("oxExternalUid", externalUID)
+                    newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
+                    newUser.setAttribute("jansExtUid", externalUID)
 
                     #### Enable user on Registration ####
                     enableUser = StringHelper.toBoolean(configurationAttributes.get("Enable_User").getValue2(), False)
 
                     if not enableUser:
                         newUser.setAttribute("userStatus", "pending")
-                        newUser.setAttribute("gluuStatus", "inactive")
+                        newUser.setAttribute("jansStatus", "inactive")
                     else:
                         newUser.setAttribute("userStatus", "active")
-                        newUser.setAttribute("gluuStatus", "active")
+                        newUser.setAttribute("jansStatus", "active")
 
                     userService.addUser(newUser, enableUser)
 
                     if not enableUser:
-                        newUser.setAttribute("gluuStatus", "inactive")
+                        newUser.setAttribute("jansStatus", "inactive")
                         userService.updateUser(newUser)
 
                     logged_in = False
@@ -733,7 +735,7 @@ class PersonAuthentication(PersonAuthenticationType):
                     x509CertificateFingerprint = self.calculateCertificateFingerprint(x509Certificate)
                     cert_user_external_uid = "cert:%s" % x509CertificateFingerprint
 
-                    userByUid = userService.getUserByAttribute("oxExternalUid", cert_user_external_uid)
+                    userByUid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid)
                     if userByUid != None:
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "The certificate is already enrolled for another user.")
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please contact System Administrator.")
@@ -838,7 +840,6 @@ class PersonAuthentication(PersonAuthenticationType):
 
         publicKey = x509Certificate.getPublicKey()
 
-        # Use oxAuth implementation
         fingerprint = FingerprintHelper.getPublicKeySshFingerprint(publicKey)
 
         return fingerprint
