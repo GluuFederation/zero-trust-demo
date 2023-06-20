@@ -196,9 +196,6 @@ def main(argv):
                 
                 print("-------------------------------------------------------");
 
-#        run_cmd([chown_cmd, "-R", "oxauth:gluu", get_full_dpath(gluu_depl_dpath, "jetty/jans-auth/custom")]);
-#        run_cmd([chown_cmd, "-R", "identity:gluu", get_full_dpath(gluu_depl_dpath, "jetty/identity/custom")]);
-
         run_cmd([chown_cmd, "-R", "jetty:jetty", get_full_dpath(gluu_depl_dpath, "jetty/jans-auth/custom")]);
 
         if os.path.exists(temp_dpath):

@@ -75,7 +75,6 @@ from java.io import File
 from java.io import FileInputStream
 from java.util import Enumeration, Properties
 
-
 #dealing with smtp server
 from java.security import Security
 from javax.mail.internet import MimeMessage, InternetAddress
@@ -238,7 +237,6 @@ class PersonAuthentication(PersonAuthenticationType):
             code = random.randint(100000, 999999)
 
             # Get code and save it in LDAP temporarily with special session entry
-
             identity.setWorkingParameter("code", code)
 
             return True;
@@ -346,8 +344,6 @@ class PersonAuthentication(PersonAuthenticationType):
                         body += self.formatLine(template_line, fmt_dict)
                     print "body = %s" % body
 
-                    #mailService.sendMail(umail, None, email_subject, body, body)
-
                     #### Email Signing Code Begin ####
 
                     sender = EmailSender()
@@ -373,7 +369,6 @@ class PersonAuthentication(PersonAuthenticationType):
             else:
                 createddate = (datetime.now()+timedelta(days=90))
                 currdate = datetime.now()
-                #user.setAttribute("oxPasswordExpirationDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
 
                 userCertificate = session_attributes.get("userCertificate")
                 certDN = session_attributes.get("certDN")
@@ -483,26 +478,26 @@ class PersonAuthentication(PersonAuthenticationType):
                     if ((curtime>=50) and (curtime<=60)):
                         timediff1 =  curtime -  min11
                         if timediff1>token_lifetime:
-                            #print "OTP Expired"
+                            print "OTP Expired"
                             facesMessages.add(FacesMessage.SEVERITY_ERROR, "OTP Expired")
                             return False
                     elif ((curtime>=0) or (curtime<=10)):
                         timediff1 = 60 - min11
                         timediff1 =  timediff1 + curtime
                         if timediff1>token_lifetime:
-                            #print "OTP Expired"
+                            print "OTP Expired"
                             facesMessages.add(FacesMessage.SEVERITY_ERROR, "OTP Expired")
                             return False
 
                 if ((min11>=0) and (min11<=60) and (curtime>=0) and (curtime<=60)):
                     timediff2 = curtime - min11
                     if timediff2>token_lifetime:
-                        #print "OTP Expired"
+                        print "OTP Expired"
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "OTP Expired")
                         return False
 
                 print "----------------------------------"
-                #print "Register. Code: %s" % str(code)
+                print "Register. Code: %s" % str(code)
                 print "----------------------------------"
 
                 if code is None:
@@ -513,19 +508,11 @@ class PersonAuthentication(PersonAuthenticationType):
                     print "Register. Passcode is empty"
                     return False
 
-                #if len(form_passcode) != 6:
-                    #print "Register. Passcode from response is not 6 digits: %s" % form_passcode
-                    #return False
-
-
-
                 if form_passcode == code:
                     print "Register, SUCCESS! User entered the same code!"
 
                     createddate = (datetime.now()+timedelta(days=90))
                     currdate = datetime.now()
-
-                    #user.setAttribute("oxPasswordExpirationDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
 
                     if certDN is not None:
                         certCNs = self.getCNFromDN(certDN)
@@ -557,7 +544,6 @@ class PersonAuthentication(PersonAuthenticationType):
                     newUser.setAttribute("userCertificate", userCertificate)
                     newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
                     newUser.setAttribute("jansExtUid", externalUID)
-                    #newUser.setAttribute("oxPreferredMethod", "1")
 
                     #### Enable user on Registration ####
                     enableUser = StringHelper.toBoolean(configurationAttributes.get("Enable_User").getValue2(), False)
@@ -640,7 +626,7 @@ class PersonAuthentication(PersonAuthenticationType):
             print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
             print "Register. FAIL! User entered the wrong code! %s != %s" % (form_passcode, code)
             print "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            #facesMessages.add(facesMessage.SEVERITY_ERROR, "Incorrect Twilio code, please try again.")
+
             return False
 
     def prepareForStep(self, configurationAttributes, requestParameters, step):
@@ -656,16 +642,6 @@ class PersonAuthentication(PersonAuthenticationType):
             attributes["mail_regex"] = attributes["mail_regex"].replace("\\","\\\\")
             attributes["pass_regex"] = attributes["pass_regex"].replace("\\","\\\\")
 
-            # this transform depends on, which symbol is used in the text of 
-            # reg.xhtml and regtr.xhtml
-            # if
-            #   email_regex = `#{identity.getWorkingParameter('mail_regex')}`;
-            #   pass_regex = `#{identity.getWorkingParameter('pass_regex')}`;
-            # in this case replace("\\\\`","\\`") should be used;
-            # if
-            #   email_regex = "#{identity.getWorkingParameter('mail_regex')}";
-            #   pass_regex = "#{identity.getWorkingParameter('pass_regex')}";
-            # in this case replace('\\\\"','\\"') should be used.
             attributes["mail_regex"] = attributes["mail_regex"].replace("\\\\`","\\`")
             attributes["pass_regex"] = attributes["pass_regex"].replace("\\\\`","\\`")
 
@@ -706,10 +682,8 @@ class PersonAuthentication(PersonAuthenticationType):
 
             if certString1 != None:
                 identity.setWorkingParameter("userCertificate", certString1)
-
-            if certString1 == None:
+            else:
                 print "not selected"
-                #return False;
 
             if clientCertificate != None:
                 x509Certificate = self.certFromPemString(clientCertificate)
@@ -741,7 +715,7 @@ class PersonAuthentication(PersonAuthenticationType):
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please contact System Administrator.")
                         return False
                     print cert_user_external_uid
-                    # print "Register. Step 1 Password Authentication"
+                    print "Register. Step 1 Password Authentication"
                     identity.setWorkingParameter("externaluid", str(cert_user_external_uid))
 
                     return True

@@ -1,96 +1,96 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html">
 <f:view transient="true" locale="#{language.localeCode}">
-	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title><ui:insert name="pageTitle" /></title>
-		<link rel="icon" href="#{request.contextPath}/servlet/favicon"
-			type='image/x-icon' />
-		<link type="text/css" rel="stylesheet"
-			href="#{webConfigurationService.getCssLocation()}/style.css" />
-		<link type="text/css" rel="stylesheet"
-			href="#{webConfigurationService.getCssLocation()}/bootstrap.min.css" />
-		<link type="text/css" rel="stylesheet"
-			href="#{webConfigurationService.getCssLocation()}/font-awesome.css" />
-		<link type="text/css" rel="stylesheet"
-			href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" />
-		<script type="text/javascript"
-			src="#{webConfigurationService.getJsLocation()}/jquery-3.6.0.min.js" />
-		<script type="text/javascript"
-			src="#{webConfigurationService.getJsLocation()}/bootstrap.min.js" />
-		<script type="text/javascript"
-			src="#{webConfigurationService.getJsLocation()}/platform.js" />
-		<style>
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title><ui:insert name="pageTitle" /></title>
+        <link rel="icon" href="#{request.contextPath}/servlet/favicon"
+            type='image/x-icon' />
+        <link type="text/css" rel="stylesheet"
+            href="#{webConfigurationService.getCssLocation()}/style.css" />
+        <link type="text/css" rel="stylesheet"
+            href="#{webConfigurationService.getCssLocation()}/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet"
+            href="#{webConfigurationService.getCssLocation()}/font-awesome.css" />
+        <link type="text/css" rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600" />
+        <script type="text/javascript"
+            src="#{webConfigurationService.getJsLocation()}/jquery-3.6.0.min.js" />
+        <script type="text/javascript"
+            src="#{webConfigurationService.getJsLocation()}/bootstrap.min.js" />
+        <script type="text/javascript"
+            src="#{webConfigurationService.getJsLocation()}/platform.js" />
+        <style>
 
 body {
-	margin-bottom: 3% !important;
+    margin-bottom: 3% !important;
 }
 
 .footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	color: white;
-	height: 37px;
-	background-color: #00BE79;
-	justify-content: center;
-	margin-left: auto;
-	margin-right: auto;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    height: 37px;
+    background-color: #00BE79;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (min-height: 720px) {
-	.footer {
-		position: absolute;
-		height: 5px !important;
-	}
+    .footer {
+        position: absolute;
+        height: 5px !important;
+    }
 }
 </style>
 
-	</h:head>
-	<h:body>
-		<div class="body">
-			<ui:insert name="body" />
-		</div>
-	</h:body>
-	<script type="text/javascript">
-		//<![CDATA[ 
-		$(document)
-				.ready(
-						function() {
-							$(window)
-									.scroll(
-											function() {
-												if (window.innerHeight < 620) {
-													document
-															.getElementById("appFooter").style.display = "none";
-												} else {
-													document
-															.getElementById("appFooter").style.display = "block";
-												}
+    </h:head>
+    <h:body>
+        <div class="body">
+            <ui:insert name="body" />
+        </div>
+    </h:body>
+    <script type="text/javascript">
+        //<![CDATA[ 
+        $(document)
+                .ready(
+                        function() {
+                            $(window)
+                                    .scroll(
+                                            function() {
+                                                if (window.innerHeight < 620) {
+                                                    document
+                                                            .getElementById("appFooter").style.display = "none";
+                                                } else {
+                                                    document
+                                                            .getElementById("appFooter").style.display = "block";
+                                                }
 
-											});
+                                            });
 
-							$(window)
-									.on(
-											'resize',
-											function() {
-												var win = $(this);
-												if (win.height() >= 620) {
-													document
-															.getElementById("appFooter").style.display = "block";
-												} else {
-													document
-															.getElementById("appFooter").style.display = "none";
-												}
-											});
-						});
+                            $(window)
+                                    .on(
+                                            'resize',
+                                            function() {
+                                                var win = $(this);
+                                                if (win.height() >= 620) {
+                                                    document
+                                                            .getElementById("appFooter").style.display = "block";
+                                                } else {
+                                                    document
+                                                            .getElementById("appFooter").style.display = "none";
+                                                }
+                                            });
+                        });
 
-		//]]>
-	</script>
+        //]]>
+    </script>
 </f:view>
 </html>

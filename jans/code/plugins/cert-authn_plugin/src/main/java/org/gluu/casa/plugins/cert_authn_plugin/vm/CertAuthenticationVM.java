@@ -124,7 +124,7 @@ public class CertAuthenticationVM {
 
             logger.info("Preparing redirect for completion of authentication flow");
             String url = persistenceService.getIssuerUrl();
-            WebUtils.execRedirect(String.format("%s/oxauth/postlogin.htm", url), true);
+            WebUtils.execRedirect(String.format("%s/jans-auth/postlogin.htm", url), true);
         }
     }
 
