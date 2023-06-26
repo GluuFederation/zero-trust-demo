@@ -1,4 +1,5 @@
 from io.jans.as.common.model.common import ZTrustPerson
+from io.jans.as.common.model.common import User
 from io.jans.as.model.common import WebKeyStorage
 
 from io.jans.service.cdi.util import CdiUtil
@@ -11,12 +12,12 @@ from io.jans.as.common.service.common import ConfigurationService, EncryptionSer
 
 from io.jans.as.server.util import ServerUtil
 from io.jans.util import StringHelper, ArrayHelper
-from java.util import Arrays
-from jakarta.faces.context import FacesContext
 from io.jans.jsf2.message import FacesMessages
 from io.jans.jsf2.service import FacesService
-
 from io.jans.service import MailService
+
+from io.jans.model import SmtpConnectProtectionType
+from io.jans.util.security import SecurityProviderUtility
 
 # cert
 from io.jans.as.common.cert.fingerprint import FingerprintHelper
@@ -30,14 +31,14 @@ from io.jans.as.model.util import CertUtils
 from io.jans.as.server.service.net import HttpService
 from org.apache.http.params import CoreConnectionPNames
 from datetime import datetime, timedelta
-from java.util import GregorianCalendar, TimeZone
+from java.util import Arrays
+
+from jakarta.faces.context import FacesContext
+from jakarta.faces.application import FacesMessage
 
 import org.codehaus.jettison.json.JSONArray as JSONArray
 
 from javax.activation import CommandMap
-
-from io.jans.model import SmtpConnectProtectionType
-from io.jans.util.security import SecurityProviderUtility
 
 import json
 import ast
@@ -80,6 +81,8 @@ from java.security import Security
 from javax.mail.internet import MimeMessage, InternetAddress
 from javax.mail import Session, Message, Transport
 
+from java.util import Date
+from java.util import Calendar
 
 class PersonAuthentication(PersonAuthenticationType):
 
@@ -331,17 +334,20 @@ class PersonAuthentication(PersonAuthenticationType):
 
                 print "email_subject = %s" % email_subject
                 print "email_msg_template = %s" % email_msg_template
+                
+                print "fmt_dict = %s" % fmt_dict
 
                 newpassword = upass
 
                 try:
                     mailService = CdiUtil.bean(MailService)
+                    print "fmt_dict = %s" % fmt_dict                    
                     body = ""
                     if isinstance(email_msg_template, (list, tuple)):
                         for template_line in email_msg_template:
                             body += self.formatLine(template_line, fmt_dict)
                     if isinstance(email_msg_template, str):
-                        body += self.formatLine(template_line, fmt_dict)
+                        body += self.formatLine(email_msg_template, fmt_dict)
                     print "body = %s" % body
 
                     #### Email Signing Code Begin ####
@@ -367,8 +373,13 @@ class PersonAuthentication(PersonAuthenticationType):
                     print "Register. Unexpected error:", ex
 
             else:
-                createddate = (datetime.now()+timedelta(days=90))
+                # createddate = (datetime.now()+timedelta(days=90))
                 currdate = datetime.now()
+                
+                calendar = Calendar.getInstance()
+                calendar.add(Calendar.DATE, 90)
+                
+                createddate = calendar.getTime()
 
                 userCertificate = session_attributes.get("userCertificate")
                 certDN = session_attributes.get("certDN")
@@ -392,8 +403,9 @@ class PersonAuthentication(PersonAuthenticationType):
                 print "ufnm = %s" % ufnm
                 print "ulnm = %s" % ulnm
                 print "umnm = %s" % umnm
-
+                
                 newUser = ZTrustPerson()
+                # newUser = User()
 
                 newUser.setAttribute("givenName", ufnm)
                 newUser.setAttribute("sn", ulnm)
@@ -401,8 +413,20 @@ class PersonAuthentication(PersonAuthenticationType):
                 newUser.setAttribute("mail", umail)
                 newUser.setAttribute("uid", umail)
                 newUser.setAttribute("userPassword", upass)
-                newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+
+                # newUser.setAttribute("createdAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                # newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                
+                print "currdate     = %s" % str(currdate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                # print "createddate  = %s" % str(createddate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                print "createddate  = %s" % createddate
+
+                # newUser.setCreatedAt(str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                # newUser.setUpdatedAt(str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                newUser.setAttribute("jansPassExpDate", createddate, False)
+
                 newUser.setAttribute("userCertificate", userCertificate)
                 newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
                 newUser.setAttribute("jansExtUid", externalUID)
@@ -511,8 +535,15 @@ class PersonAuthentication(PersonAuthenticationType):
                 if form_passcode == code:
                     print "Register, SUCCESS! User entered the same code!"
 
-                    createddate = (datetime.now()+timedelta(days=90))
+#                    createddate = (datetime.now()+timedelta(days=90))
+#                    currdate = datetime.now()
+                    
                     currdate = datetime.now()
+                    
+                    calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DATE, 90)
+                    
+                    createddate = calendar.getTime()                    
 
                     if certDN is not None:
                         certCNs = self.getCNFromDN(certDN)
@@ -532,6 +563,7 @@ class PersonAuthentication(PersonAuthenticationType):
                     print "rumnm = %s" % rumnm
 
                     newUser = ZTrustPerson()
+                    # newUser = User()
 
                     newUser.setAttribute("givenName", rufnm)
                     newUser.setAttribute("sn", rulnm)
@@ -539,8 +571,23 @@ class PersonAuthentication(PersonAuthenticationType):
                     newUser.setAttribute("mail", rumail)
                     newUser.setAttribute("uid", rumail)
                     newUser.setAttribute("userPassword", rupass)
-                    newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                    newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    # newUser.setAttribute("createdAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+
+                    # newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    
+                    #print "currdate     = %s" % str(currdate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                    #print "createddate  = %s" % str(createddate.strftime("%Y%m%d%H%M%S.%f+0000"))                    
+                    
+                    print "currdate     = %s" % str(currdate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                    # print "createddate  = %s" % str(createddate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                    print "createddate  = %s" % createddate
+
+                    # newUser.setCreatedAt(currdate)
+                    # newUser.setUpdatedAt(currdate)
+                    # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    newUser.setAttribute("jansPassExpDate", createddate, False)
+
                     newUser.setAttribute("userCertificate", userCertificate)
                     newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
                     newUser.setAttribute("jansExtUid", externalUID)
@@ -580,10 +627,18 @@ class PersonAuthentication(PersonAuthenticationType):
 
                     return True
             else:
-                    createddate = (datetime.now()+timedelta(days=90))
+                    #createddate = (datetime.now()+timedelta(days=90))
+                    #currdate = datetime.now()
+                    
                     currdate = datetime.now()
+                    
+                    calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DATE, 90)
+                    
+                    createddate = calendar.getTime()                    
 
                     newUser = ZTrustPerson()
+#                    newUser = User()
                     
                     newUser.setAttribute("givenName", rufnm)
                     newUser.setAttribute("sn", rulnm)
@@ -591,8 +646,26 @@ class PersonAuthentication(PersonAuthenticationType):
                     newUser.setAttribute("mail", rumail)
                     newUser.setAttribute("uid", rumail)
                     newUser.setAttribute("userPassword", rupass)
-                    newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
-                    newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    # newUser.setAttribute("createdAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))                    
+
+                    # newUser.setAttribute("updatedAt", str(currdate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+
+#                    newUser.setAttribute("updatedAt", currdate)
+#                    newUser.setAttribute("jansPassExpDate", createddate)
+
+#                    print "currdate     = %s" % str(currdate.strftime("%Y%m%d%H%M%S.%f+0000"))
+#                    print "createddate  = %s" % str(createddate.strftime("%Y%m%d%H%M%S.%f+0000"))
+
+                    print "currdate     = %s" % str(currdate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                    # print "createddate  = %s" % str(createddate.strftime("%Y%m%d%H%M%S.%f+0000"))
+                    print "createddate  = %s" % createddate
+ 
+#                    newUser.setCreatedAt(currdate)
+#                    newUser.setUpdatedAt(currdate)
+                    # newUser.setAttribute("jansPassExpDate", str(createddate.strftime("%Y%m%d%H%M%S.%f+0000")))
+                    newUser.setAttribute("jansPassExpDate", createddate, False)
+                    
                     newUser.setAttribute("userCertificate", userCertificate)
                     newUser.setAttribute("jans509Certificate", json.dumps(x509_json))
                     newUser.setAttribute("jansExtUid", externalUID)
@@ -709,7 +782,7 @@ class PersonAuthentication(PersonAuthenticationType):
                     x509CertificateFingerprint = self.calculateCertificateFingerprint(x509Certificate)
                     cert_user_external_uid = "cert:%s" % x509CertificateFingerprint
 
-                    userByUid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid)
+                    userByUid = userService.getUserByAttribute("jansExtUid", cert_user_external_uid, True)
                     if userByUid != None:
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "The certificate is already enrolled for another user.")
                         facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please contact System Administrator.")
@@ -765,6 +838,9 @@ class PersonAuthentication(PersonAuthenticationType):
             else:
                 return ""
         return ""
+
+    def getNextStep(self, configurationAttributes, requestParameters, step):
+        return -1
 
     def logout(self, configurationAttributes, requestParameters):
         return True
@@ -917,9 +993,9 @@ class EmailSender():
             smtp_config = {
                 'host' : smtpconfig.getHost(),
                 'port' : smtpconfig.getPort(),
-                'user' : smtpconfig.getUserName(),
+                'user' : smtpconfig.getSmtpAuthenticationAccountUsername(),
                 'from' : smtpconfig.getFromEmailAddress(),
-                'pwd_decrypted' : encryptionService.decrypt(smtpconfig.getPassword()),
+                'pwd_decrypted' : encryptionService.decrypt(smtpconfig.getSmtpAuthenticationAccountPassword()),
                 'connect_protection' : smtpconfig.getConnectProtection(),
                 'requires_authentication' : smtpconfig.isRequiresAuthentication(),
                 'server_trust' : smtpconfig.isServerTrust(),

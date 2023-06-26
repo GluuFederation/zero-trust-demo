@@ -3,7 +3,7 @@ description: Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID
 displayName: edipi
 jansAttrEditTyp: admin
 jansAttrName: edipi
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: string
 jansAttrUsgTyp: openid
 jansAttrViewTyp: admin
@@ -23,7 +23,7 @@ description: Personal Identity Verification (PIV) Identifier
 displayName: pivid
 jansAttrEditTyp: admin
 jansAttrName: pivid
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: string
 jansAttrUsgTyp: openid
 jansAttrViewTyp: admin
@@ -42,7 +42,7 @@ description: Legacy OSSO User Distinguish Name
 displayName: ossoUserDN
 jansAttrEditTyp: admin
 jansAttrName: ossoUserDN
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: string
 jansAttrUsgTyp: openid
 jansAttrViewTyp: admin
@@ -61,7 +61,7 @@ description: Legacy OSSO Subscriber Global Unique Identifier
 displayName: ossoSubscriberGuid
 jansAttrEditTyp: admin
 jansAttrName: ossoSubscriberGuid
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: string
 jansAttrUsgTyp: openid
 jansAttrViewTyp: admin
@@ -80,7 +80,7 @@ description: The registration status of the user.
 displayName: userStatus
 jansAttrEditTyp: admin
 jansAttrName: userStatus
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: string
 jansAttrUsgTyp: openid
 jansAttrViewTyp: admin
@@ -99,7 +99,7 @@ description: Last login time used to expire inactive users
 displayName: Last Login Time
 jansAttrEditTyp: admin
 jansAttrName: lastlogin
-jansAttrOrigin: ztrustPerson
+jansAttrOrigin: jansPerson
 jansAttrTyp: generalizedTime
 jansAttrViewTyp: admin
 jansSAML1URI: urn:gluu:dir:attribute-def:lastlogin

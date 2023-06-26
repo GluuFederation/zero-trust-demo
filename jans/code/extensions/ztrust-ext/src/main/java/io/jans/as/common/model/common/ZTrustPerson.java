@@ -3,8 +3,11 @@
  */
 package io.jans.as.common.model.common;
 
+import java.util.Date;
+
 import io.jans.orm.annotation.DataEntry;
 import io.jans.orm.annotation.ObjectClass;
+import io.jans.orm.model.base.CustomObjectAttribute;
 
 /**
 syntaxType = {
@@ -31,7 +34,7 @@ The 1.3.6.1.4.1.1466.115.121.1.24 LDAPSyntaxes is defined as:
  * @version Sept 8, 2022
  */
 @DataEntry
-@ObjectClass(value = "ztrustPerson")
+@ObjectClass(value = "jansPerson")
 public class ZTrustPerson extends User {
 
     /**
@@ -39,4 +42,18 @@ public class ZTrustPerson extends User {
      */
     private static final long serialVersionUID = 9100931112511064126L;
 
+    /**
+     * 
+     * @param attributeName
+     * @param attributeValue
+     * @param multiValued
+     */
+    public void setAttribute(String attributeName, Date attributeValue, Boolean multiValued) {
+        CustomObjectAttribute attribute = new CustomObjectAttribute(attributeName, attributeValue);
+        if (multiValued != null) {
+            attribute.setMultiValued(multiValued);
+        }
+        removeAttribute(attributeName);
+        getCustomAttributes().add(attribute);
+    }
 }
