@@ -1,6 +1,7 @@
 package org.gluu.casa.plugins.approval;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.gluu.casa.misc.Utils;
@@ -100,6 +101,7 @@ public class ApprovalVM {
         try {
             user.setUserStatus("active");
             user.setStatus("active");
+            user.setUpdatedAt(Calendar.getInstance().getTime());
 
             boolean res = persistenceService.modify(user);
             if (res) {
@@ -111,7 +113,7 @@ public class ApprovalVM {
             }
             else {
                 logger.info("User " + user.getFormattedName() + "isn't activated");
-                UIUtils.showMessageUI(false);                   
+                UIUtils.showMessageUI(false);
             }
         } catch (Exception e) {
             UIUtils.showMessageUI(false);
@@ -124,6 +126,7 @@ public class ApprovalVM {
         try {
             user.setUserStatus("inactive");
             user.setStatus("inactive");
+            user.setUpdatedAt(Calendar.getInstance().getTime());
 
             boolean res = persistenceService.modify(user);
             if (res) {
@@ -155,7 +158,7 @@ public class ApprovalVM {
             }
             else {
                 logger.info("User " + user.getFormattedName() + "isn't removed");
-                UIUtils.showMessageUI(false);                
+                UIUtils.showMessageUI(false);
             }
         } catch (Exception e) {
             UIUtils.showMessageUI(false);
@@ -185,6 +188,7 @@ public class ApprovalVM {
             for (ZTrustPerson user : pickedUsers) {
                 user.setStatus("active");
                 user.setUserStatus("active");
+                user.setUpdatedAt(Calendar.getInstance().getTime());
                 persistenceService.modify(user);
                 logger.info("User " + user.getFormattedName() + " is activated");
                 users.remove(user);
@@ -204,6 +208,7 @@ public class ApprovalVM {
             for (ZTrustPerson user : pickedUsers) {
                 user.setStatus("inactive");
                 user.setUserStatus("inactive");
+                user.setUpdatedAt(Calendar.getInstance().getTime());
                 persistenceService.modify(user);
                 logger.info("User " + user.getFormattedName() + " is deactivated");
                 users.remove(user);
