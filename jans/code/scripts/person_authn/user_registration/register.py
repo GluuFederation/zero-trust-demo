@@ -261,21 +261,6 @@ class PersonAuthentication(PersonAuthenticationType):
             upassd=ServerUtil.getFirstValue(requestParameters, "pass")
             urepass = str(ServerUtil.getFirstValue(requestParameters, "repass"))
 
-            certDN = session_attributes.get("certDN")
-            if certDN is not None:
-                certCNs = self.getCNFromDN(certDN)
-                if certCNs is not None:
-                    i = 0
-                    while i < len(certCNs):
-                        if len(certCNs[i]) > 0:
-                            if i == 0:
-                                ulnm = certCNs[i]
-                            elif i == 1:
-                                ufnm = certCNs[i]
-                            elif i == 2:
-                                umnm = certCNs[i]
-                        i += 1
-
             identity.setWorkingParameter("vufnm", ufnm)
             identity.setWorkingParameter("vulnm", ulnm)
             identity.setWorkingParameter("vumnm", umnm)
@@ -293,7 +278,6 @@ class PersonAuthentication(PersonAuthenticationType):
             attributes = self.getAttributes()
 
             pass_regex = attributes["pass_regex"]
-            print "pass_regex = %s" % pass_regex
 
             pat = re.compile(pass_regex)
             mat = re.search(pat, upassd)
@@ -330,11 +314,6 @@ class PersonAuthentication(PersonAuthenticationType):
                 }
 
                 email_subject, email_msg_template = self.getEmailParameters()
-
-                print "email_subject = %s" % email_subject
-                print "email_msg_template = %s" % email_msg_template
-
-                print "fmt_dict = %s" % fmt_dict
 
                 newpassword = upass
 
@@ -384,24 +363,6 @@ class PersonAuthentication(PersonAuthenticationType):
                 certDN = session_attributes.get("certDN")
                 x509_json = {"value": userCertificate,"display":certDN ,"type":"","primary":"" }
                 externalUID = session_attributes.get("externaluid")
-
-                if certDN is not None:
-                    certCNs = self.getCNFromDN(certDN)
-                    if certCNs is not None:
-                        i = 0
-                        while i < len(certCNs):
-                            if len(certCNs[i]) > 0:
-                                if i == 0:
-                                    ulnm = certCNs[i]
-                                elif i == 1:
-                                    ufnm = certCNs[i]
-                                elif i == 2:
-                                    umnm = certCNs[i]
-                            i += 1
-
-                print "ufnm = %s" % ufnm
-                print "ulnm = %s" % ulnm
-                print "umnm = %s" % umnm
 
                 newUser = ZTrustPerson()
 
@@ -531,23 +492,6 @@ class PersonAuthentication(PersonAuthenticationType):
                     calendar_exp_date.add(Calendar.DATE, 90)
 
                     pass_exp_date = calendar_exp_date.getTime()
-
-                    if certDN is not None:
-                        certCNs = self.getCNFromDN(certDN)
-                        i = 0
-                        while i < len(certCNs):
-                            if len(certCNs[i]) > 0:
-                                if i == 0:
-                                    rulnm = certCNs[i]
-                                elif i == 1:
-                                    rufnm = certCNs[i]
-                                elif i == 2:
-                                    rumnm = certCNs[i]
-                            i += 1
-
-                    print "rufnm = %s" % rufnm
-                    print "rulnm = %s" % rulnm
-                    print "rumnm = %s" % rumnm
 
                     newUser = ZTrustPerson()
                     newUser.setAttribute("givenName", rufnm)
@@ -745,6 +689,29 @@ class PersonAuthentication(PersonAuthenticationType):
                     print cert_user_external_uid
                     print "Register. Step 1 Password Authentication"
                     identity.setWorkingParameter("externaluid", str(cert_user_external_uid))
+                    
+                    certDN = str(subjectX500Principal)
+                    if certDN is not None:
+                        certCNs = self.getCNFromDN(certDN)
+                        if certCNs is not None:
+                            i = 0
+                            while i < len(certCNs):
+                                if len(certCNs[i]) > 0:
+                                    if i == 0:
+                                        ulnm = certCNs[i]
+                                    elif i == 1:
+                                        ufnm = certCNs[i]
+                                    elif i == 2:
+                                        umnm = certCNs[i]
+                                i += 1
+
+                    print "ufnm = %s" % ufnm
+                    print "ulnm = %s" % ulnm
+                    print "umnm = %s" % umnm                    
+                    
+                    identity.setWorkingParameter("vufnm", ufnm)
+                    identity.setWorkingParameter("vulnm", ulnm)
+                    identity.setWorkingParameter("vumnm", umnm)                    
 
                     return True
 
