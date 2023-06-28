@@ -17,7 +17,7 @@ import io.jans.orm.model.base.SimpleUser;
  */
 @DataEntry
 @ObjectClass(value = "jansPerson")
-public class GluuPerson extends SimpleUser {
+public class JansPerson extends SimpleUser {
 
     /**
      * 
@@ -30,7 +30,7 @@ public class GluuPerson extends SimpleUser {
     @AttributeName(name = "sn", ignoreDuringUpdate = true)
     private String sn;
 
-    @AttributeName(name = "gluuStatus")
+    @AttributeName(name = "jansStatus")
     private String status;
 
     @AttributeName(name = "mail", ignoreDuringUpdate = true)

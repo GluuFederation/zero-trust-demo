@@ -27,24 +27,27 @@ import org.zkoss.bind.annotation.NotifyChange;
  * @author jgomer
  */
 public class ApprovalVM {
+	
+    private static Logger logger = LoggerFactory.getLogger(ApprovalVM.class);
 
     private static final int DEF_IDX_INACTIVE_USERS = 0;
     private static final int DEF_IDX_PENDING_USERS = 1;
     private static final int DEF_IDX_ACTIVE_USERS = 2;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
     private IPersistenceService persistenceService;
 
-    private List<ZTrustPerson> users;
     private UserService us;
-    private List<ZTrustPerson> pickedUsers;
-    private String keyword;
 
     private String[] userTypes = { "Inactive Users", "Pending Users", "Active Users" };
 
+    private List<ZTrustPerson> users;
+    private List<ZTrustPerson> pickedUsers;
+    
     private List<ZTrustPerson> inactiveUsers;
     private List<ZTrustPerson> pendingUsers;
     private List<ZTrustPerson> activeUsers;
+    
+    private String keyword;
 
     private int currentSelectedUserTypeIndex;
 
@@ -83,7 +86,6 @@ public class ApprovalVM {
     @NotifyChange("users")
     public void init() {
         persistenceService = Utils.managedBean(IPersistenceService.class);
-//        persistenceService.initialize();        
         setCurrentSelectedUserTypeIndex(DEF_IDX_ACTIVE_USERS);
         us = new UserService();
         activeUsers = us.getUsers("active", "active");
@@ -229,7 +231,6 @@ public class ApprovalVM {
     public void onSelectAll(@BindingParam("checked") boolean isChecked) {
         if (isChecked) {
             final int currSelIdx = getCurrentSelectedUserTypeIndex();
-
             if (currSelIdx == DEF_IDX_INACTIVE_USERS) {
                 pickedUsers.clear();
                 pickedUsers = inactiveUsers;
@@ -240,7 +241,6 @@ public class ApprovalVM {
                 pickedUsers.clear();
                 pickedUsers = activeUsers;
             }
-
         } else {
             pickedUsers.clear();
         }
@@ -252,7 +252,6 @@ public class ApprovalVM {
         setCurrentSelectedUserTypeIndex(userTypeIndex);
         logger.info("Selected usertype:" + userTypes[userTypeIndex]);
         pickedUsers.clear();
-
         if (userTypeIndex == DEF_IDX_INACTIVE_USERS) {
             inactiveUsers = us.getUsers("inactive", "inactive");
             users = inactiveUsers;

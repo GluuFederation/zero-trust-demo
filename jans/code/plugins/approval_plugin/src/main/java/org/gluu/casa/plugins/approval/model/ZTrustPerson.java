@@ -9,8 +9,8 @@ import io.jans.orm.annotation.ObjectClass;
  * @version Sept 8, 2022
  */
 @DataEntry
-@ObjectClass(value = "ztrustPerson")
-public class ZTrustPerson extends GluuPerson {
+@ObjectClass(value = "jansPerson")
+public class ZTrustPerson extends JansPerson {
 	
 	/**
      * 

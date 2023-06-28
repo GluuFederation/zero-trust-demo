@@ -13,22 +13,21 @@ import io.jans.orm.search.filter.Filter;
 
 public class UserService {
 
-    private IPersistenceService persistenceService;
     @SuppressWarnings("unused")
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
+    
+    private IPersistenceService persistenceService;
 
     public UserService() {
         persistenceService = org.gluu.casa.misc.Utils.managedBean(IPersistenceService.class);
     }
 
-    public List<ZTrustPerson> getUsers(String gluuStatus, String userStatus) {
-
-        Filter gluuStatusFilter = Filter.createEqualityFilter("gluuStatus", gluuStatus);
+    public List<ZTrustPerson> getUsers(String jansStatus, String userStatus) {
+        Filter jansStatusFilter = Filter.createEqualityFilter("jansStatus", jansStatus);
         Filter userStatusFilter = Filter.createEqualityFilter("userStatus", userStatus);
-        Filter filters = Filter.createANDFilter(gluuStatusFilter, userStatusFilter);
+        Filter filters = Filter.createANDFilter(jansStatusFilter, userStatusFilter);
 
         return persistenceService.find(ZTrustPerson.class, persistenceService.getPeopleDn(), filters);
-
     };
 
     public boolean updateUser(User user) {
