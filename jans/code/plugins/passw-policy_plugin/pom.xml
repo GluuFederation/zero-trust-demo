@@ -6,14 +6,15 @@
 
     <groupId>org.gluu.casa.plugins</groupId>
     <artifactId>passw-policy_plugin</artifactId>
-    <version>4.4.2.Final</version>
+    <version>5.0.0-12</version>
     <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <plugin.id>passw-policy_plugin</plugin.id>
-        <plugin.version>4.4.2.Final</plugin.version>
+        <plugin.version>5.0.0-12</plugin.version>
+        <jans.version>1.0.14-SNAPSHOT</jans.version>
     </properties>
 
     <repositories>
@@ -29,7 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -73,15 +74,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>oxauth-common</artifactId>
-            <version>${plugin.version}</version>
+            <groupId>io.jans</groupId>
+            <artifactId>jans-auth-common</artifactId>
+            <version>${jans.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.gluu</groupId>
-            <artifactId>gluu-orm-annotation</artifactId>
-            <version>${plugin.version}</version>
+            <groupId>io.jans</groupId>
+            <artifactId>jans-orm-annotation</artifactId>
+            <version>${jans.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -9,11 +9,12 @@ import org.zkoss.bind.annotation.NotifyChange;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jans.util.Util;
+
 import java.io.File;
 import java.util.Map;
 
 import org.gluu.casa.ui.UIUtils;
-import org.gluu.util.Util;
 
 /**
  * 
@@ -23,7 +24,7 @@ import org.gluu.util.Util;
  */
 public class PasswPolicyVM {
 
-    public static final String DEF_REGEX_PROPS_FPATH = "/etc/gluu/conf/ztrust-regex.json";
+    public static final String DEF_REGEX_PROPS_FPATH = "/etc/jans/conf/ztrust-regex.json";
     public static final String DEF_PASS_REGEX = "pass_regex";
 
     private Logger logger = LoggerFactory.getLogger(PasswPolicyVM.class);
