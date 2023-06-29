@@ -261,6 +261,22 @@ class PersonAuthentication(PersonAuthenticationType):
             upassd=ServerUtil.getFirstValue(requestParameters, "pass")
             urepass = str(ServerUtil.getFirstValue(requestParameters, "repass"))
 
+            if not ufnm or not ulnm or not umnm:  
+                certDN = session_attributes.get("certDN")
+                if certDN is not None:
+                    certCNs = self.getCNFromDN(certDN)
+                    if certCNs is not None:
+                        i = 0
+                        while i < len(certCNs):
+                            if len(certCNs[i]) > 0:
+                                if i == 0 and not ulnm:
+                                    ulnm = certCNs[i]
+                                elif i == 1 and not ufnm:
+                                    ufnm = certCNs[i]
+                                elif i == 2 and not umnm:
+                                    umnm = certCNs[i]
+                            i += 1
+
             identity.setWorkingParameter("vufnm", ufnm)
             identity.setWorkingParameter("vulnm", ulnm)
             identity.setWorkingParameter("vumnm", umnm)
@@ -492,6 +508,24 @@ class PersonAuthentication(PersonAuthenticationType):
                     calendar_exp_date.add(Calendar.DATE, 90)
 
                     pass_exp_date = calendar_exp_date.getTime()
+
+                    if not rufnm or not rulnm or not rumnm:
+                        if certDN is not None:
+                            certCNs = self.getCNFromDN(certDN)
+                            i = 0
+                            while i < len(certCNs):
+                                if len(certCNs[i]) > 0:
+                                    if i == 0 and not rufnm:
+                                        rulnm = certCNs[i]
+                                    elif i == 1 and not rufnm:
+                                        rufnm = certCNs[i]
+                                    elif i == 2 and not rumnm:
+                                        rumnm = certCNs[i]
+                                i += 1
+
+                    print "rufnm = %s" % rufnm
+                    print "rulnm = %s" % rulnm
+                    print "rumnm = %s" % rumnm
 
                     newUser = ZTrustPerson()
                     newUser.setAttribute("givenName", rufnm)
