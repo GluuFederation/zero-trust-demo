@@ -1839,7 +1839,7 @@ for example, **SSL Session Cache**, **Usage of SSL OCSP Stapling**.
     + **(-)**[6.6. jans-auth App Session Audit Script]
     + **(*)**[6.7. jans-auth Extension ztrust-ext]
     + **(*)**[6.8. jans-auth Extension fido2]
-  * **(+)**[7. Casa Configuration]
+  * **(*)**[7. Casa Configuration]
     + **(*)**[7.1. Activation Casa plug-in]
     + **(*)**[7.2. Password Policy Casa plug-in]
     + **(*)**[7.3. Certificate Authentication plug-in]
