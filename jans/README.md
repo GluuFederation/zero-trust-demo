@@ -1841,7 +1841,7 @@ for example, **SSL Session Cache**, **Usage of SSL OCSP Stapling**.
     + **(*)**[6.8. jans-auth Extension fido2]
   * **(+)**[7. Casa Configuration]
     + **(*)**[7.1. Activation Casa plug-in]
-    + **(-)**[7.2. Password Policy Casa plug-in]
+    + **(*)**[7.2. Password Policy Casa plug-in]
     + **(*)**[7.3. Certificate Authentication plug-in]
     + **(*)**[7.4. Fido2 Authentication service]
   * **(*)**[8. HTTPD configuration]
