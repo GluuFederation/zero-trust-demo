@@ -24,35 +24,37 @@ import org.gluu.casa.ui.UIUtils;
  */
 public class PasswPolicyVM {
 
+    private static Logger logger = LoggerFactory.getLogger(PasswPolicyVM.class);
+
     public static final String DEF_REGEX_PROPS_FPATH = "/etc/jans/conf/ztrust-regex.json";
     public static final String DEF_PASS_REGEX = "pass_regex";
-
-    private Logger logger = LoggerFactory.getLogger(PasswPolicyVM.class);
     
     private ObjectMapper mapper = new ObjectMapper();
-    
+
     private Map<String, String> properties;
-    
+
     private String currPassRegEx;   // current Password Regular Expression
                                     // 'save', 'reload' - synchronizing with 
-    
+
     private String genPassRegEx;    // generated Password Regular Expression
-    
+
     // values, used by RegEx generator 
     private boolean isUpperCase = true;
-    
+
     private boolean isLowerCase = true;
-    
+
     private boolean isDigits = true;
-    
+
+    private boolean isSpecSymbols = true;
+
     private boolean isMinus = true;
-    
+
     private boolean isUnderline = true;
-    
+
     private boolean isSymbols = true;
-    
+
     private boolean isBrackets = true;
-    
+
     private int passwLength = 15;
 
     @Init
@@ -139,46 +141,66 @@ public class PasswPolicyVM {
         this.isDigits = isDigits;
     }
 
+    public boolean getIsSpecSymbols() {
+        logger.debug(String.format("getIsSpecSymbols(): isSpecSymbols = %b", isSpecSymbols));
+        return this.isSpecSymbols;
+    }
+
+    public void setIsSpecSymbols(final boolean isSpecSymbols) {
+        this.isSpecSymbols = isSpecSymbols;
+        logger.debug(String.format("setIsSpecSymbols(): isSpecSymbols = %b", isSpecSymbols));
+    }
+
     public boolean getIsMinus() {
+        logger.debug(String.format("getIsMinus(): isMinus = %b", isMinus));
         return this.isMinus;
-    }    
+    }
 
     public void setIsMinus(final boolean isMinus) {
         this.isMinus = isMinus;
+        logger.debug(String.format("setIsMinus(): isMinus = %b", isMinus));
     }
 
     public boolean getIsUnderline() {
+        logger.debug(String.format("getIsUnderline(): isUnderline = %b", isUnderline));
         return this.isUnderline;
-    }    
+    }
 
     public void setIsUnderline(final boolean isUnderline) {
+        logger.debug(String.format("setIsUnderline(): isUnderline = %b", isUnderline));
         this.isUnderline = isUnderline;
     }
 
     public boolean getIsSymbols() {
+        logger.debug(String.format("getIsSymbols(): isSymbols = %b", isSymbols));
         return this.isSymbols;
-    }    
+    }
 
     public void setIsSymbols(final boolean isSymbols) {
         this.isSymbols = isSymbols;
+        logger.debug(String.format("setIsSymbols(): isSymbols = %b", isSymbols));
     }
 
     public boolean getIsBrackets() {
+        logger.debug(String.format("getIsBrackets(): isBrackets = %b", isBrackets));
         return this.isBrackets;
-    }    
+    }
 
     public void setIsBrackets(final boolean isBrackets) {
+        logger.debug(String.format("setIsBrackets(): isBrackets = %b", isBrackets));
         this.isBrackets = isBrackets;
     }
 
     public int getPasswLength() {
+        logger.debug(String.format("getPasswLength(): passwLength = %b", passwLength));
         return this.passwLength;
     }
-    
+
     public void setPasswLength(final int passwLength) {
+        logger.debug(String.format("setPasswLength(): passwLength = %b", passwLength));
         this.passwLength = passwLength;
     }
-    
+
     @Command
     public void save(@BindingParam("passRegEx") String passRegEx) {
         if (Util.empty(passRegEx)) {
@@ -188,7 +210,7 @@ public class PasswPolicyVM {
             setPropertyValue(DEF_PASS_REGEX, passRegEx);
         }
     }
-    
+
     @Command
     @NotifyChange("currPassRegEx")
     public void reload() {
@@ -197,7 +219,7 @@ public class PasswPolicyVM {
         } catch (Exception e) {
             logger.error(String.format("Failed to save '%s' configuration file", DEF_REGEX_PROPS_FPATH));
             logger.error(e.getMessage(), e);
-        }        
+        }
     }
 
     @Command
@@ -208,9 +230,9 @@ public class PasswPolicyVM {
             this.genPassRegEx = "";
         }
         else {
-            
+
             String genRegEx = "";
-            
+
             if (isUpperCase || isLowerCase || isDigits || isMinus || isUnderline || isSymbols || isBrackets) {
                 genRegEx += "^";
             }
@@ -223,27 +245,30 @@ public class PasswPolicyVM {
             if (isDigits) {
                 genRegEx += "(?=.*\\d)";
             }
-            
+
             String symbols = "";
-            if (isMinus) {
-                symbols += "\\-"; 
+
+            if (isSpecSymbols) {
+                if (isMinus) {
+                    symbols += "\\-";
+                }
+                if (isUnderline) {
+                    symbols += "\\_";
+                }
+                if (isBrackets) {
+                    symbols += "\\(\\)\\{\\}\\[\\]\\<\\>";
+                }
+                if (isSymbols) {
+                    symbols += "~\\`!@#$%^&*+=|\\/:;\\\\\"\\',.?";
+                }
+
+                if (!symbols.isEmpty()) {
+                    genRegEx += "(?=.*[";
+                    genRegEx += symbols;
+                    genRegEx += "])";
+                }
             }
-            if (isUnderline) {
-                symbols += "\\_"; 
-            }
-            if (isBrackets) {
-                symbols += "\\(\\)\\{\\}\\[\\]\\<\\>"; 
-            }
-            if (isSymbols) {
-                symbols += "~\\`!@#$%^&*+=|\\/:;\\\\\"\\',.?"; 
-            }
-            
-            if (!symbols.isEmpty()) {
-                genRegEx += "(?=.*[";
-                genRegEx += symbols;
-                genRegEx += "])";
-            }
-            
+
             if (isUpperCase || isLowerCase || isDigits || isMinus || isUnderline || isSymbols || isBrackets) {
                 genRegEx += "[";
                 if (isUpperCase) {
@@ -258,11 +283,11 @@ public class PasswPolicyVM {
                 genRegEx += symbols;
                 genRegEx += "]";
             }
-            
+
             if (isUpperCase || isLowerCase || isDigits || isMinus || isUnderline || isSymbols || isBrackets) {
                 genRegEx += String.format("{%d,}$", passwLength);
-            }            
-            
+            }
+
             this.genPassRegEx = genRegEx;
             UIUtils.showMessageUI(true);
         }

@@ -3,121 +3,151 @@
 <?init class="org.zkoss.zk.ui.util.Composition" template="/general.zul"?>
 
 <zk:zk xmlns:z="http://www.zkoss.org/2005/zul" xmlns:h="xhtml"
-	xmlns:zk="zk" xmlns:w="client" xmlns:ca="client/attribute"
-	xmlns="native">
+    xmlns:zk="zk" xmlns:w="client" xmlns:ca="client/attribute"
+    xmlns="native">
 
-	<z:div if="${empty pageScope.error}" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('org.gluu.casa.plugins.passwpolicy.PasswPolicyVM')"
-		self="@define(maincontent)">
-		<h:title self="@define(title)">
-			${zkService.appName} - ${labels.password_policy.title}
-		</h:title>
+    <z:div if="${empty pageScope.error}" apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('vm') @init('org.gluu.casa.plugins.passwpolicy.PasswPolicyVM')"
+        self="@define(maincontent)">
+        <h:title self="@define(title)">
+            ${zkService.appName} - ${labels.password_policy.title}
+        </h:title>
 
-		<z:include src="/back-home.zul" />
+        <z:include src="/back-home.zul" />
 
-		<div class="ph4 mb2">
-			<div class="alert alert-success dn" id="feedback-cert-edit"
-				role="alert" />
-		</div>
-		
-		<div class="${css['sectionsWrapper']} pt3">
-			<section class="${css.section}">
-				<div class="${css.panel} flex justify-between">
-					<h2 class="f4 dark-blue2">
-						${labels.password_policy.title}
-					</h2>
-				</div>
-				<div class="flex justify-between">
-					<div class="col">
-						<div class="${css.panel}">
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="dark-blue2 v-mid-l" value="Current Regular Expression Properties File Path:"/>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="b dark-blue2 v-mid-l" value="@load(vm.regexPropsFPath)"/>
-							</div>
-						</div>
-						<div class="${css.panel}">
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="dark-blue2 v-mid-l" value="Current Password Regular Expression:"/>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="b dark-blue2 v-mid-l" value="@load(vm.currPassRegEx)"/>
-							</div>
-						</div>
-						<div class="${css.panel}">
-							<div class="row db pt1-ns ml1-l mr1-l w-100">
-								<z:textbox class="${css.textInput} w4 w-100 mr2 v-mid-l" placeholder="Password Regular Expression" value="@bind(vm.currPassRegEx)" onOK="@command('save', passRegEx = vm.currPassRegEx)" />
-							</div>
-						</div>
-						<div class="${css.panel} mb2">
-							<div class="row db pt1-ns ml1-l">
-								<z:button label="Save" class="${css.primaryButton} v-mid-l w4" onClick="@command('save', passRegEx = vm.currPassRegEx)" />
-								<z:button label="Reload" class="${css.primaryButton} v-mid-l w4" onClick="@command('reload')" />
-							</div>
+        <div class="ph4 mb2">
+            <div class="alert alert-success dn" id="feedback-cert-edit"
+                role="alert" />
+        </div>
+
+        <div class="${css['sectionsWrapper']} pt3">
+            <section class="${css.section}">
+                <div class="${css.panel} flex justify-between">
+                    <h2 class="f4 dark-blue2">
+                        ${labels.password_policy.title}
+                    </h2>
+                </div>
+                <div class="flex justify-between">
+                    <div class="col">
+                        <div class="${css.panel}">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="dark-blue2 v-mid-l" value="Current Regular Expression Properties File Path:"/>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="b dark-blue2 v-mid-l" value="@load(vm.regexPropsFPath)"/>
+                            </div>
                         </div>
-						<div class="${css.panel}">
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="dark-blue2 v-mid-l" value="Minimum Length of Password:"/>
-								<z:intbox id="id_passw_length_intbox" class="w2 mr2 v-mid-l ml2"
-									constraint="${c:new('org.gluu.casa.plugins.passwpolicy.PasswPolicyLengthConstraint')}"
-									value="@bind(vm.passwLength)"
-									w:onClick="alertRef = $('#feedback-cert-edit')"
-									onChange="vm.passwLength=id_passw_length_intbox.getValue()"/>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_upercase_chkbx" label="Upper-Case (A,B,C, ...)" checked="@bind(vm.isUpperCase)" onCheck="vm.isUpperCase=id_upercase_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_lower_chkbx" label="Lower-Case (a,b,c, ...)" checked="@bind(vm.isLowerCase)" onCheck="vm.isLowerCase=id_lower_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_digits_chkbx" label="Digits (0,1,2, ...)" checked="@bind(vm.isDigits)" onCheck="vm.isDigits=id_digits_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_minus_chkbx" label="Minus (-)" checked="@bind(vm.isMinus)" onCheck="vm.isMinus=id_minus_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                        	<z:checkbox id="id_underline_chkbx" label="Underline (_)" checked="@bind(vm.isUnderline)" onCheck="vm.isUnderline=id_underline_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_symbols_chkbx" label="Symbols (~`!@#$%^&amp;*-_+=|\/:;&quot;&apos;&lt;&gt;,.?)" checked="@bind(vm.isSymbols)" onCheck="vm.isSymbols=id_symbols_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-		                        <div class="col-md-auto" style="">
-		                            <z:checkbox id="id_brackets_chkbx" label="Brackets ({,},(,),[,])" checked="@bind(vm.isBrackets)" onCheck="vm.isBrackets=id_brackets_chkbx.isChecked()"/>
-		                        </div>
-							</div>
-						</div>
-						<div class="${css.panel} mb2">
-							<div class="row db pt1-ns ml1-l">
-								<z:button label="Generate" class="${css.primaryButton} v-mid-l w4" w:onClick="alertRef = $('#feedback-cert-edit')" onClick="@command('generate')" />
-								<z:button label="Copy" class="${css.primaryButton} v-mid-l w4" onClick="@command('copy')" />
-							</div>
+                        <div class="${css.panel}">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="dark-blue2 v-mid-l" value="Current Password Regular Expression:"/>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="b dark-blue2 v-mid-l" value="@load(vm.currPassRegEx)"/>
+                            </div>
                         </div>
-						<div class="${css.panel}">
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="dark-blue2 v-mid-l" value="Generated Password Regular Expression:"/>
-							</div>
-							<div class="row db pt1-ns ml1-l">
-								<z:label class="b dark-blue2 v-mid-l" value="@load(vm.genPassRegEx)"/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</z:div>
+                        <div class="${css.panel}">
+                            <div class="row db pt1-ns ml1-l mr1-l w-100">
+                                <z:textbox class="${css.textInput} w4 w-100 mr2 v-mid-l" placeholder="Password Regular Expression" value="@bind(vm.currPassRegEx)" onOK="@command('save', passRegEx = vm.currPassRegEx)" />
+                            </div>
+                        </div>
+                        <div class="${css.panel} mb2">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:button label="Save" class="${css.primaryButton} v-mid-l w4" onClick="@command('save', passRegEx = vm.currPassRegEx)" />
+                                <z:button label="Reload" class="${css.primaryButton} v-mid-l w4" onClick="@command('reload')" />
+                            </div>
+                        </div>
+                        <div class="${css.panel}">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="dark-blue2 v-mid-l" value="Minimum Length of Password:"/>
+                                <z:intbox id="id_passw_length_intbox" class="w2 mr2 v-mid-l ml2"
+                                    constraint="${c:new('org.gluu.casa.plugins.passwpolicy.PasswPolicyLengthConstraint')}"
+                                    value="@bind(vm.passwLength)"
+                                    w:onClick="alertRef = $('#feedback-cert-edit')"
+                                    onChange="vm.passwLength=id_passw_length_intbox.getValue()"/>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_upercase_chkbx" label="Upper-Case (A,B,C, ...)" checked="@bind(vm.isUpperCase)" onCheck="vm.isUpperCase=id_upercase_chkbx.isChecked()"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_lower_chkbx" label="Lower-Case (a,b,c, ...)" checked="@bind(vm.isLowerCase)" onCheck="vm.isLowerCase=id_lower_chkbx.isChecked()"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_digits_chkbx" label="Digits (0,1,2, ...)" checked="@bind(vm.isDigits)" onCheck="vm.isDigits=id_digits_chkbx.isChecked()"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_spec_symbols_chkbx" label="Special Sybmols:" checked="@bind(vm.isSpecSymbols)" onCheck="vm.isSpecSymbols=id_spec_symbols_chkbx.isChecked();setAllSpecSymbols(vm.isSpecSymbols);"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml4-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_minus_chkbx" label="Minus (-)" checked="@bind(vm.isMinus)" onCheck="vm.isMinus=id_minus_chkbx.isChecked();fixIsSpecSymbols();"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml4-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_underline_chkbx" label="Underline (_)" checked="@bind(vm.isUnderline)" onCheck="vm.isUnderline=id_underline_chkbx.isChecked();fixIsSpecSymbols();"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml4-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_symbols_chkbx" label="Symbols (~`!@#$%^&amp;*-_+=|\/:;&quot;&apos;&lt;&gt;,.?)" checked="@bind(vm.isSymbols)" onCheck="vm.isSymbols=id_symbols_chkbx.isChecked();fixIsSpecSymbols();"/>
+                                </div>
+                            </div>
+                            <div class="row db pt1-ns ml4-l">
+                                <div class="col-md-auto" style="">
+                                    <z:checkbox id="id_brackets_chkbx" label="Brackets ({,},(,),[,])" checked="@bind(vm.isBrackets)" onCheck="vm.isBrackets=id_brackets_chkbx.isChecked();fixIsSpecSymbols();"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="${css.panel} mb2">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:button label="Generate" class="${css.primaryButton} v-mid-l w4" w:onClick="alertRef = $('#feedback-cert-edit')" onClick="@command('generate')" />
+                                <z:button label="Copy" class="${css.primaryButton} v-mid-l w4" onClick="@command('copy')" />
+                            </div>
+                        </div>
+                        <div class="${css.panel}">
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="dark-blue2 v-mid-l" value="Generated Password Regular Expression:"/>
+                            </div>
+                            <div class="row db pt1-ns ml1-l">
+                                <z:label class="b dark-blue2 v-mid-l" value="@load(vm.genPassRegEx)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <zk:zscript><![CDATA[
+            void setAllSpecSymbols(val) {
+                id_minus_chkbx.setChecked(val);
+                id_underline_chkbx.setChecked(val);
+                id_symbols_chkbx.setChecked(val);
+                id_brackets_chkbx.setChecked(val);
+                vm.isMinus=vm.isUnderline=vm.isSymbols=vm.isBrackets=val;
+            }
+            void fixIsSpecSymbols() {
+                if (id_minus_chkbx.isChecked () ||
+                        id_underline_chkbx.isChecked() ||
+                        id_symbols_chkbx.isChecked() ||
+                        id_brackets_chkbx.isChecked()) {
+                    id_spec_symbols_chkbx.setChecked(true);
+                    vm.isSpecSymbols=true;
+                }
+                if (!id_minus_chkbx.isChecked () &&
+                        !id_underline_chkbx.isChecked() &&
+                        !id_symbols_chkbx.isChecked() &&
+                        !id_brackets_chkbx.isChecked()) {
+                    id_spec_symbols_chkbx.setChecked(false);
+                    vm.isSpecSymbols=false;
+                }
+            }
+        ]]></zk:zscript>
+    </z:div>
 </zk:zk>
