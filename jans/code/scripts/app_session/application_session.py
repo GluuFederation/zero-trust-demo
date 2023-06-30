@@ -23,6 +23,8 @@ from io.jans.model import ApplicationType
 from io.jans.orm.model.base import CustomEntry
 from io.jans.orm.model.base import CustomAttribute
 
+from io.jans.as.common.model.session import SessionId
+
 import uuid, time, java
 
 class ApplicationSession(ApplicationSessionType):
@@ -33,14 +35,13 @@ class ApplicationSession(ApplicationSessionType):
         print "ApplicationSession.init: begin"
         self.entryManager = CdiUtil.bean(PersistenceEntryManager)
         self.staticConfiguration = CdiUtil.bean(StaticConfiguration)
-        self.metricService= CdiUtil.bean(MetricService)
+        self.metricService = CdiUtil.bean(MetricService)
         self.identity = CdiUtil.bean(Identity)
 
         try:
             self.metric_audit_ou_name = configurationAttributes.get("metric_audit_ou_name").getValue2()
         except:
             print "ApplicationSession.init: metric_audit_ou_name not found"
-
 
         print "ApplicationSession.init: success"
         return True
@@ -93,12 +94,12 @@ class ApplicationSession(ApplicationSessionType):
         #
         # dn=uniqueIdentifier={guid},ou={year-month},ou=audit,o=metric
         # objectclass: top
-        # objectclass: oxMetric
+        # objectclass: jansMetric
         # uniqueIdentifier: {guid}
-        # oxMetricType: audit
+        # jansMetricTyp: audit
         # creationDate: {timestamp}
-        # oxApplicationType: client_id
-        # oxData: {“uid”:”foobar”,
+        # jansAppTyp: client_id
+        # jansData: {“uid”:”foobar”,
         #          “edipi”:”12321321”,
         #          “type”: “startSession”,
         #          "redirect_uri": "https://abc.com/cb"
@@ -137,12 +138,12 @@ class ApplicationSession(ApplicationSessionType):
         uniqueIdentifier = str(uuid.uuid4())
         createDate = time.strftime("%Y%m%d%H%M%S.%f+0000", now)
         metricEntity = CustomEntry()
-        metricEntity.setCustomObjectClasses(["top","oxMetric"])
+        metricEntity.setCustomObjectClasses(["top","jansMetric"])
         dn = "uniqueIdentifier=%s,%s" % (str(uniqueIdentifier), ouDN)
         uniqueIdentifier = CustomAttribute("uniqueIdentifier", uniqueIdentifier)
-        metricType = CustomAttribute("oxMetricType", "audit")
+        metricType = CustomAttribute("jansMetricTyp", "audit")
         creationDate = CustomAttribute("creationDate", createDate)
-        applicationType = CustomAttribute("oxApplicationType", clientid)
+        applicationType = CustomAttribute("jansAppTyp", client_id)
         data = """{"sessionId": "%s",
 "uid": "%s",
 "client_id": "%s",
@@ -150,12 +151,12 @@ class ApplicationSession(ApplicationSessionType):
 "acr": "%s",
 "ip": "%s",
 "type": "startSession"}""" % (sessionId, uid, client_id, redirect_uri, acr, ip)
-        oxData = CustomAttribute("oxData", data)
+        jansData = CustomAttribute("jansData", data)
         customAttributes = [uniqueIdentifier,
                             metricType,
                             creationDate,
                             applicationType,
-                            oxData]
+                            jansData]
         customEntry.setCustomAttributes(customAttributes)
         customEntry.setDn(dn)
         self.entryManager.persist(customEntry)
@@ -167,7 +168,7 @@ class ApplicationSession(ApplicationSessionType):
     #   sessionId is org.gluu.oxauth.model.common.SessionId
     #   configurationAttributes is java.util.Map<String, SimpleCustomProperty>
     def startSession(self, httpRequest, sessionId, configurationAttributes):
-
+        print "ApplicationSession.startSession for sessionId: %" % sessionId.getId()
         return True
 
     # Application calls it at end session request to allow notify 3rd part systems
