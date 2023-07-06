@@ -62,7 +62,13 @@ class ApplicationSession(ApplicationSessionType):
     # event is org.gluu.oxauth.service.external.session.SessionEvent
     def onEvent(self, event):
         print("ApplicationSession.onEvent: start")
+        print("ApplicationSession.onEvent: event = {}".format(event))
         print("ApplicationSession.onEvent: event.getType() = {}".format(event.getType()))
+        print("ApplicationSession.onEvent: event.getSessionId() = {}".format(event.getSessionId()))
+
+        remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
+        print("ApplicationSession.onEvent: remote_ip = {}".format(remote_ip))
+
 #        if not(event.getType() == SessionEventType.AUTHENTICATED):
 #            print("ApplicationSession.onEvent: end")
 #            return
@@ -101,7 +107,7 @@ class ApplicationSession(ApplicationSessionType):
         httpRequest = event.getHttpRequest()
         
         if httpRequest:
-            ip = event.getHttpRequest().getRemoteAddr()
+            ip = httpRequest.getRemoteAddr()
 
         print('ApplicationSession.onEvent: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}' %
             (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
@@ -202,259 +208,35 @@ class ApplicationSession(ApplicationSessionType):
 
         print("ApplicationSession.onEvent: metricEntity = %s" % metricEntity)
         self.entryManager.persist(metricEntity)
-
-        print("ApplicationSession.startSession: Wrote metric entry %s" % dn)
+        print("ApplicationSession.onEvent: Wrote metric entry %s" % dn)
         print("ApplicationSession.onEvent: end")            
 
         return
-        
-    def onEventAuthenticated(self, event):
-        session = event.getSessionId()
-        sessionAttrs = session.getSessionAttributes()
-        session_id = session.getId()
-        user = session.getUser()
-        userDN = session.getUserDn()
-        uid = user.getUserId()
-        # edipi = user.getAttribute("edipi")
-        client_id = sessionAttrs.get("client_id")
-        redirect_uri = sessionAttrs.get("redirect_uri")
-        acr = sessionAttrs.get("acr_values")
-        ip = event.getHttpRequest().getRemoteAddr()
-        print('ApplicationSession.onEvent: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s"}' % (session_id, uid, client_id, redirect_uri, acr, ip))
-
-        ########################################################################
-        # Don't allow more then one session!
-        ########################################################################
-        entity = SessionId()
-        entity.setDn(self.staticConfiguration.getBaseDn().getSessions())
-        entity.setUserDn(userDN)
-        entity.setState(SessionIdState.AUTHENTICATED)
-        results = self.entryManager.findEntries(entity)
-        if results == 1:
-            facesMessages = CdiUtil.bean(FacesMessages)
-            facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please, end active session first!")
-            print("User %s denied session--must end active session first" % uid)
-            return
-
-        ########################################################################
-        # Audit Log enhancements to store additional data in LDAP.
-        #
-        # The goal is to create a record here that can be exported and
-        # reported on at a later time.
-        #
-        # dn=uniqueIdentifier={guid},ou={year-month},ou=audit,o=metric
-        # objectclass: top
-        # objectclass: jansMetric
-        # uniqueIdentifier: {guid}
-        # jansMetricTyp: audit
-        # creationDate: {timestamp}
-        # jansAppTyp: client_id
-        # jansData: {'uid':'foobar',
-        #          'edipi':'12321321',
-        #          'type': 'startSession',
-        #          'redirect_uri': 'https://abc.com/cb'
-        #          'ip': '10.10.10.10',
-        #          'acr': 'smartcard',
-        #          'session_id': "1234"}
-        ########################################################################
-        
-        now = time.localtime(time.time())
-        yearMonth = time.strftime("%Y%m", now)
-        
-        if self.entryManager.hasBranchesSupport(""):
-            print("ApplicationSession.onEvent: self.entryManager.hasBranchesSupport("") = %s" % str(self.entryManager.hasBranchesSupport("")))
-            # Create a base organization unit, for example
-            # ou=audit,o=metric
-            metricDN = self.staticConfiguration.getBaseDn().getMetric().split(",")[1]
-            print("ApplicationSession.onEvent: metricDN = %s" % metricDN)
-            auditDN = "ou=%s,ou=statistic,%s" % (self.metric_audit_ou_name, metricDN)
-            print("ApplicationSession.onEvent: auditDN = %s" % auditDN)
-
-            # If audit organizational unit does not exist, create it
-            ouExists = self.entryManager.contains(auditDN, SimpleBranch)
-            print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
-            if not ouExists:
-                print("Creating organizational unit: %s" % auditDN)
-                branch = SimpleBranch()
-                branch.setOrganizationalUnitName(self.metric_audit_ou_name)
-                branch.setDn(auditDN)
-                print("ApplicationSession.onEvent: branch = %s" % branch)
-                self.entryManager.persist(branch)
-
-            # If there is no audit organizational unit for this month, create it
-            yearMonthDN = "ou=%s,%s" % (yearMonth, auditDN)
-            print("ApplicationSession.onEvent: yearMonthDN = %s" % yearMonthDN)
-            ouExists = self.entryManager.contains(yearMonthDN, SimpleBranch)
-            print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
-            if not ouExists:
-                print("Creating organizational unit: %s" % yearMonthDN)
-                branch = SimpleBranch()
-                branch.setOrganizationalUnitName(yearMonth)
-                branch.setDn(yearMonthDN)
-                print("ApplicationSession.onEvent: branch = %s" % branch)
-                self.entryManager.persist(branch)
-
-        # Write the log
-        # TODO Need to figure out edipi
-        uniqueIdentifier = str(uuid.uuid4())
-        print("ApplicationSession.onEvent: uniqueIdentifier = %s" % uniqueIdentifier)
-        calendar_curr_date = Calendar.getInstance()
-        curr_date = calendar_curr_date.getTime()
-        print("ApplicationSession.onEvent: type(curr_date) = %s" % type(curr_date))
-
-        dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (uniqueIdentifier, yearMonth, self.metric_audit_ou_name)
-
-        metricEntity = ZTrustMetricEntry()
-
-        metricEntity.setDn(dn)
-        metricEntity.setId(uniqueIdentifier)
-        metricEntity.setCreationDate(curr_date)
-        metricEntity.setApplicationType(ApplicationType.OX_AUTH)
-        metricEntity.setMetricType("audit")
- 
-#        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "startSession"}""" % (session_id, uid, client_id, redirect_uri, acr, ip)
-        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}""" % (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType()))
-
-        metricEntity.setJansData(data)
-
-        print("ApplicationSession.onEvent: metricEntity = %s" % metricEntity)
-        self.entryManager.persist(metricEntity)
-        print("ApplicationSession.startSession: Wrote metric entry %s" % dn)
-        print("ApplicationSession.onEvent: end")
-        return    
-
-    def onEventGone(self, event):
-        session = None
-        sessionAttrs = None
-        session_id = None
-        userDN = None 
-        user = None
-        uid = None
-        
-        session = event.getSessionId()
-        if session:
-            sessionAttrs = session.getSessionAttributes()
-            session_id = session.getId()
-            userDN = session.getUserDn()
-            user = session.getUser()
-        
-        if user:
-            uid = user.getUserId()
-
-        if sessionAttrs:
-            client_id = sessionAttrs.get("client_id")
-            redirect_uri = sessionAttrs.get("redirect_uri")
-            acr = sessionAttrs.get("acr_values")
-
-        print('ApplicationSession.onEvent: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s"}' % (session_id, uid, client_id, redirect_uri, acr))
-
-        ########################################################################
-        # Don't allow more then one session!
-        ########################################################################
-        entity = SessionId()
-        entity.setDn(self.staticConfiguration.getBaseDn().getSessions())
-        entity.setUserDn(userDN)
-        entity.setState(SessionIdState.UNAUTHENTICATED)
-        results = self.entryManager.findEntries(entity)
-        if results == 1:
-            facesMessages = CdiUtil.bean(FacesMessages)
-            facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please, end active session first!")
-            print("User %s denied session--must end active session first" % uid)
-            return
-
-        ########################################################################
-        # Audit Log enhancements to store additional data in LDAP.
-        #
-        # The goal is to create a record here that can be exported and
-        # reported on at a later time.
-        #
-        # dn=uniqueIdentifier={guid},ou={year-month},ou=audit,o=metric
-        # objectclass: top
-        # objectclass: jansMetric
-        # uniqueIdentifier: {guid}
-        # jansMetricTyp: audit
-        # creationDate: {timestamp}
-        # jansAppTyp: client_id
-        # jansData: {'uid':'foobar',
-        #          'edipi':'12321321',
-        #          'type': 'startSession',
-        #          'redirect_uri': 'https://abc.com/cb'
-        #          'acr': 'smartcard',
-        #          'session_id': "1234"}
-        ########################################################################
-        
-        now = time.localtime(time.time())
-        yearMonth = time.strftime("%Y%m", now)
-        
-        if self.entryManager.hasBranchesSupport(""):
-            print("ApplicationSession.onEvent: self.entryManager.hasBranchesSupport("") = %s" % str(self.entryManager.hasBranchesSupport("")))
-            # Create a base organization unit, for example
-            # ou=audit,o=metric
-            metricDN = self.staticConfiguration.getBaseDn().getMetric().split(",")[1]
-            print("ApplicationSession.onEvent: metricDN = %s" % metricDN)
-            auditDN = "ou=%s,ou=statistic,%s" % (self.metric_audit_ou_name, metricDN)
-            print("ApplicationSession.onEvent: auditDN = %s" % auditDN)
-
-            # If audit organizational unit does not exist, create it
-            ouExists = self.entryManager.contains(auditDN, SimpleBranch)
-            print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
-            if not ouExists:
-                print("Creating organizational unit: %s" % auditDN)
-                branch = SimpleBranch()
-                branch.setOrganizationalUnitName(self.metric_audit_ou_name)
-                branch.setDn(auditDN)
-                print("ApplicationSession.onEvent: branch = %s" % branch)
-                self.entryManager.persist(branch)
-
-            # If there is no audit organizational unit for this month, create it
-            yearMonthDN = "ou=%s,%s" % (yearMonth, auditDN)
-            print("ApplicationSession.onEvent: yearMonthDN = %s" % yearMonthDN)
-            ouExists = self.entryManager.contains(yearMonthDN, SimpleBranch)
-            print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
-            if not ouExists:
-                print("Creating organizational unit: %s" % yearMonthDN)
-                branch = SimpleBranch()
-                branch.setOrganizationalUnitName(yearMonth)
-                branch.setDn(yearMonthDN)
-                print("ApplicationSession.onEvent: branch = %s" % branch)
-                self.entryManager.persist(branch)
-
-        # Write the log
-        # TODO Need to figure out edipi
-        uniqueIdentifier = str(uuid.uuid4())
-        print("ApplicationSession.onEvent: uniqueIdentifier = %s" % uniqueIdentifier)
-        calendar_curr_date = Calendar.getInstance()
-        curr_date = calendar_curr_date.getTime()
-        print("ApplicationSession.onEvent: type(curr_date) = %s" % type(curr_date))
-
-        dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (uniqueIdentifier, yearMonth, self.metric_audit_ou_name)
-
-        metricEntity = ZTrustMetricEntry()
-
-        metricEntity.setDn(dn)
-        metricEntity.setId(uniqueIdentifier)
-        metricEntity.setCreationDate(curr_date)
-        metricEntity.setApplicationType(ApplicationType.OX_AUTH)
-        metricEntity.setMetricType("audit")
- 
-#        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "startSession"}""" % (session_id, uid, client_id, redirect_uri, acr, ip)
-        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "type": "%s"}""" % (session_id, uid, client_id, redirect_uri, acr, str(event.getType()))
-
-        metricEntity.setJansData(data)
-
-        print("ApplicationSession.onEvent: metricEntity = %s" % metricEntity)
-        self.entryManager.persist(metricEntity)
-
-        print("ApplicationSession.startSession: Wrote metric entry %s" % dn)
-        print("ApplicationSession.onEvent: end")
-        return    
 
     # This method is called for both authenticated and unauthenticated sessions
     #   httpRequest is javax.servlet.http.HttpServletRequest
     #   sessionId is org.gluu.oxauth.model.common.SessionId
     #   configurationAttributes is java.util.Map<String, SimpleCustomProperty>
     def startSession(self, httpRequest, sessionId, configurationAttributes):
+#        print("ApplicationSession.startSession for sessionId: {}".format(sessionId.getId()))
+        print("ApplicationSession.startSession")
+        ip = None
+        if httpRequest:
+            ip = httpRequest.getRemoteAddr()
+            
+        remote_ip = sessionId.getSessionAttributes()["remote_ip"]
+        print("ApplicationSession.startSession: remote_ip = {}".format(remote_ip))
+
+        print("ApplicationSession.startSession: httpRequest = {}".format(httpRequest))            
+        print("ApplicationSession.startSession: sessionId = {}".format(sessionId))
+        print("ApplicationSession.startSession: ip = {}".format(ip))
+        print("ApplicationSession.startSession: configurationAttributes = {}".format(configurationAttributes))
+
+#        print('ApplicationSession.startSession: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}' %
+#            (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
+        
         print("ApplicationSession.startSession for sessionId: {}".format(sessionId.getId()))
+        
         return True
 
     # Application calls it at end session request to allow notify 3rd part systems
@@ -462,8 +244,25 @@ class ApplicationSession(ApplicationSessionType):
     #   sessionId is org.gluu.oxauth.model.common.SessionId
     #   configurationAttributes is java.util.Map<String, SimpleCustomProperty>
     def endSession(self, httpRequest, sessionId, configurationAttributes):
-        if sessionId:
-            print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))
-        else:
-            print("ApplicationSession.endSession: sessionId object not found")
+        print("ApplicationSession.endSession")
+        ip = None
+        if httpRequest:
+            ip = httpRequest.getRemoteAddr()
+
+        remote_ip = sessionId.getSessionAttributes()["remote_ip"]
+        print("ApplicationSession.endSession: remote_ip = {}".format(remote_ip))
+
+        print("ApplicationSession.endSession: httpRequest = {}".format(httpRequest))
+        print("ApplicationSession.endSession: sessionId = {}".format(sessionId))
+        print("ApplicationSession.endSession: ip = {}".format(ip))
+        print("ApplicationSession.endSession: configurationAttributes = {}".format(configurationAttributes))
+
+#        if sessionId:
+#            print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))
+#        else:
+#            print("ApplicationSession.endSession: sessionId object not found")
+
+#        if httpRequest:
+#            ip = httpRequest.getRemoteAddr()
+            
         return True
