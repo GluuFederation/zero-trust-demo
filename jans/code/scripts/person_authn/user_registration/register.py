@@ -360,7 +360,7 @@ class PersonAuthentication(PersonAuthenticationType):
 
                     identity.setWorkingParameter("sentmin", listee[1])
                     return True
-                except Exception, ex:
+                except Exception as ex:
                     facesMessages.add(FacesMessage.SEVERITY_ERROR,
                                       "Failed to send email")
                     print "Register. Error sending message to SMTP"
