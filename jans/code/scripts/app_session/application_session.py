@@ -30,7 +30,10 @@ from io.jans.as.common.model.session import SessionIdState
 
 from io.jans.model.metric.sql import ZTrustMetricEntry
 
-import uuid, time, java
+import uuid
+import time
+import json
+import java
 
 class ApplicationSession(ApplicationSessionType):
     def __init__(self, currentTimeMillis):
@@ -38,6 +41,15 @@ class ApplicationSession(ApplicationSessionType):
 
     def init(self, configurationAttributes):
         print "ApplicationSession.init: begin"
+        
+        self.metric_audit_ou_name = None
+        self.metric_audit_conf_json_file_path = None
+        
+        self.event_types = None
+        self.audit_data = None
+        
+        self.init_ok = False
+        
         self.entryManager = CdiUtil.bean(PersistenceEntryManager)
         self.staticConfiguration = CdiUtil.bean(StaticConfiguration)
         self.metricService = CdiUtil.bean(MetricService)
@@ -45,10 +57,17 @@ class ApplicationSession(ApplicationSessionType):
 
         try:
             self.metric_audit_ou_name = configurationAttributes.get("metric_audit_ou_name").getValue2()
-        except:
-            print("ApplicationSession.init: metric_audit_ou_name not found")
+            self.metric_audit_conf_json_file_path = configurationAttributes.get("metric_audit_conf_json_file_path").getValue2()
+            self.event_types, self.audit_data = self.getMetricAuditParameters(self.metric_audit_conf_json_file_path)
+            if self.event_types and self.audit_data:
+                self.init_ok = True
+        except Exception as ex:
+            print("ApplicationSession.init: error of initializing: ex = {}".format(ex))
 
-        print("ApplicationSession.init: success")
+        print("ApplicationSession.init: self.event_types = {}".format(self.event_types))
+        print("ApplicationSession.init: self.audit_data = {}".format(self.audit_data))
+
+        print("ApplicationSession.init: self.init_ok = {}".format(self.init_ok))
         return True
 
     def destroy(self, configurationAttributes):
@@ -65,6 +84,9 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.onEvent: event = {}".format(event))
         print("ApplicationSession.onEvent: event.getType() = {}".format(event.getType()))
         print("ApplicationSession.onEvent: event.getSessionId() = {}".format(event.getSessionId()))
+        
+        if not self.init_ok:
+            print("ApplicationSession.onEvent: isn't initialized")
 
         remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
         print("ApplicationSession.onEvent: remote_ip = {}".format(remote_ip))
@@ -220,6 +242,8 @@ class ApplicationSession(ApplicationSessionType):
     def startSession(self, httpRequest, sessionId, configurationAttributes):
 #        print("ApplicationSession.startSession for sessionId: {}".format(sessionId.getId()))
         print("ApplicationSession.startSession")
+        if not self.init_ok:
+            print("ApplicationSession.startSession: isn't initialized")
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
@@ -245,6 +269,8 @@ class ApplicationSession(ApplicationSessionType):
     #   configurationAttributes is java.util.Map<String, SimpleCustomProperty>
     def endSession(self, httpRequest, sessionId, configurationAttributes):
         print("ApplicationSession.endSession")
+        if not self.init_ok:
+            print("ApplicationSession.endSession: isn't initialized")
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
@@ -256,6 +282,8 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.endSession: sessionId = {}".format(sessionId))
         print("ApplicationSession.endSession: ip = {}".format(ip))
         print("ApplicationSession.endSession: configurationAttributes = {}".format(configurationAttributes))
+        
+        print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))        
 
 #        if sessionId:
 #            print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))
@@ -266,3 +294,19 @@ class ApplicationSession(ApplicationSessionType):
 #            ip = httpRequest.getRemoteAddr()
             
         return True
+
+    def getMetricAuditParameters(self, metric_audit_conf_json_file_path):
+        file_data = None
+        event_types = None
+        audit_data = None
+        try:
+            file = open(metric_audit_conf_json_file_path)
+            file_data = json.load(file)
+            file_data = ast.literal_eval(json.dumps(data))
+            event_types = file_data["event_types"]
+            audit_data = file_data["audit_data"]
+        except Exception as ex:
+            print("ApplicationSession.getMetricAuditParameters: Errror Reading of config file: ex = {}".format(ex))
+        print("ApplicationSession.getMetricAuditParameters() event_types = {}".format(event_types))
+        print("ApplicationSession.getMetricAuditParameters() audit_data = {}".format(audit_data))
+        return event_types, audit_data
