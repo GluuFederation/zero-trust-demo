@@ -30,10 +30,12 @@ from io.jans.as.common.model.session import SessionIdState
 
 from io.jans.model.metric.sql import ZTrustMetricEntry
 
+import java
+
 import uuid
 import time
 import json
-import java
+import ast
 
 class ApplicationSession(ApplicationSessionType):
     def __init__(self, currentTimeMillis):
@@ -80,13 +82,18 @@ class ApplicationSession(ApplicationSessionType):
     # Called each time specific session event occurs
     # event is org.gluu.oxauth.service.external.session.SessionEvent
     def onEvent(self, event):
-        print("ApplicationSession.onEvent: start")
+
         print("ApplicationSession.onEvent: event = {}".format(event))
         print("ApplicationSession.onEvent: event.getType() = {}".format(event.getType()))
         print("ApplicationSession.onEvent: event.getSessionId() = {}".format(event.getSessionId()))
-        
+
         if not self.init_ok:
             print("ApplicationSession.onEvent: isn't initialized")
+            return
+            
+        if not(str(event.getType()).upper() in (event_type.upper() for event_type in self.event_types)):
+            print("ApplicationSession.onEvent: event {} will not be processed".format(event.getType()))
+            return;
 
         remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
         print("ApplicationSession.onEvent: remote_ip = {}".format(remote_ip))
@@ -244,6 +251,7 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.startSession")
         if not self.init_ok:
             print("ApplicationSession.startSession: isn't initialized")
+            return
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
@@ -271,6 +279,7 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.endSession")
         if not self.init_ok:
             print("ApplicationSession.endSession: isn't initialized")
+            return
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
@@ -302,7 +311,7 @@ class ApplicationSession(ApplicationSessionType):
         try:
             file = open(metric_audit_conf_json_file_path)
             file_data = json.load(file)
-            file_data = ast.literal_eval(json.dumps(data))
+            file_data = ast.literal_eval(json.dumps(file_data))
             event_types = file_data["event_types"]
             audit_data = file_data["audit_data"]
         except Exception as ex:
