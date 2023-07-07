@@ -158,7 +158,7 @@ class ApplicationSession(ApplicationSessionType):
         if results == 1:
             facesMessages = CdiUtil.bean(FacesMessages)
             facesMessages.add(FacesMessage.SEVERITY_ERROR, "Please, end active session first!")
-            print("User %s denied session--must end active session first" % uid)
+            print("ApplicationSession.onEvent: User %s denied session--must end active session first" % uid)
             return
 
         # Audit Log enhancements to store additional data in LDAP.
@@ -181,7 +181,7 @@ class ApplicationSession(ApplicationSessionType):
             ouExists = self.entryManager.contains(auditDN, SimpleBranch)
             print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
             if not ouExists:
-                print("Creating organizational unit: %s" % auditDN)
+                print("ApplicationSession.onEvent: Creating organizational unit: %s" % auditDN)
                 branch = SimpleBranch()
                 branch.setOrganizationalUnitName(self.metric_audit_ou_name)
                 branch.setDn(auditDN)
@@ -194,7 +194,7 @@ class ApplicationSession(ApplicationSessionType):
             ouExists = self.entryManager.contains(yearMonthDN, SimpleBranch)
             print("ApplicationSession.onEvent: ouExists = %s" % ouExists)
             if not ouExists:
-                print("Creating organizational unit: %s" % yearMonthDN)
+                print("ApplicationSession.onEvent: Creating organizational unit: %s" % yearMonthDN)
                 branch = SimpleBranch()
                 branch.setOrganizationalUnitName(yearMonth)
                 branch.setDn(yearMonthDN)
@@ -238,6 +238,7 @@ class ApplicationSession(ApplicationSessionType):
         if not self.init_ok:
             print("ApplicationSession.startSession: isn't initialized")
             return
+
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
@@ -263,6 +264,7 @@ class ApplicationSession(ApplicationSessionType):
         if not self.init_ok:
             print("ApplicationSession.endSession: isn't initialized")
             return
+
         ip = None
         if httpRequest:
             ip = httpRequest.getRemoteAddr()
