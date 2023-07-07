@@ -38,6 +38,26 @@ import json
 import ast
 
 class ApplicationSession(ApplicationSessionType):
+
+    session_attributes_keys = [
+            "auth_external_attributes",
+            "opbs",
+            "response_type",
+            "client_id",
+            "auth_step",
+            "acr",
+            "casa_logoUrl",
+            "remote_ip",
+            "scope",
+            "acr_values",
+            "casa_faviconUrl",
+            "redirect_uri",
+            "state",
+            "casa_prefix",
+            "casa_contextPath",
+            "casa_extraCss"  
+        ]
+
     def __init__(self, currentTimeMillis):
         self.currentTimeMillis = currentTimeMillis
 
@@ -97,18 +117,6 @@ class ApplicationSession(ApplicationSessionType):
 
         remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
         print("ApplicationSession.onEvent: remote_ip = {}".format(remote_ip))
-
-#        if not(event.getType() == SessionEventType.AUTHENTICATED):
-#            print("ApplicationSession.onEvent: end")
-#            return
-
-#        if event.getType() == SessionEventType.AUTHENTICATED:
-#            self.onEventAuthenticated(event)
-#            return
-
- #       if event.getType() == SessionEventType.GONE:
-#            self.onEventGone(event)
-#            return
             
         session = None
         sessionAttrs = None
@@ -141,9 +149,7 @@ class ApplicationSession(ApplicationSessionType):
         print('ApplicationSession.onEvent: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}' %
             (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
 
-        ########################################################################
         # Don't allow more then one session!
-        ########################################################################
         entity = SessionId()
         entity.setDn(self.staticConfiguration.getBaseDn().getSessions())
         entity.setUserDn(userDN)
@@ -155,27 +161,10 @@ class ApplicationSession(ApplicationSessionType):
             print("User %s denied session--must end active session first" % uid)
             return
 
-        ########################################################################
         # Audit Log enhancements to store additional data in LDAP.
         #
         # The goal is to create a record here that can be exported and
         # reported on at a later time.
-        #
-        # dn=uniqueIdentifier={guid},ou={year-month},ou=audit,o=metric
-        # objectclass: top
-        # objectclass: jansMetric
-        # uniqueIdentifier: {guid}
-        # jansMetricTyp: audit
-        # creationDate: {timestamp}
-        # jansAppTyp: client_id
-        # jansData: {'uid':'foobar',
-        #          'edipi':'12321321',
-        #          'type': 'startSession',
-        #          'redirect_uri': 'https://abc.com/cb'
-        #          'acr': 'smartcard',
-        #          'session_id': "1234"}
-        ########################################################################
-        
         now = time.localtime(time.time())
         yearMonth = time.strftime("%Y%m", now)
         
@@ -218,7 +207,6 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.onEvent: uniqueIdentifier = %s" % uniqueIdentifier)
         calendar_curr_date = Calendar.getInstance()
         curr_date = calendar_curr_date.getTime()
-        print("ApplicationSession.onEvent: type(curr_date) = %s" % type(curr_date))
 
         dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (uniqueIdentifier, yearMonth, self.metric_audit_ou_name)
 
@@ -229,9 +217,8 @@ class ApplicationSession(ApplicationSessionType):
         metricEntity.setCreationDate(curr_date)
         metricEntity.setApplicationType(ApplicationType.OX_AUTH)
         metricEntity.setMetricType("audit")
- 
-#        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "startSession"}""" % (session_id, uid, client_id, redirect_uri, acr, ip)
-        data = """{"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}""" % (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType()))
+
+        data = self.generateJansData(event, self.audit_data)
 
         metricEntity.setJansData(data)
 
@@ -247,7 +234,6 @@ class ApplicationSession(ApplicationSessionType):
     #   sessionId is org.gluu.oxauth.model.common.SessionId
     #   configurationAttributes is java.util.Map<String, SimpleCustomProperty>
     def startSession(self, httpRequest, sessionId, configurationAttributes):
-#        print("ApplicationSession.startSession for sessionId: {}".format(sessionId.getId()))
         print("ApplicationSession.startSession")
         if not self.init_ok:
             print("ApplicationSession.startSession: isn't initialized")
@@ -263,9 +249,6 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.startSession: sessionId = {}".format(sessionId))
         print("ApplicationSession.startSession: ip = {}".format(ip))
         print("ApplicationSession.startSession: configurationAttributes = {}".format(configurationAttributes))
-
-#        print('ApplicationSession.startSession: {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}' %
-#            (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
         
         print("ApplicationSession.startSession for sessionId: {}".format(sessionId.getId()))
         
@@ -293,14 +276,6 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.endSession: configurationAttributes = {}".format(configurationAttributes))
         
         print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))        
-
-#        if sessionId:
-#            print("ApplicationSession.endSession for sessionId: {}".format(sessionId.getId()))
-#        else:
-#            print("ApplicationSession.endSession: sessionId object not found")
-
-#        if httpRequest:
-#            ip = httpRequest.getRemoteAddr()
             
         return True
 
@@ -319,3 +294,115 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.getMetricAuditParameters() event_types = {}".format(event_types))
         print("ApplicationSession.getMetricAuditParameters() audit_data = {}".format(audit_data))
         return event_types, audit_data
+
+    def generateJansData(self, event, audit_data):
+        session = event.getSessionId()
+        first_added = False
+        
+        jans_data = '{ '
+        
+        if "type".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"type": "%s"' % event.getType()
+
+        if "dn".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"dn": "%s"' % session.getUserDn() if session else "None"
+
+        if "id".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"id": "%s"' % session.getId() if session else "None"
+
+        if "outsideSid".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"outsideSid": "%s"' % session.getOutsideSid() if session else "None"
+
+        if "lastUsedAt".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"lastUsedAt": "%s"' % session.getLastUsedAt() if session else "None"
+
+        if "authenticationTime".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"authenticationTime": "%s"' % session.getAuthenticationTime() if session else "None"
+
+        if "state".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"state": "%s"' % session.getState() if session else "None"
+
+        if "expirationDate".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"expirationDate": "%s"' % session.getExpirationDate() if session else "None"
+
+        if "sessionState".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"sessionState": "%s"' % session.getSessionState() if session else "None"
+
+        if "permissionGranted".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"permissionGranted": "%s"' % session.getPermissionGranted() if session else "None"
+
+        if "permissionGrantedMap".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"permissionGrantedMap": "%s"' % session.getPermissionGrantedMap() if session else "None"
+
+        if "deviceSecrets".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if first_added:
+                jans_data += ','
+            else:
+                first_added = True
+            jans_data += '"deviceSecrets": "%s"' % session.getDeviceSecrets() if session else "None"
+
+        session_attributes = {}
+
+        if session:
+            session_attributes = session.getSessionAttributes()
+
+        try:
+            for session_attributes_key in self.session_attributes_keys:
+                if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
+                        not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
+                        session_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+                    if first_added:
+                        jans_data += ','
+                    else:
+                        first_added = True
+                    jans_data += '"%s": "%s"' % (session_attributes_key, session_attributes[session_attributes_key] if session else "None")
+        except Exception as ex:
+            print("ApplicationSession.generateJansData: Error: ex = {}".format(ex))
+
+        jans_data += ' }'
+
+        return jans_data

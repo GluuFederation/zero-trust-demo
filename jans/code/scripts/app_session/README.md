@@ -24,6 +24,7 @@ ztrust-application_session
         "sessionState",
         "permissionGranted",
         "permissionGrantedMap",
+        "deviceSecrets",
 
         "sessionAttributes"
     ]    
@@ -47,7 +48,8 @@ or
         "sessionState",
         "permissionGranted",
         "permissionGrantedMap",
-        
+        "deviceSecrets",
+
         "auth_external_attributes",
         "opbs",
         "response_type",
@@ -63,9 +65,7 @@ or
         "state",
         "casa_prefix",
         "casa_contextPath",
-        "casa_extraCss",
-        "persisted",
-        "deviceSecrets"
+        "casa_extraCss"
     ]
 }
 ```
@@ -91,9 +91,7 @@ or
         "state",
         "casa_prefix",
         "casa_contextPath",
-        "casa_extraCss",
-        "persisted",
-        "deviceSecrets"
+        "casa_extraCss"
 
 ```
 .
