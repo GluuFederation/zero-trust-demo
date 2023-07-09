@@ -39,7 +39,21 @@ import ast
 
 class ApplicationSession(ApplicationSessionType):
 
-    session_attributes_keys = [
+    session_attributes = {
+        "dn": "userDn",
+        "id": "id",
+        "outsideSid": "outsideSid",
+        "lastUsedAt": "lastUsedAt",
+        "authenticationTime": "authenticationTime",
+        "state": "state",
+        "expirationDate": "expirationDate",
+        "sessionState": "sessionState",
+        "permissionGranted": "permissionGranted",
+        "permissionGrantedMap": "permissionGrantedMap",
+        "deviceSecrets": "deviceSecrets"
+    }
+
+    session_cust_attributes_keys = [
             "auth_external_attributes",
             "opbs",
             "response_type",
@@ -310,98 +324,36 @@ class ApplicationSession(ApplicationSessionType):
                 first_added = True
             jans_data += '"type": "%s"' % event.getType()
 
-        if "dn".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"dn": "%s"' % session.getUserDn() if session else "None"
+        #empty first call
+        attr_value = getattr(session, "userDn")
+            
+        for attr_key, attr_name in self.session_attributes.items():
+            try:
+                attr_value = getattr(session, attr_name)
+                if first_added:
+                    jans_data += ','
+                else:
+                    first_added = True
+                jans_data += '"%s": "%s"' % (attr_key, attr_value if session else "None")
+            except Exception as ex:
+                print("ApplicationSession.generateJansData: Errror Reading of config file: ex = {0}".format(ex))
+                jans_data += '"%s": "%s"' % (attr_key, "None")
 
-        if "id".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"id": "%s"' % session.getId() if session else "None"
-
-        if "outsideSid".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"outsideSid": "%s"' % session.getOutsideSid() if session else "None"
-
-        if "lastUsedAt".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"lastUsedAt": "%s"' % session.getLastUsedAt() if session else "None"
-
-        if "authenticationTime".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"authenticationTime": "%s"' % session.getAuthenticationTime() if session else "None"
-
-        if "state".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"state": "%s"' % session.getState() if session else "None"
-
-        if "expirationDate".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"expirationDate": "%s"' % session.getExpirationDate() if session else "None"
-
-        if "sessionState".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"sessionState": "%s"' % session.getSessionState() if session else "None"
-
-        if "permissionGranted".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"permissionGranted": "%s"' % session.getPermissionGranted() if session else "None"
-
-        if "permissionGrantedMap".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"permissionGrantedMap": "%s"' % session.getPermissionGrantedMap() if session else "None"
-
-        if "deviceSecrets".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            if first_added:
-                jans_data += ','
-            else:
-                first_added = True
-            jans_data += '"deviceSecrets": "%s"' % session.getDeviceSecrets() if session else "None"
-
-        session_attributes = {}
+        session_cust_attributes = {}
 
         if session:
-            session_attributes = session.getSessionAttributes()
+            session_cust_attributes = session.getSessionAttributes()
 
         try:
-            for session_attributes_key in self.session_attributes_keys:
+            for session_cust_attributes_key in self.session_cust_attributes_keys:
                 if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
                         not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
-                        session_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+                        session_cust_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
                     if first_added:
                         jans_data += ','
                     else:
                         first_added = True
-                    jans_data += '"%s": "%s"' % (session_attributes_key, session_attributes[session_attributes_key] if session else "None")
+                    jans_data += '"%s": "%s"' % (session_cust_attributes_key, session_cust_attributes[session_cust_attributes_key] if session else "None")
         except Exception as ex:
             print("ApplicationSession.generateJansData: Error: ex = {}".format(ex))
 
