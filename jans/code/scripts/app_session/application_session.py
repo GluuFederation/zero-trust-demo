@@ -209,10 +209,10 @@ class ApplicationSession(ApplicationSessionType):
             ou_exists = self.entry_manager.contains(year_month_dn, SimpleBranch)
             print("ApplicationSession.onEvent(): ou_exists = %s" % ou_exists)
             if not ou_exists:
-                print("ApplicationSession.onEvent(): Creating organizational unit: %s" % yearMonthDN)
+                print("ApplicationSession.onEvent(): Creating organizational unit: %s" % year_month_dn)
                 branch = SimpleBranch()
-                branch.setOrganizationalUnitName(yearMonth)
-                branch.setDn(yearMonthDN)
+                branch.setOrganizationalUnitName(year_month)
+                branch.setDn(year_month_dn)
                 print("ApplicationSession.onEvent(): branch = %s" % branch)
                 self.entry_manager.persist(branch)
 
@@ -223,7 +223,7 @@ class ApplicationSession(ApplicationSessionType):
         calendar_curr_date = Calendar.getInstance()
         curr_date = calendar_curr_date.getTime()
 
-        dn = "unique_identifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, yearMonth, self.metric_audit_ou_name)
+        dn = "unique_identifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
 
         metric_entity = AuditMetricEntry()
 
