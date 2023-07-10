@@ -50,7 +50,6 @@ class ApplicationSession(ApplicationSessionType):
             "expirationDate": "expirationDate",
             "sessionState": "sessionState",
             "permissionGranted": "permissionGranted",
-            "permissionGrantedMap": "permissionGrantedMap",
             "deviceSecrets": "deviceSecrets"
         }
 
@@ -338,23 +337,23 @@ class ApplicationSession(ApplicationSessionType):
         attr_name = "authState"
 
         if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-                try:
-                    attr_value = getattr(session, attr_key)
-                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-                    setattr(audit_metric_data, attr_name, str(attr_value))
-                except Exception as ex:
-                    print("ApplicationSession.getAuditMetricData(): Error Reading of config file: ex = {0}".format(ex))
+            try:
+                attr_value = getattr(session, attr_key)
+                print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                setattr(audit_metric_data, attr_name, str(attr_value))
+            except Exception as ex:
+                print("ApplicationSession.getAuditMetricData(): Error Reading of config file: ex = {0}".format(ex))
 
         attr_key = "permissionGrantedMap"
         attr_name = "permissionGrantedMap"
 
         if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-                try:
-                    attr_value = getattr(session, attr_key)
-                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-                    setattr(audit_metric_data, attr_name, attr_value.getPermissionGranted())
-                except Exception as ex:
-                    print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
+            try:
+                attr_value = getattr(session, attr_key)
+                print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                setattr(audit_metric_data, attr_name, attr_value.getPermissionGranted())
+            except Exception as ex:
+                print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
 
         session_cust_attributes = {}
 
