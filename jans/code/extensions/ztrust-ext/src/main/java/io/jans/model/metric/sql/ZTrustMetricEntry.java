@@ -13,7 +13,7 @@ import io.jans.orm.annotation.ObjectClass;
 
 /**
  * @author Sergey Manoylo
- * @version June 2, 2023
+ * @version July 2, 2023
  */
 @DataEntry
 @ObjectClass(value = "jansMetric")

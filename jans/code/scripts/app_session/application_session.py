@@ -29,6 +29,12 @@ from io.jans.as.common.model.session import SessionId
 from io.jans.as.common.model.session import SessionIdState
 
 from io.jans.model.metric.sql import ZTrustMetricEntry
+from io.jans.model.metric.ldap import MetricEntry
+
+from io.jans.model.metric.audit import AuditMetricEntry
+from io.jans.model.metric.audit import AuditMetricData
+
+from io.jans.model.metric import MetricType
 
 import java
 
@@ -39,19 +45,19 @@ import ast
 
 class ApplicationSession(ApplicationSessionType):
 
-    session_attributes = {
-        "dn": "userDn",
-        "id": "id",
-        "outsideSid": "outsideSid",
-        "lastUsedAt": "lastUsedAt",
-        "authenticationTime": "authenticationTime",
-        "state": "state",
-        "expirationDate": "expirationDate",
-        "sessionState": "sessionState",
-        "permissionGranted": "permissionGranted",
-        "permissionGrantedMap": "permissionGrantedMap",
-        "deviceSecrets": "deviceSecrets"
-    }
+    session_attributes_list = {
+            "userDn",
+            "id",
+            "outsideSid",
+            "lastUsedAt",
+            "authenticationTime",
+            "state",
+            "expirationDate",
+            "sessionState",
+            "permissionGranted",
+            "permissionGrantedMap",
+            "deviceSecrets"
+        }
 
     session_cust_attributes_keys = [
             "auth_external_attributes",
@@ -71,6 +77,55 @@ class ApplicationSession(ApplicationSessionType):
             "casa_contextPath",
             "casa_extraCss"  
         ]
+        
+#    session_attributes = {
+#            "dn": ("dn", False),
+#            "userDn": ("userDn", False),
+#            "id": ("id", False),
+#            "outsideSid": ("outsideSid", False),
+#            "lastUsedAt": ("lastUsedAt", False),
+#            "authenticationTime": ("authenticationTime", False),
+#            "state": ("authState", True),
+#            "expirationDate": ("expirationDate", False),
+#            "sessionState": ("sessionState", False),
+#            "permissionGranted": ("permissionGranted", False),
+#            "permissionGrantedMap": ("permissionGrantedMap", False),
+#            "deviceSecrets": ("deviceSecrets", False)
+#        }
+
+    session_attributes = {
+            "dn": "dn",
+            "userDn": "userDn",
+            "id": "id",
+            "outsideSid": "outsideSid",
+            "lastUsedAt": "lastUsedAt",
+            "authenticationTime": "authenticationTime",
+            "state": "authState",
+            "expirationDate": "expirationDate",
+            "sessionState": "sessionState",
+            "permissionGranted": "permissionGranted",
+            "permissionGrantedMap": "permissionGrantedMap",
+            "deviceSecrets": "deviceSecrets"
+        }
+        
+    session_cust_attributes = {
+            "auth_external_attributes": "authExternalAttributes",
+            "opbs": "opbs",
+            "response_type": "responseType",
+            "client_id": "clientId",
+            "auth_step": "authStep",
+            "acr": "acr",
+            "casa_logoUrl": "casaLogoUrl",
+            "remote_ip": "remoteIp",
+            "scope": "scope",
+            "acr_values": "acrValues",
+            "casa_faviconUrl": "casaFaviconUrl",
+            "redirect_uri": "redirectUri",
+            "state": "state",
+            "casa_prefix": "casaPrefix",
+            "casa_contextPath": "casaContextPath",
+            "casa_extraCss": "casaExtraCss"
+        }
 
     def __init__(self, currentTimeMillis):
         self.currentTimeMillis = currentTimeMillis
@@ -224,17 +279,30 @@ class ApplicationSession(ApplicationSessionType):
 
         dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (uniqueIdentifier, yearMonth, self.metric_audit_ou_name)
 
-        metricEntity = ZTrustMetricEntry()
+#        metricEntity = ZTrustMetricEntry()
+
+#        metricEntity.setDn(dn)
+#        metricEntity.setId(uniqueIdentifier)
+#        metricEntity.setCreationDate(curr_date)
+#        metricEntity.setApplicationType(ApplicationType.OX_AUTH)
+#        metricEntity.setMetricType("audit")
+
+#        data = self.generateJansData(event, self.audit_data)
+
+#        metricEntity.setJansData(data)
+
+        metricEntity = AuditMetricEntry()
 
         metricEntity.setDn(dn)
         metricEntity.setId(uniqueIdentifier)
         metricEntity.setCreationDate(curr_date)
         metricEntity.setApplicationType(ApplicationType.OX_AUTH)
-        metricEntity.setMetricType("audit")
-
-        data = self.generateJansData(event, self.audit_data)
-
-        metricEntity.setJansData(data)
+        metricEntity.setMetricType(MetricType.AUDIT)
+        
+#        data = self.generateJansData(event, self.audit_data)
+        audit_metric_data = self.getAuditMetricData(event, self.audit_data)
+        
+        metricEntity.setMetricData(audit_metric_data)
 
         print("ApplicationSession.onEvent: metricEntity = %s" % metricEntity)
         self.entryManager.persist(metricEntity)
@@ -328,16 +396,17 @@ class ApplicationSession(ApplicationSessionType):
         attr_value = getattr(session, "userDn")
             
         for attr_key, attr_name in self.session_attributes.items():
-            try:
-                attr_value = getattr(session, attr_name)
-                if first_added:
-                    jans_data += ','
-                else:
-                    first_added = True
-                jans_data += '"%s": "%s"' % (attr_key, attr_value if session else "None")
-            except Exception as ex:
-                print("ApplicationSession.generateJansData: Errror Reading of config file: ex = {0}".format(ex))
-                jans_data += '"%s": "%s"' % (attr_key, "None")
+            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+                try:
+                    attr_value = getattr(session, attr_name)
+                    if first_added:
+                        jans_data += ','
+                    else:
+                        first_added = True
+                    jans_data += '"%s": "%s"' % (attr_key, attr_value if session else "None")
+                except Exception as ex:
+                    print("ApplicationSession.generateJansData: Errror Reading of config file: ex = {0}".format(ex))
+                    jans_data += '"%s": "%s"' % (attr_key, "None")
 
         session_cust_attributes = {}
 
@@ -355,8 +424,48 @@ class ApplicationSession(ApplicationSessionType):
                         first_added = True
                     jans_data += '"%s": "%s"' % (session_cust_attributes_key, session_cust_attributes[session_cust_attributes_key] if session else "None")
         except Exception as ex:
-            print("ApplicationSession.generateJansData: Error: ex = {}".format(ex))
+            print("ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
 
         jans_data += ' }'
 
         return jans_data
+
+    def getAuditMetricData(self, event, audit_data):
+        session = event.getSessionId()
+        auditMetricData = AuditMetricData()
+        
+        print("ApplicationSession.getAuditMetricData(): session = {0}".format(session))
+        
+        if "type".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            auditMetricData.setType(str(event.getType()))
+
+        #empty first call
+        attr_value = getattr(session, "userDn")
+
+        for attr_key, attr_name in self.session_attributes.items():
+            print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_name = {1}".format(attr_key, attr_name))
+            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+                try:
+                    attr_value = getattr(session, attr_key)
+                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                    setattr(auditMetricData, attr_name, attr_value)
+                except Exception as ex:
+                    print("ApplicationSession.getAuditMetricData(): Error Reading of config file: ex = {0}".format(ex))
+
+        session_cust_attributes = {}
+
+        if session:
+            session_cust_attributes = session.getSessionAttributes()
+            
+        for cust_attr_key, cust_attr_name in self.session_cust_attributes.items():            
+            print("ApplicationSession.getAuditMetricData(): cust_attr_key = {0}, cust_attr_name = {0}".format(cust_attr_key, cust_attr_name))
+            if cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):            
+                try:
+                    cust_attr_value = session_cust_attributes[cust_attr_key]
+                    print("ApplicationSession.getAuditMetricData(): cust_attr_name = {0}, cust_attr_value = {1}".format(cust_attr_name, cust_attr_value))
+                    setattr(auditMetricData, cust_attr_name, cust_attr_value)
+                except Exception as ex:
+                    print("ApplicationSession.getAuditMetricData(): Error Reading of config file: ex = {0}".format(ex))
+
+        return auditMetricData
+   
