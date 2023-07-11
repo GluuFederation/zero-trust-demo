@@ -13,6 +13,8 @@ from io.jans.jsf2.message import FacesMessages
 
 from java.util import Date
 from java.util import Calendar
+from java.util import GregorianCalendar
+from java.util import TimeZone
 
 #### Audit Entries Additional Imports ####
 from io.jans.as.server.security import Identity
@@ -30,6 +32,12 @@ from io.jans.as.common.model.session import SessionIdState
 
 from io.jans.model.metric.audit import AuditMetricEntry
 from io.jans.model.metric.audit import AuditMetricData
+
+from io.jans.orm.model.base import CustomAttribute
+from io.jans.orm.model.base import CustomEntry
+
+from io.jans.orm.model.base import CustomObjectAttribute
+from io.jans.orm.model.base import CustomObjectEntry
 
 import java
 
@@ -222,19 +230,55 @@ class ApplicationSession(ApplicationSessionType):
         calendar_curr_date = Calendar.getInstance()
         curr_date = calendar_curr_date.getTime()
 
-        dn = "unique_identifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
+        dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
+        
+        metric_entity = CustomObjectEntry();
+        metric_entity.setDn(dn);
+        metric_entity.setCustomObjectClasses(["jansMetric"])
+#        metric_entity.setId(unique_identifier)
 
-        metric_entity = AuditMetricEntry()
+        custom_attribute = CustomObjectAttribute("uniqueIdentifier", unique_identifier)
+        metric_entity.getCustomObjectAttributes().add(custom_attribute)        
 
-        metric_entity.setDn(dn)
-        metric_entity.setId(unique_identifier)
-        metric_entity.setCreationDate(curr_date)
-        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
-        metric_entity.setMetricType(MetricType.AUDIT)
+        now = GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime()
+        
+#        now_date_string = now
+        now_date_string = self.entry_manager.encodeTime(dn, now)
 
-        audit_metric_data = self.getAuditMetricData(event, self.audit_data)
+        print("ApplicationSession.onEvent(): now_date_string = %s" % now_date_string)
+        print("ApplicationSession.onEvent(): now = %s" % str(now))
 
-        metric_entity.setMetricData(audit_metric_data)
+#from io.jans.orm.model.base import CustomObjectAttribute
+#from io.jans.orm.model.base import CustomObjectEntry
+
+        custom_attribute = CustomObjectAttribute("creationDate", now)
+        metric_entity.getCustomObjectAttributes().add(custom_attribute)
+
+#       CustomEntry customEntry = new CustomEntry();
+#       customEntry.setDn(user.getDn());
+#       customEntry.setCustomObjectClasses(new String[] { "jansPerson" });
+
+#       Date now = new GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime();
+#       String nowDateString = couchbaseEntryManager.encodeTime(customEntry.getDn(), now);
+#       CustomAttribute customAttribute = new CustomAttribute("jansLastLogonTime", nowDateString);
+#       customEntry.getCustomAttributes().add(customAttribute);
+        
+# from java.util import Date
+# from java.util import Calendar
+# from java.util import GregorianCalendar
+# from java.util import TimeZone
+
+#        metric_entity = AuditMetricEntry()
+
+#        metric_entity.setDn(dn)
+#        metric_entity.setId(unique_identifier)
+#        metric_entity.setCreationDate(curr_date)
+#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
+#        metric_entity.setMetricType(MetricType.AUDIT)
+
+#       audit_metric_data = self.getAuditMetricData(event, self.audit_data)
+
+#        metric_entity.setMetricData(audit_metric_data)
 
         print("ApplicationSession.onEvent(): metric_entity = %s" % metric_entity)
         self.entry_manager.persist(metric_entity)
@@ -362,7 +406,9 @@ class ApplicationSession(ApplicationSessionType):
 
         for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
             print("ApplicationSession.getAuditMetricData(): cust_attr_key = {0}, cust_attr_name = {0}".format(cust_attr_key, cust_attr_name))
-            if cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
+                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
+                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):            
                 try:
                     cust_attr_value = session_cust_attributes[cust_attr_key]
                     print("ApplicationSession.getAuditMetricData(): cust_attr_name = {0}, cust_attr_value = {1}".format(cust_attr_name, cust_attr_value))
