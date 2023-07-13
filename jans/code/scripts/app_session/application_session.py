@@ -15,14 +15,13 @@ from java.util import Date
 from java.util import Calendar
 from java.util import GregorianCalendar
 from java.util import TimeZone
+from java.text import SimpleDateFormat
 
 #### Audit Entries Additional Imports ####
 from io.jans.as.server.security import Identity
 from io.jans.as.server.service import MetricService
 
 from io.jans.orm.model.base import SimpleBranch
-from io.jans.model.metric import MetricType
-
 from io.jans.model import ApplicationType
 
 from io.jans.as.server.service.external.session import SessionEventType
@@ -49,7 +48,6 @@ import ast
 class ApplicationSession(ApplicationSessionType):
 
     session_attributes_map = {
-            "dn": "dn",
             "userDn": "userDn",
             "id": "id",
             "outsideSid": "outsideSid",
@@ -135,7 +133,7 @@ class ApplicationSession(ApplicationSessionType):
 
         if not(str(event.getType()).upper() in (event_type.upper() for event_type in self.event_types)):
             print("ApplicationSession.onEvent(): event {} will not be processed".format(event.getType()))
-            return;
+            return
 
         remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
         print("ApplicationSession.onEvent(): remote_ip = {}".format(remote_ip))
@@ -187,8 +185,16 @@ class ApplicationSession(ApplicationSessionType):
         #
         # The goal is to create a record here that can be exported and
         # reported on at a later time.
-        now = time.localtime(time.time())
-        year_month = time.strftime("%Y%m", now)
+
+        calendar_curr_date = Calendar.getInstance()
+        curr_date = calendar_curr_date.getTime()
+        
+        pattern = "yyyyMM";
+        simple_df = SimpleDateFormat(pattern);
+        year_month = simple_df.format(curr_date)
+        
+#        now = time.localtime(time.time())
+#        year_month = time.strftime("%Y%m", now)
 
         if self.entry_manager.hasBranchesSupport(""):
             print("ApplicationSession.onEvent(): self.entry_manager.hasBranchesSupport("") = %s" % str(self.entry_manager.hasBranchesSupport("")))
@@ -227,32 +233,67 @@ class ApplicationSession(ApplicationSessionType):
         # TODO Need to figure out edipi
         unique_identifier = str(uuid.uuid4())
         print("ApplicationSession.onEvent(): unique_identifier = %s" % unique_identifier)
-        calendar_curr_date = Calendar.getInstance()
-        curr_date = calendar_curr_date.getTime()
+
+#        dn = "unique_identifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
+
+#        metric_entity = AuditMetricEntry()
+
+#        metric_entity.setDn(dn)
+#        metric_entity.setId(unique_identifier)
+#        metric_entity.setCreationDate(curr_date)
+#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
+#        metric_entity.setMetricType(MetricType.AUDIT)
+
+#        audit_metric_data = self.getAuditMetricData(event, self.audit_data)
+
+#        metric_entity.setMetricData(audit_metric_data)
+
+#    session_attributes_map = {
+#            "userDn": "userDn",
+#            "id": "id",
+#            "outsideSid": "outsideSid",
+#            "lastUsedAt": "lastUsedAt",
+#            "authenticationTime": "authenticationTime",
+#            "expirationDate": "expirationDate",
+#            "sessionState": "sessionState",
+#            "permissionGranted": "permissionGranted",
+#            "deviceSecrets": "deviceSecrets"
+#        }
 
         dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
-        
-        metric_entity = CustomObjectEntry();
-        metric_entity.setDn(dn);
+
+        metric_entity = CustomObjectEntry()
+
         metric_entity.setCustomObjectClasses(["jansMetric"])
-#        metric_entity.setId(unique_identifier)
+        metric_entity.setDn(dn)
 
-        custom_attribute = CustomObjectAttribute("uniqueIdentifier", unique_identifier)
-        metric_entity.getCustomObjectAttributes().add(custom_attribute)        
+        metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("uniqueIdentifier", unique_identifier))
+        metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("creationDate", curr_date))
+        metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansAppTyp", str(ApplicationType.OX_AUTH)))
+        metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansMetricTyp", "audit"))
+        
+        jans_data = self.generateJansData(event, self.audit_data)
+        
+        print("ApplicationSession.onEvent(): jans_data = %s" % jans_data)
+        
+        metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansData", jans_data))
+        
+#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
+#        metric_entity.setMetricType(MetricType.AUDIT)        
+        
+#        self.initCustomObjectEntry(metric_entity, event, self.audit_data)
 
-        now = GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime()
+#        now = GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime()
         
 #        now_date_string = now
-        now_date_string = self.entry_manager.encodeTime(dn, now)
+#        now_date_string = self.entry_manager.encodeTime(dn, now)
 
-        print("ApplicationSession.onEvent(): now_date_string = %s" % now_date_string)
-        print("ApplicationSession.onEvent(): now = %s" % str(now))
+#      print("ApplicationSession.onEvent(): now_date_string = %s" % now_date_string)
+#       print("ApplicationSession.onEvent(): now = %s" % str(now))
 
 #from io.jans.orm.model.base import CustomObjectAttribute
 #from io.jans.orm.model.base import CustomObjectEntry
 
-        custom_attribute = CustomObjectAttribute("creationDate", now)
-        metric_entity.getCustomObjectAttributes().add(custom_attribute)
 
 #       CustomEntry customEntry = new CustomEntry();
 #       customEntry.setDn(user.getDn());
@@ -354,6 +395,128 @@ class ApplicationSession(ApplicationSessionType):
         print("ApplicationSession.getMetricAuditParameters(): event_types = {}".format(event_types))
         print("ApplicationSession.getMetricAuditParameters(): audit_data = {}".format(audit_data))
         return event_types, audit_data
+        
+    def initCustomObjectEntry(self, metric_entity, event, audit_data):
+        session = event.getSessionId()
+        
+        print("ApplicationSession.getAuditMetricData(): session = {0}".format(session))  
+        
+        #empty first call
+        attr_value = getattr(session, "userDn")        
+        
+        for attr_key, attr_name in self.session_attributes_map.items():
+            print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_name = {1}".format(attr_key, attr_name))
+            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+                try:
+                    attr_value = getattr(session, attr_key)
+                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                    metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute(attr_name, attr_value))
+                    #setattr(audit_metric_data, attr_name, attr_value)
+                except Exception as ex:
+                    print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
+                    
+        return
+
+    def generateJansData(self, event, audit_data):
+        session = event.getSessionId()
+        
+        if not session:
+            return '{ }'
+        
+        jans_data = '{ '
+        
+        jans_data += '"type": "%s"' % event.getType()
+
+        #empty first call
+        attr_value = getattr(session, "userDn")
+            
+        for attr_key, attr_name in self.session_attributes_map.items():
+            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+                try:
+                    attr_value = getattr(session, attr_key)
+                    print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))                    
+                    jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"') )
+                except Exception as ex:
+                    print("ApplicationSession.generateJansData: Errror: ex = {0}".format(ex))
+                    jans_data += ',"%s": "%s"' % (attr_name, "None")
+
+        attr_key = "state"
+        attr_name = "authState"
+
+        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            try:
+                attr_value = getattr(session, attr_key)
+                print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+#                jans_data += ',"%s": "%s"' % (attr_name, str(attr_value).replace('"','\\"') if session else None)
+                jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"'))
+#                setattr(audit_metric_data, attr_name, str(attr_value))
+            except Exception as ex:
+                print("ApplicationSession.generateJansData(): Error Reading of config file: ex = {0}".format(ex))
+                jans_data += ',"%s": "%s"' % (attr_name, "None")
+
+        attr_key = "permissionGrantedMap"
+        attr_name = "permissionGrantedMap"
+
+        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            try:
+                attr_value = getattr(session, attr_key)
+                print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                permission_granted_map = attr_value.getPermissionGranted()                
+                print("ApplicationSession.generateJansData(): permissionGrantedMap ------------------------------- >>")
+                for key, value in permission_granted_map.items():
+                    print("ApplicationSession.generateJansData(): permissionGrantedMap: key = {0}, value = {1}".format(key, value))
+                print("ApplicationSession.generateJansData(): permissionGrantedMap ------------------------------- <<")
+
+                jans_data += ',"%s:" {' % (attr_name)
+
+                first_added = False
+                for key, value in permission_granted_map.items():
+                    if first_added:
+                        jans_data += ','
+                    else:
+                        first_added = True
+                    jans_data += '"%s:" %s' % (key, "false" if value == 0 or value == False else "true")
+
+                jans_data += '}'
+
+#               permission_granted_map = attr_value.getPermissionGranted()
+#                permission_granted_map_json = json.JSONEncoder().encode(permission_granted_map)
+#                print("ApplicationSession.generateJansData(): permission_granted_map_json = {0}".format(permission_granted_map_json))
+#                print("ApplicationSession.generateJansData(): permission_granted_map = {0}".format(permission_granted_map))
+#                print("ApplicationSession.generateJansData(): str(permission_granted_map) = {0}".format(str(permission_granted_map)))
+#                print("ApplicationSession.generateJansData(): str(permission_granted_map).replace(...) = {0}".format(str(permission_granted_map).replace('"','\\"')))
+
+#                jans_data += ',"%s": "%s"' % (attr_name, str(permission_granted_map).replace('"','\\"') if session else None)
+
+#                jans_data += ',"%s": "%s"' % (attr_name, attr_value)
+#                jans_data += ',"%s": "%s"' % (attr_name, str(permission_granted_map).replace('"','\\"') if session else "None")                
+#                setattr(audit_metric_data, attr_name, attr_value.getPermissionGranted())
+            except Exception as ex:
+                print("ApplicationSession.generateJansData(): Error: ex = {0}".format(ex))
+                jans_data += ',"%s": "%s"' % (attr_name, "None") 
+
+        session_cust_attributes = {}
+
+        session_cust_attributes = session.getSessionAttributes()
+        for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
+            try:
+                if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
+                        not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
+                        session_cust_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+                    cust_attr_value = session_cust_attributes[cust_attr_key]
+                    print("ApplicationSession.generateJansData(): cust_attr_name = {0}, cust_attr_value = {1}".format(cust_attr_name, cust_attr_value))
+                    print("ApplicationSession.generateJansData(): cust_attr_name = {0}, type(cust_attr_value) = {1}".format(cust_attr_name, type(cust_attr_value)))
+                    jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if (cust_attr_value and isinstance(cust_attr_value, str)) else str(cust_attr_value).replace('"','\\"'))
+#                    jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value if cust_attr_value else None)
+#                        setattr(audit_metric_data, cust_attr_name, cust_attr_value)
+#                    jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if cust_attr_value  )
+            except Exception as ex:
+                print("ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
+                jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
+
+        jans_data += ' }'
+
+        return jans_data
 
     def getAuditMetricData(self, event, audit_data):
         session = event.getSessionId()

@@ -12,8 +12,6 @@
 {
     "event_types": [ "AUTHENTICATED", "UNAUTHENTICATED", "UPDATED", "GONE" ],
     "audit_data": [ 
-        "type",
-        "dn",
         "id",
         "outsideSid",
         "lastUsedAt",
@@ -36,8 +34,6 @@ or
 {
     "event_types": [ "AUTHENTICATED", "UNAUTHENTICATED", "UPDATED", "GONE" ],
     "audit_data": [ 
-        "type",
-        "dn",
         "id",
         "outsideSid",
         "lastUsedAt",
