@@ -47,6 +47,8 @@ import ast
 
 class ApplicationSession(ApplicationSessionType):
 
+    log_level = -1
+
     session_attributes_map = {
             "userDn": "userDn",
             "id": "id",
@@ -82,7 +84,7 @@ class ApplicationSession(ApplicationSessionType):
         self.currentTimeMillis = current_time_millis
 
     def init(self, configuration_attributes):
-        print "ApplicationSession.init(): begin"
+        print ("ApplicationSession.init(): begin")
 
         self.metric_audit_ou_name = None
         self.metric_audit_conf_json_file_path = None
@@ -100,16 +102,25 @@ class ApplicationSession(ApplicationSessionType):
         try:
             self.metric_audit_ou_name = configuration_attributes.get("metric_audit_ou_name").getValue2()
             self.metric_audit_conf_json_file_path = configuration_attributes.get("metric_audit_conf_json_file_path").getValue2()
+
+            log_level_val = configuration_attributes.get("log_level").getValue2()
+            self.log_level = ApplicationSession.logLevelToInt(log_level_val)
+
             self.event_types, self.audit_data = self.getMetricAuditParameters(self.metric_audit_conf_json_file_path)
             if self.event_types and self.audit_data:
                 self.init_ok = True
         except Exception as ex:
-            print("ApplicationSession.init(): error of initializing: ex = {}".format(ex))
+            self.logOut("ERROR","ApplicationSession.init(): error of initializing: ex = {}".format(ex))
 
-        print("ApplicationSession.init(): self.event_types = {}".format(self.event_types))
-        print("ApplicationSession.init(): self.audit_data = {}".format(self.audit_data))
+        self.logOut("DEBUG", "ApplicationSession.init(): self.event_types = {}".format(self.event_types))
+        self.logOut("DEBUG", "ApplicationSession.init(): self.audit_data = {}".format(self.audit_data))
+        self.logOut("DEBUG", "ApplicationSession.init(): self.log_level = {}".format(self.log_level))
 
-        print("ApplicationSession.init(): self.init_ok = {}".format(self.init_ok))
+        self.logOut("ERROR", "ApplicationSession.init(): test error")
+        self.logOut("INFO", "ApplicationSession.init(): self.init_ok = {}".format(self.init_ok))
+
+        print ("ApplicationSession.init(): end")
+
         return True
 
     def destroy(self, configuration_attributes):
@@ -122,21 +133,19 @@ class ApplicationSession(ApplicationSessionType):
     # Called each time specific session event occurs
     # event is org.gluu.oxauth.service.external.session.SessionEvent
     def onEvent(self, event):
-
-        print("ApplicationSession.onEvent(): event = {}".format(event))
-        print("ApplicationSession.onEvent(): event.getType() = {}".format(event.getType()))
-        print("ApplicationSession.onEvent(): event.getSessionId() = {}".format(event.getSessionId()))
+        self.logOut("INFO","ApplicationSession.onEvent(): start")
+        self.logOut("INFO","ApplicationSession.onEvent(): event = {}".format(event))
 
         if not self.init_ok:
-            print("ApplicationSession.onEvent(): isn't initialized")
+            self.logOut("ERROR","ApplicationSession.onEvent(): isn't initialized")
             return
 
         if not(str(event.getType()).upper() in (event_type.upper() for event_type in self.event_types)):
-            print("ApplicationSession.onEvent(): event {} will not be processed".format(event.getType()))
+            self.logOut("INFO","ApplicationSession.onEvent(): event {} will not be processed".format(event.getType()))
             return
 
         remote_ip = event.getSessionId().getSessionAttributes()["remote_ip"]
-        print("ApplicationSession.onEvent(): remote_ip = {}".format(remote_ip))
+        self.logOut("DEBUG","ApplicationSession.onEvent(): remote_ip = {}".format(remote_ip))
 
         session = None
         session_attrs = None
@@ -166,8 +175,8 @@ class ApplicationSession(ApplicationSessionType):
         if http_request:
             ip = http_request.getRemoteAddr()
 
-        print('ApplicationSession.onEvent(): {"sessionId": "%s", "uid": "%s", "client_id": "%s", "redirect_uri": "%s", "acr": "%s", "ip": "%s", "type": "%s"}' %
-            (session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
+        self.logOut("DEBUG", 'ApplicationSession.onEvent(): "sessionId": {}, "uid": {}, "client_id": {}, "redirect_uri": {}, "acr": {}, "ip": {}, "type": {}'.format(
+            session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
 
         # Don't allow more then one session!
         entity = SessionId()
@@ -192,73 +201,44 @@ class ApplicationSession(ApplicationSessionType):
         pattern = "yyyyMM";
         simple_df = SimpleDateFormat(pattern);
         year_month = simple_df.format(curr_date)
-        
-#        now = time.localtime(time.time())
-#        year_month = time.strftime("%Y%m", now)
 
         if self.entry_manager.hasBranchesSupport(""):
-            print("ApplicationSession.onEvent(): self.entry_manager.hasBranchesSupport("") = %s" % str(self.entry_manager.hasBranchesSupport("")))
+            self.logOut("DEBUG","ApplicationSession.onEvent(): self.entry_manager.hasBranchesSupport("") = {}".format(str(self.entry_manager.hasBranchesSupport(""))))
             # Create a base organization unit, for example
             # ou=audit,o=metric
             metric_dn = self.static_configuration.getBaseDn().getMetric().split(",")[1]
-            print("ApplicationSession.onEvent(): metric_dn = %s" % metric_dn)
+            self.logOut("DEBUG","ApplicationSession.onEvent(): metric_dn = {}".format(metric_dn))
             audit_dn = "ou=%s,ou=statistic,%s" % (self.metric_audit_ou_name, metric_dn)
-            print("ApplicationSession.onEvent(): audit_dn = %s" % audit_dn)
+            self.logOut("DEBUG","ApplicationSession.onEvent(): audit_dn = {}".format(audit_dn))
 
             # If audit organizational unit does not exist, create it
             ou_exists = self.entry_manager.contains(audit_dn, SimpleBranch)
-            print("ApplicationSession.onEvent(): ou_exists = %s" % ou_exists)
+            self.logOut("DEBUG","ApplicationSession.onEvent(): ou_exists = {}".format(ou_exists))
             if not ou_exists:
-                print("ApplicationSession.onEvent(): Creating organizational unit: %s" % audit_dn)
+                self.logOut("DEBUG","ApplicationSession.onEvent(): Creating organizational unit: {}".format(audit_dn))
                 branch = SimpleBranch()
                 branch.setOrganizationalUnitName(self.metric_audit_ou_name)
                 branch.setDn(audit_dn)
-                print("ApplicationSession.onEvent(): branch = %s" % branch)
+                self.logOut("DEBUG","ApplicationSession.onEvent(): branch = {}".format(branch))
                 self.entry_manager.persist(branch)
 
             # If there is no audit organizational unit for this month, create it
             year_month_dn = "ou=%s,%s" % (year_month, audit_dn)
-            print("ApplicationSession.onEvent(): year_month_dn = %s" % year_month_dn)
+            self.logOut("DEBUG","ApplicationSession.onEvent(): year_month_dn = {}".format(year_month_dn))
             ou_exists = self.entry_manager.contains(year_month_dn, SimpleBranch)
-            print("ApplicationSession.onEvent(): ou_exists = %s" % ou_exists)
+            self.logOut("DEBUG","ApplicationSession.onEvent(): ou_exists = {}".format(ou_exists))
             if not ou_exists:
-                print("ApplicationSession.onEvent(): Creating organizational unit: %s" % year_month_dn)
+                self.logOut("DEBUG","ApplicationSession.onEvent(): Creating organizational unit = {}".format(year_month_dn))
                 branch = SimpleBranch()
                 branch.setOrganizationalUnitName(year_month)
                 branch.setDn(year_month_dn)
-                print("ApplicationSession.onEvent(): branch = %s" % branch)
+                self.logOut("DEBUG","ApplicationSession.onEvent(): branch = {}".format(branch))
                 self.entry_manager.persist(branch)
 
         # Write the log
         # TODO Need to figure out edipi
         unique_identifier = str(uuid.uuid4())
-        print("ApplicationSession.onEvent(): unique_identifier = %s" % unique_identifier)
-
-#        dn = "unique_identifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
-
-#        metric_entity = AuditMetricEntry()
-
-#        metric_entity.setDn(dn)
-#        metric_entity.setId(unique_identifier)
-#        metric_entity.setCreationDate(curr_date)
-#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
-#        metric_entity.setMetricType(MetricType.AUDIT)
-
-#        audit_metric_data = self.getAuditMetricData(event, self.audit_data)
-
-#        metric_entity.setMetricData(audit_metric_data)
-
-#    session_attributes_map = {
-#            "userDn": "userDn",
-#            "id": "id",
-#            "outsideSid": "outsideSid",
-#            "lastUsedAt": "lastUsedAt",
-#            "authenticationTime": "authenticationTime",
-#            "expirationDate": "expirationDate",
-#            "sessionState": "sessionState",
-#            "permissionGranted": "permissionGranted",
-#            "deviceSecrets": "deviceSecrets"
-#        }
+        self.logOut("DEBUG","ApplicationSession.onEvent(): unique_identifier = {}".format(unique_identifier))
 
         dn = "uniqueIdentifier=%s,ou=%s,ou=%s,ou=statistic,o=metric" % (unique_identifier, year_month, self.metric_audit_ou_name)
 
@@ -274,57 +254,15 @@ class ApplicationSession(ApplicationSessionType):
         
         jans_data = self.generateJansData(event, self.audit_data)
         
-        print("ApplicationSession.onEvent(): jans_data = %s" % jans_data)
+        self.logOut("DEBUG","ApplicationSession.onEvent(): jans_data = {}".format(jans_data))
         
         metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansData", jans_data))
-        
-#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
-#        metric_entity.setMetricType(MetricType.AUDIT)        
-        
-#        self.initCustomObjectEntry(metric_entity, event, self.audit_data)
 
-#        now = GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime()
-        
-#        now_date_string = now
-#        now_date_string = self.entry_manager.encodeTime(dn, now)
-
-#      print("ApplicationSession.onEvent(): now_date_string = %s" % now_date_string)
-#       print("ApplicationSession.onEvent(): now = %s" % str(now))
-
-#from io.jans.orm.model.base import CustomObjectAttribute
-#from io.jans.orm.model.base import CustomObjectEntry
-
-
-#       CustomEntry customEntry = new CustomEntry();
-#       customEntry.setDn(user.getDn());
-#       customEntry.setCustomObjectClasses(new String[] { "jansPerson" });
-
-#       Date now = new GregorianCalendar(TimeZone.getTimeZone("UTC")).getTime();
-#       String nowDateString = couchbaseEntryManager.encodeTime(customEntry.getDn(), now);
-#       CustomAttribute customAttribute = new CustomAttribute("jansLastLogonTime", nowDateString);
-#       customEntry.getCustomAttributes().add(customAttribute);
-        
-# from java.util import Date
-# from java.util import Calendar
-# from java.util import GregorianCalendar
-# from java.util import TimeZone
-
-#        metric_entity = AuditMetricEntry()
-
-#        metric_entity.setDn(dn)
-#        metric_entity.setId(unique_identifier)
-#        metric_entity.setCreationDate(curr_date)
-#        metric_entity.setApplicationType(ApplicationType.OX_AUTH)
-#        metric_entity.setMetricType(MetricType.AUDIT)
-
-#       audit_metric_data = self.getAuditMetricData(event, self.audit_data)
-
-#        metric_entity.setMetricData(audit_metric_data)
-
-        print("ApplicationSession.onEvent(): metric_entity = %s" % metric_entity)
+        self.logOut("DEBUG","ApplicationSession.onEvent(): metric_entity = {}".format(metric_entity))
         self.entry_manager.persist(metric_entity)
-        print("ApplicationSession.onEvent(): Wrote metric entry %s" % dn)
-        print("ApplicationSession.onEvent(): end")
+        self.logOut("DEBUG","ApplicationSession.onEvent(): Wrote metric entry: dn = {}".format(dn))
+
+        self.logOut("INFO","ApplicationSession.onEvent(): end")
 
         return
 
@@ -333,9 +271,12 @@ class ApplicationSession(ApplicationSessionType):
     #   session_id is org.gluu.oxauth.model.common.SessionId
     #   configuration_attributes is java.util.Map<String, SimpleCustomProperty>
     def startSession(self, http_request, session_id, configuration_attributes):
-        print("ApplicationSession.startSession()")
+    
+        self.logOut("INFO","ApplicationSession.startSession(): start")
+        self.logOut("INFO","ApplicationSession.startSession(): session_id = {}".format(session_id))    
+
         if not self.init_ok:
-            print("ApplicationSession.startSession(): isn't initialized")
+            self.logOut("ERROR","ApplicationSession.startSession(): isn't initialized")
             return True
 
         ip = None
@@ -343,14 +284,16 @@ class ApplicationSession(ApplicationSessionType):
             ip = http_request.getRemoteAddr()
 
         remote_ip = session_id.getSessionAttributes()["remote_ip"]
-        print("ApplicationSession.startSession(): remote_ip = {}".format(remote_ip))
 
-        print("ApplicationSession.startSession(): http_request = {}".format(http_request))
-        print("ApplicationSession.startSession(): session_id = {}".format(session_id))
-        print("ApplicationSession.startSession(): ip = {}".format(ip))
-        print("ApplicationSession.startSession(): configuration_attributes = {}".format(configuration_attributes))
+        self.logOut("DEBUG","ApplicationSession.startSession(): remote_ip = {}".format(remote_ip))
+        self.logOut("DEBUG","ApplicationSession.startSession(): http_request = {}".format(http_request))
+        self.logOut("DEBUG","ApplicationSession.startSession(): session_id = {}".format(session_id))
+        self.logOut("DEBUG","ApplicationSession.startSession(): ip = {}".format(ip))
+        self.logOut("DEBUG","ApplicationSession.startSession(): configuration_attributes = {}".format(configuration_attributes))
 
-        print("ApplicationSession.startSession(): for session_id: {}".format(session_id.getId()))
+        self.logOut("DEBUG","ApplicationSession.startSession(): for session_id: {}".format(session_id.getId()))
+
+        self.logOut("INFO","ApplicationSession.startSession(): end")
 
         return True
 
@@ -359,9 +302,12 @@ class ApplicationSession(ApplicationSessionType):
     #   session_id is org.gluu.oxauth.model.common.SessionId
     #   configuration_attributes is java.util.Map<String, SimpleCustomProperty>
     def endSession(self, http_request, session_id, configuration_attributes):
-        print("ApplicationSession.endSession()")
+    
+        self.logOut("INFO","ApplicationSession.endSession(): start")
+        self.logOut("INFO","ApplicationSession.endSession(): session_id = {}".format(session_id))
+    
         if not self.init_ok:
-            print("ApplicationSession.endSession: isn't initialized")
+            self.logOut("ERROR","ApplicationSession.endSession(): isn't initialized")
             return True
 
         ip = None
@@ -369,15 +315,17 @@ class ApplicationSession(ApplicationSessionType):
             ip = http_request.getRemoteAddr()
 
         remote_ip = session_id.getSessionAttributes()["remote_ip"]
-        print("ApplicationSession.endSession(): remote_ip = {}".format(remote_ip))
+        self.logOut("DEBUG","ApplicationSession.endSession(): remote_ip = {}".format(remote_ip))
 
-        print("ApplicationSession.endSession(): http_request = {}".format(http_request))
-        print("ApplicationSession.endSession(): session_id = {}".format(session_id))
-        print("ApplicationSession.endSession(): ip = {}".format(ip))
-        print("ApplicationSession.endSession(): configuration_attributes = {}".format(configuration_attributes))
+        self.logOut("DEBUG","ApplicationSession.endSession(): http_request = {}".format(http_request))
+        self.logOut("DEBUG","ApplicationSession.endSession(): session_id = {}".format(session_id))
+        self.logOut("DEBUG","ApplicationSession.endSession(): ip = {}".format(ip))
+        self.logOut("DEBUG","ApplicationSession.endSession(): configuration_attributes = {}".format(configuration_attributes))
         
-        print("ApplicationSession.endSession(): for session_id: {}".format(session_id.getId()))        
-            
+        self.logOut("DEBUG","ApplicationSession.endSession(): for session_id: {}".format(session_id.getId()))        
+        
+        self.logOut("INFO","ApplicationSession.endSession(): end")
+
         return True
 
     def getMetricAuditParameters(self, metric_audit_conf_json_file_path):
@@ -391,30 +339,26 @@ class ApplicationSession(ApplicationSessionType):
             event_types = file_data["event_types"]
             audit_data = file_data["audit_data"]
         except Exception as ex:
-            print("ApplicationSession.getMetricAuditParameters: Errror Reading of config file: ex = {}".format(ex))
-        print("ApplicationSession.getMetricAuditParameters(): event_types = {}".format(event_types))
-        print("ApplicationSession.getMetricAuditParameters(): audit_data = {}".format(audit_data))
+            self.logOut("ERROR","ApplicationSession.getMetricAuditParameters: Errror Reading of config file: ex = {}".format(ex))
+        self.logOut("DEBUG","ApplicationSession.getMetricAuditParameters(): event_types = {}".format(event_types))
+        self.logOut("DEBUG","ApplicationSession.getMetricAuditParameters(): audit_data = {}".format(audit_data))
         return event_types, audit_data
         
     def initCustomObjectEntry(self, metric_entity, event, audit_data):
         session = event.getSessionId()
-        
-        print("ApplicationSession.getAuditMetricData(): session = {0}".format(session))  
-        
+        self.logOut("DEBUG","ApplicationSession.initCustomObjectEntry(): session = {}".format(session))
         #empty first call
         attr_value = getattr(session, "userDn")        
         
         for attr_key, attr_name in self.session_attributes_map.items():
-            print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_name = {1}".format(attr_key, attr_name))
             if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
                 try:
                     attr_value = getattr(session, attr_key)
-                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                    self.logOut("DEBUG","ApplicationSession.initCustomObjectEntry(): attr_key = {}, attr_name = {}".format(attr_key, attr_name))
                     metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute(attr_name, attr_value))
                     #setattr(audit_metric_data, attr_name, attr_value)
                 except Exception as ex:
-                    print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
-                    
+                    self.logOut("ERROR","ApplicationSession.initCustomObjectEntry(): Error: ex = {0}".format(ex))
         return
 
     def generateJansData(self, event, audit_data):
@@ -434,10 +378,10 @@ class ApplicationSession(ApplicationSessionType):
             if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
                 try:
                     attr_value = getattr(session, attr_key)
-                    print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))                    
-                    jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"') )
+                    self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
+                    jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"'))
                 except Exception as ex:
-                    print("ApplicationSession.generateJansData: Errror: ex = {0}".format(ex))
+                    self.logOut("ERROR","ApplicationSession.generateJansData(): Errror: ex = {}".format(ex))
                     jans_data += ',"%s": "%s"' % (attr_name, "None")
 
         attr_key = "state"
@@ -446,12 +390,10 @@ class ApplicationSession(ApplicationSessionType):
         if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
             try:
                 attr_value = getattr(session, attr_key)
-                print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-#                jans_data += ',"%s": "%s"' % (attr_name, str(attr_value).replace('"','\\"') if session else None)
+                self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
                 jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"'))
-#                setattr(audit_metric_data, attr_name, str(attr_value))
             except Exception as ex:
-                print("ApplicationSession.generateJansData(): Error Reading of config file: ex = {0}".format(ex))
+                self.logOut("ERROR","ApplicationSession.generateJansData(): Errror: ex = {}".format(ex))
                 jans_data += ',"%s": "%s"' % (attr_name, "None")
 
         attr_key = "permissionGrantedMap"
@@ -460,12 +402,8 @@ class ApplicationSession(ApplicationSessionType):
         if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
             try:
                 attr_value = getattr(session, attr_key)
-                print("ApplicationSession.generateJansData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
+                self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
                 permission_granted_map = attr_value.getPermissionGranted()                
-                print("ApplicationSession.generateJansData(): permissionGrantedMap ------------------------------- >>")
-                for key, value in permission_granted_map.items():
-                    print("ApplicationSession.generateJansData(): permissionGrantedMap: key = {0}, value = {1}".format(key, value))
-                print("ApplicationSession.generateJansData(): permissionGrantedMap ------------------------------- <<")
 
                 jans_data += ',"%s:" {' % (attr_name)
 
@@ -479,20 +417,8 @@ class ApplicationSession(ApplicationSessionType):
 
                 jans_data += '}'
 
-#               permission_granted_map = attr_value.getPermissionGranted()
-#                permission_granted_map_json = json.JSONEncoder().encode(permission_granted_map)
-#                print("ApplicationSession.generateJansData(): permission_granted_map_json = {0}".format(permission_granted_map_json))
-#                print("ApplicationSession.generateJansData(): permission_granted_map = {0}".format(permission_granted_map))
-#                print("ApplicationSession.generateJansData(): str(permission_granted_map) = {0}".format(str(permission_granted_map)))
-#                print("ApplicationSession.generateJansData(): str(permission_granted_map).replace(...) = {0}".format(str(permission_granted_map).replace('"','\\"')))
-
-#                jans_data += ',"%s": "%s"' % (attr_name, str(permission_granted_map).replace('"','\\"') if session else None)
-
-#                jans_data += ',"%s": "%s"' % (attr_name, attr_value)
-#                jans_data += ',"%s": "%s"' % (attr_name, str(permission_granted_map).replace('"','\\"') if session else "None")                
-#                setattr(audit_metric_data, attr_name, attr_value.getPermissionGranted())
             except Exception as ex:
-                print("ApplicationSession.generateJansData(): Error: ex = {0}".format(ex))
+                self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
                 jans_data += ',"%s": "%s"' % (attr_name, "None") 
 
         session_cust_attributes = {}
@@ -504,79 +430,32 @@ class ApplicationSession(ApplicationSessionType):
                         not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
                         session_cust_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
                     cust_attr_value = session_cust_attributes[cust_attr_key]
-                    print("ApplicationSession.generateJansData(): cust_attr_name = {0}, cust_attr_value = {1}".format(cust_attr_name, cust_attr_value))
-                    print("ApplicationSession.generateJansData(): cust_attr_name = {0}, type(cust_attr_value) = {1}".format(cust_attr_name, type(cust_attr_value)))
+                    self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
                     jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if (cust_attr_value and isinstance(cust_attr_value, str)) else str(cust_attr_value).replace('"','\\"'))
-#                    jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value if cust_attr_value else None)
-#                        setattr(audit_metric_data, cust_attr_name, cust_attr_value)
-#                    jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if cust_attr_value  )
             except Exception as ex:
-                print("ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
+                self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
                 jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
 
         jans_data += ' }'
 
         return jans_data
 
-    def getAuditMetricData(self, event, audit_data):
-        session = event.getSessionId()
-        audit_metric_data = AuditMetricData()
+    # log_level = 0     - ERROR
+    # log_level = 5     - INFO
+    # log_level = 10    - DEBUG
+    @staticmethod
+    def logLevelToInt(log_level_val):
+        log_level = -1
+        if log_level_val.strip().upper() == "ERROR":
+            log_level = 0
+        elif log_level_val.strip().upper() == "INFO":
+            log_level = 5
+        elif log_level_val.strip().upper() == "DEBUG":
+            log_level = 10
+        return log_level
 
-        print("ApplicationSession.getAuditMetricData(): session = {0}".format(session))
-
-        if "type".upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            audit_metric_data.setType(str(event.getType()))
-
-        #empty first call
-        attr_value = getattr(session, "userDn")
-
-        for attr_key, attr_name in self.session_attributes_map.items():
-            print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_name = {1}".format(attr_key, attr_name))
-            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-                try:
-                    attr_value = getattr(session, attr_key)
-                    print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-                    setattr(audit_metric_data, attr_name, attr_value)
-                except Exception as ex:
-                    print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
-
-        attr_key = "state"
-        attr_name = "authState"
-
-        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            try:
-                attr_value = getattr(session, attr_key)
-                print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-                setattr(audit_metric_data, attr_name, str(attr_value))
-            except Exception as ex:
-                print("ApplicationSession.getAuditMetricData(): Error Reading of config file: ex = {0}".format(ex))
-
-        attr_key = "permissionGrantedMap"
-        attr_name = "permissionGrantedMap"
-
-        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            try:
-                attr_value = getattr(session, attr_key)
-                print("ApplicationSession.getAuditMetricData(): attr_key = {0}, attr_value = {1}".format(attr_key, attr_value))
-                setattr(audit_metric_data, attr_name, attr_value.getPermissionGranted())
-            except Exception as ex:
-                print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
-
-        session_cust_attributes = {}
-
-        if session:
-            session_cust_attributes = session.getSessionAttributes()
-
-        for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
-            print("ApplicationSession.getAuditMetricData(): cust_attr_key = {0}, cust_attr_name = {0}".format(cust_attr_key, cust_attr_name))
-            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
-                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
-                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):            
-                try:
-                    cust_attr_value = session_cust_attributes[cust_attr_key]
-                    print("ApplicationSession.getAuditMetricData(): cust_attr_name = {0}, cust_attr_value = {1}".format(cust_attr_name, cust_attr_value))
-                    setattr(audit_metric_data, cust_attr_name, cust_attr_value)
-                except Exception as ex:
-                    print("ApplicationSession.getAuditMetricData(): Error: ex = {0}".format(ex))
-
-        return audit_metric_data
+    def logOut(self, level, out_data):
+        curr_log_level = ApplicationSession.logLevelToInt(level)
+        if (curr_log_level <= self.log_level):
+            print(out_data)
+        return
