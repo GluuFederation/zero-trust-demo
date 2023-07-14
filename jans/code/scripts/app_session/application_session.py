@@ -96,6 +96,7 @@ class ApplicationSession(ApplicationSessionType):
 
         self.event_types = None
         self.audit_data = None
+        self.audit_cust_data = None
 
         self.init_ok = False
 
@@ -112,7 +113,7 @@ class ApplicationSession(ApplicationSessionType):
             self.log_level = ApplicationSession.logLevelToInt(log_level_val)
 
             self.event_types, self.audit_data, self.audit_cust_data = self.getMetricAuditParameters(self.metric_audit_conf_json_file_path)
-            if self.event_types and self.audit_data and self.audit_cust_data:
+            if self.event_types is not None and self.audit_data is not None and self.audit_cust_data is not None:
                 self.init_ok = True
         except Exception as ex:
             self.logOut("ERROR","ApplicationSession.init(): error of initializing: ex = {}".format(ex))
@@ -259,7 +260,7 @@ class ApplicationSession(ApplicationSessionType):
         metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansAppTyp", str(ApplicationType.OX_AUTH)))
         metric_entity.getCustomObjectAttributes().add(CustomObjectAttribute("jansMetricTyp", "audit"))
         
-        jans_data = self.generateJansData(event, self.audit_data)
+        jans_data = self.generateJansData(event, self.audit_data, self.audit_cust_data)
         
         self.logOut("DEBUG","ApplicationSession.onEvent(): jans_data = {}".format(jans_data))
         
@@ -372,7 +373,7 @@ class ApplicationSession(ApplicationSessionType):
                     self.logOut("ERROR","ApplicationSession.initCustomObjectEntry(): Error: ex = {0}".format(ex))
         return
 
-    def generateJansData(self, event, audit_data):
+    def generateJansData(self, event, audit_data, audit_cust_data):
         session = event.getSessionId()
         
         if not session:
