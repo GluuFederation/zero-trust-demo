@@ -119,7 +119,7 @@ class ApplicationSession(ApplicationSessionType):
         self.logOut("ERROR", "ApplicationSession.init(): test error")
         self.logOut("INFO", "ApplicationSession.init(): self.init_ok = {}".format(self.init_ok))
 
-        print ("ApplicationSession.init(): end")
+        self.logOut("INFO", "ApplicationSession.init(): end")
 
         return True
 
@@ -174,6 +174,8 @@ class ApplicationSession(ApplicationSessionType):
 
         if http_request:
             ip = http_request.getRemoteAddr()
+
+        self.logOut("DEBUG", 'ApplicationSession.onEvent(): "session" = {}'.format(str(session)))
 
         self.logOut("DEBUG", 'ApplicationSession.onEvent(): "sessionId": {}, "uid": {}, "client_id": {}, "redirect_uri": {}, "acr": {}, "ip": {}, "type": {}'.format(
             session_id, uid, client_id, redirect_uri, acr, ip, str(event.getType())))
@@ -335,6 +337,7 @@ class ApplicationSession(ApplicationSessionType):
         try:
             file = open(metric_audit_conf_json_file_path)
             file_data = json.load(file)
+            file.close()
             file_data = ast.literal_eval(json.dumps(file_data))
             event_types = file_data["event_types"]
             audit_data = file_data["audit_data"]
@@ -405,7 +408,7 @@ class ApplicationSession(ApplicationSessionType):
                 self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
                 permission_granted_map = attr_value.getPermissionGranted()                
 
-                jans_data += ',"%s:" {' % (attr_name)
+                jans_data += ',"%s": {' % (attr_name)
 
                 first_added = False
                 for key, value in permission_granted_map.items():
@@ -413,7 +416,7 @@ class ApplicationSession(ApplicationSessionType):
                         jans_data += ','
                     else:
                         first_added = True
-                    jans_data += '"%s:" %s' % (key, "false" if value == 0 or value == False else "true")
+                    jans_data += '"%s": %s' % (key, "false" if value == 0 or value == False else "true")
 
                 jans_data += '}'
 
@@ -425,16 +428,17 @@ class ApplicationSession(ApplicationSessionType):
 
         session_cust_attributes = session.getSessionAttributes()
         for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
-            try:
-                if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
-                        not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
-                        session_cust_attributes_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
+                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
+                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+                try:
                     cust_attr_value = session_cust_attributes[cust_attr_key]
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
+                    self.logOut("DEBUG","ApplicationSession.generateJansData(): type(cust_attr_value) = {}".format(type(cust_attr_value)))
                     jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if (cust_attr_value and isinstance(cust_attr_value, str)) else str(cust_attr_value).replace('"','\\"'))
-            except Exception as ex:
-                self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
-                jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
+                except Exception as ex:
+                    self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
+                    jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
 
         jans_data += ' }'
 
