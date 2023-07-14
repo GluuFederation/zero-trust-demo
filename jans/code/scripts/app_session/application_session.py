@@ -58,11 +58,11 @@ class ApplicationSession(ApplicationSessionType):
             "expirationDate": "expirationDate",
             "sessionState": "sessionState",
             "permissionGranted": "permissionGranted",
-            "deviceSecrets": "deviceSecrets"
+            "deviceSecrets": "deviceSecrets",
+            "state": "authState"
         }
 
     session_cust_attributes_map = {
-            "auth_external_attributes": "authExternalAttributes",
             "opbs": "opbs",
             "response_type": "responseType",
             "client_id": "clientId",
@@ -78,6 +78,11 @@ class ApplicationSession(ApplicationSessionType):
             "casa_prefix": "casaPrefix",
             "casa_contextPath": "casaContextPath",
             "casa_extraCss": "casaExtraCss"
+        }
+
+    # without string processing
+    session_cust_attributes_json_map = {
+            "auth_external_attributes": "authExternalAttributes"
         }
 
     def __init__(self, current_time_millis):
@@ -116,7 +121,6 @@ class ApplicationSession(ApplicationSessionType):
         self.logOut("DEBUG", "ApplicationSession.init(): self.audit_data = {}".format(self.audit_data))
         self.logOut("DEBUG", "ApplicationSession.init(): self.log_level = {}".format(self.log_level))
 
-        self.logOut("ERROR", "ApplicationSession.init(): test error")
         self.logOut("INFO", "ApplicationSession.init(): self.init_ok = {}".format(self.init_ok))
 
         self.logOut("INFO", "ApplicationSession.init(): end")
@@ -387,18 +391,6 @@ class ApplicationSession(ApplicationSessionType):
                     self.logOut("ERROR","ApplicationSession.generateJansData(): Errror: ex = {}".format(ex))
                     jans_data += ',"%s": "%s"' % (attr_name, "None")
 
-        attr_key = "state"
-        attr_name = "authState"
-
-        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
-            try:
-                attr_value = getattr(session, attr_key)
-                self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
-                jans_data += ',"%s": "%s"' % (attr_name, attr_value.replace('"','\\"') if (attr_value and isinstance(attr_value, str)) else str(attr_value).replace('"','\\"'))
-            except Exception as ex:
-                self.logOut("ERROR","ApplicationSession.generateJansData(): Errror: ex = {}".format(ex))
-                jans_data += ',"%s": "%s"' % (attr_name, "None")
-
         attr_key = "permissionGrantedMap"
         attr_name = "permissionGrantedMap"
 
@@ -424,9 +416,8 @@ class ApplicationSession(ApplicationSessionType):
                 self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
                 jans_data += ',"%s": "%s"' % (attr_name, "None") 
 
-        session_cust_attributes = {}
-
         session_cust_attributes = session.getSessionAttributes()
+
         for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
             if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
                     not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
@@ -436,6 +427,19 @@ class ApplicationSession(ApplicationSessionType):
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): type(cust_attr_value) = {}".format(type(cust_attr_value)))
                     jans_data += ',"%s": "%s"' % (cust_attr_name, cust_attr_value.replace('"','\\"') if (cust_attr_value and isinstance(cust_attr_value, str)) else str(cust_attr_value).replace('"','\\"'))
+                except Exception as ex:
+                    self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
+                    jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
+
+        for cust_attr_key, cust_attr_name in self.session_cust_attributes_json_map.items():
+            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
+                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
+                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+                try:
+                    cust_attr_value = session_cust_attributes[cust_attr_key]
+                    self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
+                    self.logOut("DEBUG","ApplicationSession.generateJansData(): type(cust_attr_value) = {}".format(type(cust_attr_value)))
+                    jans_data += ',"%s": %s' % (cust_attr_name, cust_attr_value)
                 except Exception as ex:
                     self.logOut("ERROR","ApplicationSession.generateJansData(): Error: ex = {}".format(ex))
                     jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
