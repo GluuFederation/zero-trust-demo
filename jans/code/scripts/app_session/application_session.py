@@ -111,14 +111,15 @@ class ApplicationSession(ApplicationSessionType):
             log_level_val = configuration_attributes.get("log_level").getValue2()
             self.log_level = ApplicationSession.logLevelToInt(log_level_val)
 
-            self.event_types, self.audit_data = self.getMetricAuditParameters(self.metric_audit_conf_json_file_path)
-            if self.event_types and self.audit_data:
+            self.event_types, self.audit_data, self.audit_cust_data = self.getMetricAuditParameters(self.metric_audit_conf_json_file_path)
+            if self.event_types and self.audit_data and self.audit_cust_data:
                 self.init_ok = True
         except Exception as ex:
             self.logOut("ERROR","ApplicationSession.init(): error of initializing: ex = {}".format(ex))
 
         self.logOut("DEBUG", "ApplicationSession.init(): self.event_types = {}".format(self.event_types))
         self.logOut("DEBUG", "ApplicationSession.init(): self.audit_data = {}".format(self.audit_data))
+        self.logOut("DEBUG", "ApplicationSession.init(): self.audit_cust_data = {}".format(self.audit_cust_data))
         self.logOut("DEBUG", "ApplicationSession.init(): self.log_level = {}".format(self.log_level))
 
         self.logOut("INFO", "ApplicationSession.init(): self.init_ok = {}".format(self.init_ok))
@@ -144,7 +145,7 @@ class ApplicationSession(ApplicationSessionType):
             self.logOut("ERROR","ApplicationSession.onEvent(): isn't initialized")
             return
 
-        if not(str(event.getType()).upper() in (event_type.upper() for event_type in self.event_types)):
+        if not event or not(str(event.getType()).upper() in (event_type.upper() for event_type in self.event_types)):
             self.logOut("INFO","ApplicationSession.onEvent(): event {} will not be processed".format(event.getType()))
             return
 
@@ -338,6 +339,7 @@ class ApplicationSession(ApplicationSessionType):
         file_data = None
         event_types = None
         audit_data = None
+        audit_cust_data = None        
         try:
             file = open(metric_audit_conf_json_file_path)
             file_data = json.load(file)
@@ -345,11 +347,13 @@ class ApplicationSession(ApplicationSessionType):
             file_data = ast.literal_eval(json.dumps(file_data))
             event_types = file_data["event_types"]
             audit_data = file_data["audit_data"]
+            audit_cust_data = file_data["audit_cust_data"]
         except Exception as ex:
             self.logOut("ERROR","ApplicationSession.getMetricAuditParameters: Errror Reading of config file: ex = {}".format(ex))
         self.logOut("DEBUG","ApplicationSession.getMetricAuditParameters(): event_types = {}".format(event_types))
         self.logOut("DEBUG","ApplicationSession.getMetricAuditParameters(): audit_data = {}".format(audit_data))
-        return event_types, audit_data
+        self.logOut("DEBUG","ApplicationSession.getMetricAuditParameters(): audit_cust_data = {}".format(audit_cust_data))
+        return event_types, audit_data, audit_cust_data
         
     def initCustomObjectEntry(self, metric_entity, event, audit_data):
         session = event.getSessionId()
@@ -380,9 +384,9 @@ class ApplicationSession(ApplicationSessionType):
 
         #empty first call
         attr_value = getattr(session, "userDn")
-            
+
         for attr_key, attr_name in self.session_attributes_map.items():
-            if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+            if attr_key.strip().upper() in (audit_data_el.strip().upper() for audit_data_el in audit_data):
                 try:
                     attr_value = getattr(session, attr_key)
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
@@ -394,7 +398,7 @@ class ApplicationSession(ApplicationSessionType):
         attr_key = "permissionGrantedMap"
         attr_name = "permissionGrantedMap"
 
-        if attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data):
+        if attr_key.strip().upper() in (audit_data_el.strip().upper() for audit_data_el in audit_data):
             try:
                 attr_value = getattr(session, attr_key)
                 self.logOut("DEBUG","ApplicationSession.generateJansData(): attr_key = {}, attr_value = {}".format(attr_key, attr_value))
@@ -419,9 +423,9 @@ class ApplicationSession(ApplicationSessionType):
         session_cust_attributes = session.getSessionAttributes()
 
         for cust_attr_key, cust_attr_name in self.session_cust_attributes_map.items():
-            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
-                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
-                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+            if ("sessionAttributes".upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data) or
+                    not ("sessionAttributes".upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data)) and
+                    cust_attr_key.strip().upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data)):
                 try:
                     cust_attr_value = session_cust_attributes[cust_attr_key]
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
@@ -432,9 +436,9 @@ class ApplicationSession(ApplicationSessionType):
                     jans_data += ',"%s": "%s"' % (cust_attr_name, "None")
 
         for cust_attr_key, cust_attr_name in self.session_cust_attributes_json_map.items():
-            if ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data) or
-                    not ("sessionAttributes".upper() in (audit_data_el.upper() for audit_data_el in audit_data)) and
-                    cust_attr_key.upper() in (audit_data_el.upper() for audit_data_el in audit_data)):
+            if ("sessionAttributes".upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data) or
+                    not ("sessionAttributes".upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data)) and
+                    cust_attr_key.strip().upper() in (audit_data_el.strip().upper() for audit_data_el in audit_cust_data)):
                 try:
                     cust_attr_value = session_cust_attributes[cust_attr_key]
                     self.logOut("DEBUG","ApplicationSession.generateJansData(): cust_attr_key = {}, cust_attr_name = {}, cust_attr_value = {}".format(cust_attr_key, cust_attr_name, cust_attr_value))
