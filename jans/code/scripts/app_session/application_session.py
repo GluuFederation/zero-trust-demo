@@ -94,8 +94,6 @@ class ApplicationSession(ApplicationSessionType):
 
         self.entry_manager = CdiUtil.bean(PersistenceEntryManager)
         self.static_configuration = CdiUtil.bean(StaticConfiguration)
-        self.metric_service = CdiUtil.bean(MetricService)
-        self.identity = CdiUtil.bean(Identity)
 
         try:
             self.metric_audit_ou_name = configuration_attributes.get("metric_audit_ou_name").getValue2()
