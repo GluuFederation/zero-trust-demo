@@ -244,24 +244,29 @@ Please, use follow doc for running setup:
 python3 ./show_version.py
 
 Title: jans-config-api-server-fips
-Version: 1.0.7-SNAPSHOT
+Version: 1.0.14-SNAPSHOT
 Builddate:
-Build: a798e35dcf82de58a75d2299639b355300a79042
+Build: 3794ee8a71925444d55845940b3463c79178e41e
+
+Title: casa-fips
+Version: 5.0.0-12
+Builddate:
+Build: 5b1449898b268d5951c9b6b157a750795945de1e
 
 Title: SCIM API Server (FIPS)
-Version: 1.0.7-SNAPSHOT
+Version: 1.0.14-SNAPSHOT
 Builddate:
-Build: a798e35dcf82de58a75d2299639b355300a79042
+Build: 3794ee8a71925444d55845940b3463c79178e41e
 
 Title: Fido2 API Server (FIPS)
-Version: 1.0.7-SNAPSHOT
+Version: 1.0.14-SNAPSHOT
 Builddate:
-Build: a798e35dcf82de58a75d2299639b355300a79042
+Build: 3794ee8a71925444d55845940b3463c79178e41e
 
 Title: Jans authentication server (FIPS)
-Version: 1.0.7-SNAPSHOT
+Version: 1.0.14-SNAPSHOT
 Builddate:
-Build: a798e35dcf82de58a75d2299639b355300a79042
+Build: 8b9373eb47d2c3353acd9bfa283a414e8892dc01
 ```
 
 1. Verify Janssen Server Access
