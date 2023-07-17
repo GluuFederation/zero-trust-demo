@@ -1,12 +1,13 @@
 ## README Auditing Authentication Attempts
 
 Name of the script in **janssen** (for example, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**): **ztrust-application_session**.  
+Script type:  **Application Sessions**.  
 
 The script generates audit report and creates record in DB. Also **jansData** field (in JSON format), that contains summary info of session audit will be generated.  
 
 Following are the configuration properties for the *application_session.py* script (**ztrust-application_session**):  
 
-Parameters of the script:
+Parameters of the script:  
 
 - **metric_audit_ou_name**: Name of the audit OU. For example: **jans_auth**.  
 
