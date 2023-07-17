@@ -10,18 +10,19 @@ Parameters of the script:
 
 - **metric_audit_ou_name**: Name of the audit OU. For example: **jans_auth**.  
 
-- **metric_audit_conf_json_file_path**: configuration file. For example: **/etc/jans/conf/ztrust-metric-audit.json**  
+- **metric_audit_conf_json_file_path**: configuration file. For example: **/etc/jans/conf/ztrust-metric-audit.json**.  
 
-File should contain follow properties:  
+This configuration file should contain follow properties:  
 1. **event_types**.  
-    Type of Session event(s), that will be saved in the DB:  
+    Type of Session event(s), that will be processed and saved in the DB:  
     - **AUTHENTICATED**
     - **UNAUTHENTICATED**
     - **UPDATED**
-    - **GONE**
+    - **GONE**  
+    .
 
 1. **audit_data**.  
-    List of properties of **Session** (**SessionId**):
+    List of properties of **Session** (**SessionId**), that will be used, during generation of the **jansData** value:
     - **userDn**
     - **id**
     - **outsideSid**
@@ -32,10 +33,11 @@ File should contain follow properties:
     - **sessionState**
     - **permissionGranted**
     - **permissionGrantedMap**
-    - **deviceSecrets**
+    - **deviceSecrets**  
+    .
 
 1. **audit_cust_data**.  
-    List of **Extra Session Attributes** (**SessionId**):
+    List of **Extra Session Attributes** (**SessionId**), that will be used, during generation of the **jansData** value:
     - **auth_external_attributes**
     - **opbs**
     - **response_type**
@@ -51,14 +53,33 @@ File should contain follow properties:
     - **state**
     - **casa_prefix**
     - **casa_contextPath**
-    - **casa_extraCss**
+    - **casa_extraCss**  
+    .
 
 1. **audit_cust_data** Can contain only one attribute:
-    - **sessionAttributes**
+    - **sessionAttributes**  
+    .
     
-    The value (**sessionAttributes**) covers list of all **Extra Session Attributes** (**SessionId**).  
+    The value (**sessionAttributes**) covers list of all **Extra Session Attributes** (**SessionId**):
+    - **auth_external_attributes**
+    - **opbs**
+    - **response_type**
+    - **client_id**
+    - **auth_step**
+    - **acr**
+    - **casa_logoUrl**
+    - **remote_ip**
+    - **scope**
+    - **acr_values**
+    - **casa_faviconUrl**
+    - **redirect_uri**
+    - **state**
+    - **casa_prefix**
+    - **casa_contextPath**
+    - **casa_extraCss**  
+    .
 
-Generated value **jansData** in JSON format will contain type of event (one of **AUTHENTICATED**, **UNAUTHENTICATED**, **UPDATED**, **GONE**) and all properties/attributes defined by **audit_data** and **audit_cust_data**.
+Generated value **jansData** in the JSON format will contain **type of event** (one of **AUTHENTICATED**, **UNAUTHENTICATED**, **UPDATED**, **GONE**) and all properties/attributes defined by **audit_data** and **audit_cust_data**.
 
 Examples of **/etc/jans/conf/ztrust-metric-audit.json** file: 
 
