@@ -1184,9 +1184,6 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 |metric_audit_conf_json_file_path     | no                          | /etc/jans/conf/ztrust-metric-audit.json     | specifies configuration file                                                          |
 |log_level                            | no                          | DEBUG                                       | level of log out in the file: **/opt/jans/jetty/jans-auth/logs/jans-auth_script.log** | 
 
-
-- **metric_audit_conf_json_file_path**: configuration file. For example: **/etc/jans/conf/ztrust-metric-audit.json**.  
-
 **metric_audit_conf_json_file_path**: configuration file should contain follow properties:  
 1. **event_types**.  
     Type of Session event(s), that will be processed and saved in the DB:  
