@@ -24,16 +24,8 @@ from io.jans.as.server.service import MetricService
 from io.jans.orm.model.base import SimpleBranch
 from io.jans.model import ApplicationType
 
-from io.jans.as.server.service.external.session import SessionEventType
-
 from io.jans.as.common.model.session import SessionId
 from io.jans.as.common.model.session import SessionIdState
-
-from io.jans.model.metric.audit import AuditMetricEntry
-from io.jans.model.metric.audit import AuditMetricData
-
-from io.jans.orm.model.base import CustomAttribute
-from io.jans.orm.model.base import CustomEntry
 
 from io.jans.orm.model.base import CustomObjectAttribute
 from io.jans.orm.model.base import CustomObjectEntry
