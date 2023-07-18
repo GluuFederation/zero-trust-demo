@@ -1537,6 +1537,19 @@ Examples of generated **jansData** (JSON format):
 service jans-auth restart  
 ```
 
+* **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** is used till **bootsfaces-1.6.0** is not released. **bootsfaces-1.6.0-jakarta** supports **jakarta.\*** namespace. **bootsfaces-1.6.0-jakarta** can be built from sources: https://github.com/TheCoder4eu/BootsFaces-OSP.git. When the **bootsfaces-1.6.0** is released, follow dependency can be added to the project **jans-auth-server/server**:
+
+```xml
+<dependency>
+    <groupId>net.bootsfaces</groupId>
+    <artifactId>bootsfaces</artifactId>
+    <version>1.6.0</version>
+    <classifier>jakarta</classifier>
+</dependency>
+```
+
+.
+
 ###  6.8. jans-auth Extension fido2
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
