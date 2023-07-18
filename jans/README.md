@@ -1,7 +1,7 @@
 
 # Linux Foundation Janssen Project: Zero Trust Demo
 
-Zero Trust Demo for Janssen 1.0.7 with OpenID
+Zero Trust Demo for **Janssen 1.0.15** with **OpenID**
 
 # Table of Contents
 
@@ -309,22 +309,22 @@ You can always find the latest Gluu Server packages here (for all linux
 distributions): [Janssen Releases](https://github.com/JanssenProject/jans/releases/).
 
 Please, use follow doc for installing RHEL packages:
-[Red Hat EL Janssen Installation](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/).
+[Red Hat EL Janssen Installation](https://docs.jans.io/v1.0.15/admin/install/vm-install/rhel/).
 
 ###  3.3. Janssen Server setup
 
 Please, use follow doc for running setup:
-[Run the Setup Script](https://docs.jans.io/v1.0.7/admin/install/vm-install/rhel/#run-the-setup-script).
+[Run the Setup Script](https://docs.jans.io/v1.0.15/admin/install/vm-install/rhel/#run-the-setup-script).
 
 ###  3.4. Janssen Server Verification
 
-1. Check the version of the installed Jannsen components
+1. Check the version of the installed Jannsen components 
 
 ```bash
 python3 ./show_version.py
 
 Title: jans-config-api-server-fips
-Version: 1.0.14-SNAPSHOT
+Version: 1.0.15-SNAPSHOT
 Builddate:
 Build: 3794ee8a71925444d55845940b3463c79178e41e
 
@@ -334,17 +334,17 @@ Builddate:
 Build: 5b1449898b268d5951c9b6b157a750795945de1e
 
 Title: SCIM API Server (FIPS)
-Version: 1.0.14-SNAPSHOT
+Version: 1.0.15-SNAPSHOT
 Builddate:
 Build: 3794ee8a71925444d55845940b3463c79178e41e
 
 Title: Fido2 API Server (FIPS)
-Version: 1.0.14-SNAPSHOT
+Version: 1.0.15-SNAPSHOT
 Builddate:
 Build: 3794ee8a71925444d55845940b3463c79178e41e
 
 Title: Jans authentication server (FIPS)
-Version: 1.0.14-SNAPSHOT
+Version: 1.0.15-SNAPSHOT
 Builddate:
 Build: 8b9373eb47d2c3353acd9bfa283a414e8892dc01
 ```
@@ -352,12 +352,12 @@ Build: 8b9373eb47d2c3353acd9bfa283a414e8892dc01
 1. Verify Janssen Server Access
 
 * use these configuration endpoints for checking access:  
-[Auth Server / Authorization](https://docs.jans.io/v1.0.7/admin/auth-server/endpoints/authorization/)  
-[Auth Server / Crypto Keys](https://docs.jans.io/v1.0.7/admin/auth-server/crypto/keys/)  
+[Auth Server / Authorization](https://docs.jans.io/v1.0.15/admin/auth-server/endpoints/authorization/)  
+[Auth Server / Crypto Keys](https://docs.jans.io/v1.0.15/admin/auth-server/crypto/keys/)  
 
 * use these admin tools for checking access:  
-[jans-cli Module Command line Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
-[jans_cli_tui Text User Interface Admin Tool](https://docs.jans.io/v1.0.7/admin/config-guide/tui/)  
+[jans-cli Module Command line Admin Tool](https://github.com/JanssenProject/jans/tree/main/docs/admin/config-guide/jans-cli)  
+[jans-cli-tui Text User Interface Admin Tool](https://github.com/JanssenProject/jans/tree/main/docs/admin/config-guide/jans-tui)  
 
 <dl>
   <dt>Note:</dt>
