@@ -1584,10 +1584,10 @@ see the Casa Admin Console menu option.
 * Copy files to the directory */opt/jans/casa/plugins*:
 
 ```bash
-        cp approval_plugin-1.0.14-SNAPSHOT.jar \
-        cert-authn_plugin-1.0.14-SNAPSHOT.jar \
-        email_2fa_plugin-1.0.14-SNAPSHOT.jar \
-        passw-policy_plugin-1.0.14-SNAPSHOT.jar \
+        cp approval_plugin-5.0.0-12.jar \
+        cert-authn_plugin-5.0.0-12.jar \
+        email_2fa_plugin-5.0.0-12.jar \
+        passw-policy_plugin-5.0.0-12.jar \
         /opt/jans/casa/plugins
 ```
 
