@@ -833,6 +833,8 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
+* **Script Type**: Select **Person Authentication**;
+
 * Navigate to *Scripts*, and click **Add Script**;
 
 * Specify the name as `ztrust-email_2fa_plugin` and add these properties:
@@ -900,6 +902,8 @@ Browser->End User: Access to the account of a registered user
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
 * Navigate to *Scripts*, and click **Add Script**;
+
+* **Script Type**: Select **Person Authentication**;
 
 * Specify the Name as `ztrust-register` and add these properties:
 
