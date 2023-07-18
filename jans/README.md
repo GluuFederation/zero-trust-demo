@@ -1507,7 +1507,11 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-![Diagram 1 -- Single Sign-On Overview](./img/screenshot-15-app-session-1.png)
+![ztrust-application_session script](./img/screenshot-15-app-session-1.png)
+
+![jansMetric DB Records 1](./img/screenshot-15-app-session-2.png)
+
+![jansMetric DB Records 2](./img/screenshot-15-app-session-3.png)
 
 ###  6.7. jans-auth Extension ztrust-ext
 
