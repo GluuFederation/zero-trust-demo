@@ -5,49 +5,48 @@ Zero Trust Demo for Janssen 1.0.7 with OpenID
 
 # Table of Contents
 
-* [Linux Foundation Janssen Project: Zero Trust Demo](#linux-foundation-janssen-project-zero-trust-demo)
-* [Table of Contents](#table-of-contents)
-* [Solution Overview](#solution-overview)
-   * [1. Use Cases](#1-use-cases)
-      * [1.1. Registration](#11-registration)
-      * [1.2. Authentication](#12-authentication)
-      * [1.3. Credential Management](#13-credential-management)
-      * [1.4. Audit Logging](#14-audit-logging)
-      * [1.5. Restrict to single sessions](#15-restrict-to-single-sessions)
-      * [1.6. Logout](#16-logout)
-* [Installation](#installation)
-   * [2. RHEL 8 installation](#2-rhel-8-installation)
-      * [2.1. Base installation with DISA STIG Security Profile](#21-base-installation-with-disa-stig-security-profile)
-      * [2.2. RHEL 8 Server Firewall](#22-rhel-8-server-firewall)
-   * [3. Janssen Server Installation](#3-janssen-server-installation)
-      * [3.1. Install Janssen GPG Key](#31-install-janssen-gpg-key)
-      * [3.2. Install Janssen Server RPM](#32-install-janssen-server-rpm)
-      * [3.3. Janssen Server setup](#33-janssen-server-setup)
-      * [3.4. Janssen Server Verification](#34-janssen-server-verification)
-   * [4. Gluu Casa Installation](#4-gluu-casa-installation)
-   * [5. PostgreSQL Server Configuration](#5-postgresql-server-configuration)
-   * [6. jans-auth configuration](#6-jans-auth-configuration)
-      * [6.1. jans-auth properties](#61-jans-auth-properties)
-      * [6.2. Custom assets](#62-custom-assets)
-      * [6.3. jans-auth Email 2FA Script](#63-jans-auth-email-2fa-script)
-         * [6.3.1. Generating private keys and certificates for signing emails](#631-generating-private-keys-and-certificates-for-signing-emails)
-         * [6.3.2. Properties of Email 2FA Script](#632-properties-of-email-2fa-script)
-      * [6.4. jans-auth User Registration Script](#64-jans-auth-user-registration-script)
-      * [6.5. jans-auth CAC Card Script](#65-jans-auth-cac-card-script)
-      * [6.6. jans-auth App Session Audit Script](#66-jans-auth-app-session-audit-script)
-      * [6.7. jans-auth Extension ztrust-ext](#67-jans-auth-extension-ztrust-ext)
-      * [6.8. jans-auth Extension fido2](#68-jans-auth-extension-fido2)
-   * [7. Casa Configuration](#7-casa-configuration)
-      * [7.1. Activation Casa plug-in](#71-activation-casa-plug-in)
-      * [7.2. Password Policy Casa plug-in](#72-password-policy-casa-plug-in)
-      * [7.3. Certificate Authentication plug-in](#73-certificate-authentication-plug-in)
-      * [7.4. Fido2 Authentication service](#74-fido2-authentication-service)
-   * [8. HTTPD configuration](#8-httpd-configuration)
-      * [8.1. httpd SSL configuration](#81-httpd-ssl-configuration)
-      * [8.2. httpd Enabling TLS v1.3 Protocol](#82-httpd-enabling-tls-v13-protocol)
-      * [8.3. httpd Java application proxy configuration](#83-httpd-java-application-proxy-configuration)
-      * [8.4. httpd Development load balancer](#84-httpd-development-load-balancer)
-* [Current Status](#current-status)
+- [Linux Foundation Janssen Project: Zero Trust Demo](#linux-foundation-janssen-project--zero-trust-demo)
+- [Table of Contents](#table-of-contents)
+- [Solution Overview](#solution-overview)
+  * [1. Use Cases](#1-use-cases)
+    + [1.1. Registration](#11-registration)
+    + [1.2. Authentication](#12-authentication)
+    + [1.3. Credential Management](#13-credential-management)
+    + [1.4. Audit Logging](#14-audit-logging)
+    + [1.5. Restrict to single sessions](#15-restrict-to-single-sessions)
+    + [1.6. Logout](#16-logout)
+- [Installation](#installation)
+  * [2. RHEL 8 installation](#2-rhel-8-installation)
+    + [2.1. Base installation with DISA STIG Security Profile](#21-base-installation-with-disa-stig-security-profile)
+    + [2.2. RHEL 8 Server Firewall](#22-rhel-8-server-firewall)
+  * [3. Janssen Server Installation](#3-janssen-server-installation)
+    + [3.1. Install Janssen GPG Key](#31-install-janssen-gpg-key)
+    + [3.2. Install Janssen Server RPM](#32-install-janssen-server-rpm)
+    + [3.3. Janssen Server setup](#33-janssen-server-setup)
+    + [3.4. Janssen Server Verification](#34-janssen-server-verification)
+  * [4. Gluu Casa Installation](#4-gluu-casa-installation)
+  * [5. PostgreSQL Server Configuration](#5-postgresql-server-configuration)
+  * [6. jans-auth configuration](#6-jans-auth-configuration)
+    + [6.1. jans-auth properties](#61-jans-auth-properties)
+    + [6.2. Custom assets](#62-custom-assets)
+    + [6.3. jans-auth Email 2FA Script](#63-jans-auth-email-2fa-script)
+      - [6.3.1. Generating private keys and certificates for signing emails](#631-generating-private-keys-and-certificates-for-signing-emails)
+      - [6.3.2. Properties of Email 2FA Script](#632-properties-of-email-2fa-script)
+    + [6.4. jans-auth User Registration Script](#64-jans-auth-user-registration-script)
+    + [6.5. jans-auth CAC Card Script](#65-jans-auth-cac-card-script)
+    + [6.6. jans-auth App Session Audit Script](#66-jans-auth-app-session-audit-script)
+    + [6.7. jans-auth Extension ztrust-ext](#67-jans-auth-extension-ztrust-ext)
+    + [6.8. jans-auth Extension fido2](#68-jans-auth-extension-fido2)
+  * [7. Casa Configuration](#7-casa-configuration)
+    + [7.1. Activation Casa plug-in](#71-activation-casa-plug-in)
+    + [7.2. Password Policy Casa plug-in](#72-password-policy-casa-plug-in)
+    + [7.3. Certificate Authentication plug-in](#73-certificate-authentication-plug-in)
+    + [7.4. Fido2 Authentication service](#74-fido2-authentication-service)
+  * [8. HTTPD configuration](#8-httpd-configuration)
+    + [8.1. httpd SSL configuration](#81-httpd-ssl-configuration)
+    + [8.2. httpd Enabling TLS v1.3 Protocol](#82-httpd-enabling-tls-v13-protocol)
+    + [8.3. httpd Java application proxy configuration](#83-httpd-java-application-proxy-configuration)
+    + [8.4. httpd Development load balancer](#84-httpd-development-load-balancer)
 
 # Solution Overview
 
@@ -1140,7 +1139,6 @@ OCSP;URI.0 = http://<ocsp.domain>:8080
 Example of text info of signed client certificate, that contains OCSP info (**Authority Information Access**):  
 
 ```text
-
         X509v3 extensions:
             X509v3 Basic Constraints: critical
                 CA:FALSE
@@ -1473,7 +1471,6 @@ Examples of generated **jansData** (JSON format):
 4.2. Generated **jansData**:
 
 ```json
-
 {
     "type": "AUTHENTICATED",
     "id": "426d82e8-3182-4f5e-9b1a-54fa1d9fc295",
@@ -2238,45 +2235,4 @@ LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so
 If you use **Load Balancer**, you also need to use SSL setup directives described in the chapter:
 **httpd SSL configuration** in configuation files of **httpd** of **Load Balancer**,  
 for example, **SSL Session Cache**, **Usage of SSL OCSP Stapling**.
-
-# Current Status
-
-- [Installation]
-  * **(*)**[2. RHEL 8 installation]
-    + **(*)**[2.1. Base installation with DISA STIG Security Profile]
-    + **(*)**[2.2. RHEL 8 Server Firewall]
-  * **(*)** [3. Janssen Server Installation]
-    + **(*)**[3.1. Install Janssen GPG Key]
-    + **(*)**[3.2. Install Janssen Server RPM]
-    + **(*)**[3.3. Janssen Server setup]
-    + **(*)**[3.4. Janssen Server Verification]
-  * **(*)**[4. Gluu Casa Installation]
-  * **(*)**[5. PostgreSQL Server Configuration]
-  * **(*)**[6. jans-auth configuration]
-    + **(*)**[6.1. jans-auth properties]
-    + **(*)**[6.2. Custom assets]
-    + **(*)**[6.3. jans-auth Email 2FA Script]
-      - **(*)**[6.3.1. Generating private keys and certificates for signing emails]
-      - **(*)**[6.3.2. Properties of Email 2FA Script]
-    + **(*)**[6.4. jans-auth User Registration Script]
-    + **(*)**[6.5. jans-auth CAC Card Script]
-    + **(*)**[6.6. jans-auth App Session Audit Script]
-    + **(*)**[6.7. jans-auth Extension ztrust-ext]
-    + **(*)**[6.8. jans-auth Extension fido2]
-  * **(*)**[7. Casa Configuration]
-    + **(*)**[7.1. Activation Casa plug-in]
-    + **(*)**[7.2. Password Policy Casa plug-in]
-    + **(*)**[7.3. Certificate Authentication plug-in]
-    + **(*)**[7.4. Fido2 Authentication service]
-  * **(*)**[8. HTTPD configuration]
-    + **(*)**[8.1. httpd SSL configuration]
-    + **(*)**[8.2. httpd Enabling TLS v1.3 Protocol]
-    + **(*)**[8.3. httpd Java application proxy configuration]
-    + **(*)**[8.4. httpd Development load balancer]
-
-State Legend:
-
--  **(*)** - fully implemented
--  **(+)** - partially implemented / under development
--  **(-)** - not implemented / requires checking (updating)
 
