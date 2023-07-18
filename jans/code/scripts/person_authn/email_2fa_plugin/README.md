@@ -1,10 +1,9 @@
 # README Email 2fa Plugin
 
-Name of the script in **janssen** (for example, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**): **ztrust-email_2fa_plugin**. 
+Name of the script in **janssen** (for example, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**): **ztrust-email_2fa_plugin**.  
+Script type:  **Person Authentication**.  
 
 Following are the configuration properties for the *email_2fa_plugin.py* script (**ztrust-email_2fa_plugin**):
-
-Parameters of the script:
 
 - **email_templates_json_file_path**:
 

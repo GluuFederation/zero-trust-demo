@@ -1,6 +1,7 @@
 # README User Registration
 
-Name of the script in **oxTrust** (**identity**) *Configuration*/*Person Authentication Scripts*: **ztrust-register**.
+Name of the script in **janssen** (for example, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**): **ztrust-register**.  
+Script type:  **Person Authentication**.  
 
 Following are the configuration properties for the *register.py* script (**ztrust-register**):
 

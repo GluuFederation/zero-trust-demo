@@ -1453,7 +1453,7 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-4.1. **/etc/jans/conf/ztrust-metric-audit.json**: 
+4.1. **/etc/jans/conf/ztrust-metric-audit.json**:
 
 ```json
 {
@@ -1517,7 +1517,7 @@ Examples of generated **jansData** (JSON format):
 
 * Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
 
-* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar**:
+* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
 
 ```text
 <Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>

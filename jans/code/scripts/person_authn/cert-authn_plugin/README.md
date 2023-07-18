@@ -1,6 +1,9 @@
 ## README CAC card/Certificate Login
 
-Following are the configuration properties for the *cert-authn_plugin.py* script (**ztrust-cert**):
+Name of the script in **janssen** (for example, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**): **ztrust-cert**.  
+Script type:  **Person Authentication**.  
+
+Following are the configuration properties for the *cert-authn_plugin.py* script (**ztrust-cert**):  
 
 - **credentials_file**: mandatory property pointing to credentials file in [json] format.
 
