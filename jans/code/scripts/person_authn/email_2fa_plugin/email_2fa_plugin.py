@@ -430,12 +430,8 @@ class PersonAuthentication(PersonAuthenticationType):
             return True
 
     def prepareForStep(self, configurationAttributes, requestParameters, step):
-        print "Email 2FA. prepareForStep(). ------------------------------------------------------ >>"
         print "Email 2FA - Preparing for step %s" % step
-        print "Email 2FA. prepareForStep(). ------------------------------------------------------ <<"
-
         return True
-
 
     # Return value is a java.util.List<String>
     def getExtraParametersForStep(self, configurationAttributes, step):

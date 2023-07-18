@@ -54,7 +54,7 @@ class PersonAuthentication(PersonAuthenticationType):
             return False
 
         print "Cert (ZTrust). Initialization. Loaded '%d' chain certificates" % self.chain_certs.size()
-        
+
         crl_max_response_size = 5 * 1024 * 1024  # 5Mb
         if configurationAttributes.containsKey("crl_max_response_size"):
             crl_max_response_size = StringHelper.toInteger(configurationAttributes.get("crl_max_response_size").getValue2(), crl_max_response_size)
@@ -83,7 +83,7 @@ class PersonAuthentication(PersonAuthenticationType):
 
         print "Cert (ZTrust). Initialized successfully"
 
-        return True   
+        return True
 
     def destroy(self, configurationAttributes):
         print "Cert (ZTrust). Destroy"
@@ -108,19 +108,18 @@ class PersonAuthentication(PersonAuthenticationType):
         return None
 
     def getAlternativeAuthenticationMethod(self, usageType, configurationAttributes):
-        print "Cert (ZTrust). getAlternativeAuthenticationMethod(). result: None"    
+        print "Cert (ZTrust). getAlternativeAuthenticationMethod(). result: None"
         return None
 
     def authenticate(self, configurationAttributes, requestParameters, step):
-    
-        print "Cert (ZTrust). authenticate(). ------------------------------------------------------ >>"
+
         print "Cert (ZTrust). authenticate(). step = '%d'" % step
-    
+
         identity = CdiUtil.bean(Identity)
         credentials = identity.getCredentials()
 
         user_name = credentials.getUsername()
-        
+
         print "Cert (ZTrust). authenticate(). user_name = '%s'" % user_name
 
         userService = CdiUtil.bean(UserService)
@@ -259,7 +258,6 @@ class PersonAuthentication(PersonAuthenticationType):
             return False
 
     def prepareForStep(self, configurationAttributes, requestParameters, step):
-        print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ >>"    
         print "Cert (ZTrust). Prepare for step %d" % step
         identity = CdiUtil.bean(Identity)
         
@@ -268,8 +266,7 @@ class PersonAuthentication(PersonAuthenticationType):
             if self.enabled_recaptcha:
                 identity.setWorkingParameter("recaptcha_site_key", self.recaptcha_creds['site_key'])
             print "Cert (ZTrust). prepareForStep(): step == 1. result: True"
-            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
-            return True    
+            return True
         elif step == 2:
             print "Cert (ZTrust). prepareForStep(): step == 2"
             # Store certificate in session
@@ -284,9 +281,8 @@ class PersonAuthentication(PersonAuthenticationType):
                 identity.setWorkingParameter("cert_x509",  self.certToString(x509Certificate))
                 print "Cert (ZTrust). Prepare for step 2. Storing user certificate obtained from 'X-ClientCert' header"
                 print "Cert (ZTrust). prepareForStep(): step == 2. result: True"
-                print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
                 return True
-                
+
             print "Cert (ZTrust). prepareForStep(): step == 2. clientCertificate == None"
             # Try to get certificate from attribute jakarta.servlet.request.X509Certificate
             x509Certificates = request.getAttribute('jakarta.servlet.request.X509Certificate')
@@ -295,20 +291,17 @@ class PersonAuthentication(PersonAuthenticationType):
                 identity.setWorkingParameter("cert_x509", self.certToString(x509Certificates[0]))
                 print "Cert (ZTrust). Prepare for step 2. Storing user certificate obtained from 'jakarta.servlet.request.X509Certificate' attribute"
                 print "Cert (ZTrust). prepareForStep(): step == 2. result: True"
-                print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"                
                 return True
 
         if step < 4:
             print "Cert (ZTrust). Prepare for step %d (step < 4). result: True" % step
-            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
             return True
         else:
             print "Cert (ZTrust). Prepare for step %d. result: False" % step
-            print "Cert (ZTrust). prepareForStep(). ------------------------------------------------------ <<"
             return False
 
     def getExtraParametersForStep(self, configurationAttributes, step):
-        print "Cert (ZTrust). getExtraParametersForStep(): step %d." % step                    
+        print "Cert (ZTrust). getExtraParametersForStep(): step %d." % step
         if step == 1:
             return None
         print "Cert (ZTrust). getExtraParametersForStep(): step %d. result = '%s'" % (step, Arrays.asList("cert_selected", "cert_valid", "cert_x509", "cert_x509_fingerprint", "cert_count_login_steps", "cert_user_external_uid"))
@@ -348,14 +341,14 @@ class PersonAuthentication(PersonAuthenticationType):
 
             print "Cert (ZTrust). getPageForStep(): step = '%s'. result = '/login.xhtml'" % step
             print "Cert (ZTrust). getPageForStep(): '/login.xhtml'"
-            
+
             return "/login.xhtml"
 
         print "Cert (ZTrust). getPageForStep(): step = '%s'. result = ''" % step
         return ""
 
     def getNextStep(self, configurationAttributes, requestParameters, step):
-        print "Cert (ZTrust). getNextStep(): step = '%s'. result = -1" % step    
+        print "Cert (ZTrust). getNextStep(): step = '%s'. result = -1" % step
         return -1
 
     def logout(self, configurationAttributes, requestParameters):
@@ -363,15 +356,15 @@ class PersonAuthentication(PersonAuthenticationType):
         return True
 
     def processBasicAuthentication(self, credentials):
-    
+
         print "Cert (ZTrust). processBasicAuthentication()"
-    
+
         userService = CdiUtil.bean(UserService)
         authenticationService = CdiUtil.bean(AuthenticationService)
 
         user_name = credentials.getUsername()
         user_password = credentials.getPassword()
-        
+
         print "Cert (ZTrust). processBasicAuthentication(): user_name     = '%s'" % user_name
         print "Cert (ZTrust). processBasicAuthentication(): user_password = '%s'" % user_password
 
@@ -388,20 +381,20 @@ class PersonAuthentication(PersonAuthenticationType):
         if (find_user_by_uid == None):
             print "Cert (ZTrust). Process basic authentication. Failed to find user '%s'" % user_name
             return None
-        
+
         print "Cert (ZTrust). processBasicAuthentication(): find_user_by_uid = '%s'" % find_user_by_uid
         return find_user_by_uid
 
     def getSessionAttribute(self, attribute_name):
-    
+
         print "Cert (ZTrust). getSessionAttribute(): attribute_name = '%s'" % attribute_name
-    
+
         identity = CdiUtil.bean(Identity)
 
         # Try to get attribute value from Seam event context
         if identity.isSetWorkingParameter(attribute_name):
             return identity.getWorkingParameter(attribute_name)
-        
+
         # Try to get attribute from persistent session
         session_id = identity.getSessionId()
         if session_id == None:
@@ -419,34 +412,34 @@ class PersonAuthentication(PersonAuthenticationType):
 
     def calculateCertificateFingerprint(self, x509Certificate):
         print "Cert (ZTrust). Calculate fingerprint for certificate DN '%s'" % x509Certificate.getSubjectX500Principal()
-        
+
         publicKey = x509Certificate.getPublicKey()
-        
+
         # Use Janssen implementation
         fingerprint = FingerprintHelper.getPublicKeySshFingerprint(publicKey)
-        
+
         print "Cert (ZTrust). Calculate fingerprint for certificate DN '%s'. fingerprint = '%s'" % (x509Certificate.getSubjectX500Principal(), fingerprint)
-        
+
         return fingerprint
 
     def validateCertificate(self, x509Certificate):
         subjectX500Principal = x509Certificate.getSubjectX500Principal()
 
         print "Cert (ZTrust). Validating certificate with DN '%s'" % subjectX500Principal
-        
+
         validation_date = java.util.Date()
 
         for type in self.validator_types:
             if self.validators[type][1]:
                 result = self.validators[type][0].validate(x509Certificate, self.chain_certs, validation_date)
                 print "Cert (ZTrust). Validate certificate: '%s'. Validation method '%s' result: '%s'" % (subjectX500Principal, type, result)
-                
+
                 if (result.getValidity() != ValidationStatus.CertificateValidity.VALID):
                     print "Cert (ZTrust). Certificate: '%s' is invalid" % subjectX500Principal
                     return False
-        
+
         print "Cert (ZTrust). validateCertificate(): '%s' result: True" % subjectX500Principal       
-        
+
         return True
 
     def certToString(self, x509Certificate):
@@ -478,13 +471,13 @@ class PersonAuthentication(PersonAuthenticationType):
             return False
         finally:
             f.close()
-        
+
         try:
             recaptcha_creds = creds["recaptcha"]
         except:
             print "Cert (ZTrust). Initialize recaptcha. Invalid credentials file '%s' format:" % cert_creds_file
             return False
-        
+
         self.recaptcha_creds = None
         if recaptcha_creds["enabled"]:
             print "Cert (ZTrust). Initialize recaptcha. Recaptcha is enabled"
@@ -506,7 +499,7 @@ class PersonAuthentication(PersonAuthenticationType):
                 # Ignore exception. Value is not encrypted
                 print "Cert (ZTrust). Initialize recaptcha. Assuming that 'secret_key' in not encrypted"
 
-            
+
             self.recaptcha_creds = { 'site_key' : site_key, "secret_key" : secret_key }
             print "Cert (ZTrust). Initialize recaptcha. Recaptcha is configured correctly"
 
@@ -530,7 +523,7 @@ class PersonAuthentication(PersonAuthenticationType):
         http_client = httpService.getHttpsClient()
         http_client_params = http_client.getParams()
         http_client_params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 15 * 1000)
-        
+
         recaptcha_validation_url = "https://www.google.com/recaptcha/api/siteverify"
         recaptcha_validation_request = urllib.urlencode({ "secret" : self.recaptcha_creds['secret_key'], "response" : recaptcha_response, "remoteip" : remoteip })
         recaptcha_validation_headers = { "Content-type" : "application/x-www-form-urlencoded", "Accept" : "application/json" }
@@ -547,7 +540,7 @@ class PersonAuthentication(PersonAuthenticationType):
                 print "Cert (ZTrust). Validate recaptcha response. Get invalid response from validation server: ", str(http_response.getStatusLine().getStatusCode())
                 httpService.consume(http_response)
                 return False
-    
+
             response_bytes = httpService.getResponseContent(http_response)
             response_string = httpService.convertEntityToString(response_bytes)
             httpService.consume(http_response)
@@ -557,9 +550,9 @@ class PersonAuthentication(PersonAuthenticationType):
         if response_string == None:
             print "Cert (ZTrust). Validate recaptcha response. Get empty response from validation server"
             return False
-        
+
         response = json.loads(response_string)
-        
+
         return response["success"]
 
     def hasEnrollments(self, configurationAttributes, user):
@@ -570,7 +563,7 @@ class PersonAuthentication(PersonAuthenticationType):
             for extUid in values:
                 if not result:
                     result = extUid.find("cert:") != -1
-                    
+
         print "Cert (ZTrust). hasEnrollments(): result = %s" % result
 
         return result
