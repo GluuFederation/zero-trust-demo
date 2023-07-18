@@ -282,7 +282,7 @@ of 1-1 is complete, you will initialize the other servers.
 * Download **Janssen** key:
 
 ```bash
-wget https://repo.gluu.org/rhel/RPM-GPG-KEY-GLUU -O /etc/pki/rpm-gpg/RPM-GPG-KEY-GLUU
+wget https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/gluu-key/RPM-GPG-KEY-GLUU -O /etc/pki/rpm-gpg/RPM-GPG-KEY-GLUU
 ```
 
 * Install **Janssen** key:
@@ -1080,7 +1080,7 @@ This template can use follow variables:
 
 ###  6.5. jans-auth CAC Card Script
 
-* launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
 * Navigate to  *Scripts*, and click **Add Script**;
 
@@ -1168,7 +1168,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 ###  6.6. jans-auth App Session Audit Script
 
-* launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
 * Navigate to  *Scripts*, and click **Add Script**;
 
@@ -1818,7 +1818,7 @@ Important security issues of definition of **\<VirtualHost *:443\>** directive:
 ```text
     SSLEngine on
     SSLProtocol -all +TLSv1.2
-    SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256
+    SSLCipherSuite SSLCipherSuite ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-CCM:ECDHE-ECDSA-AES256-CCM:ECDHE-ECDSA-AES128-CCM8:ECDHE-ECDSA-AES256-CCM8
     SSLHonorCipherOrder On
     SSLCertificateFile /etc/certs/httpd.crt
     SSLCertificateKeyFile /etc/certs/httpd.key
@@ -1827,7 +1827,7 @@ Important security issues of definition of **\<VirtualHost *:443\>** directive:
 
 where:
 **SSLProtocol -all +TLSv1.2** - will be used follow version of Transport Layer Security (TLS) **TLSv1.2**  
-**SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256** - suite of ciphers, used by SSL Protocol (**+TLSv1.2**).  
+**SSLCipherSuite SSLCipherSuite ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-CCM:ECDHE-ECDSA-AES256-CCM:ECDHE-ECDSA-AES128-CCM8:ECDHE-ECDSA-AES256-CCM8** - suite of ciphers, used by SSL Protocol (**+TLSv1.2**).  
 
 **SSLCertificateKeyFile /etc/certs/httpd.key** - server SSL key (PEM-encoded)  
 **SSLCertificateFile /etc/certs/httpd.crt**    - server SSL certificate (PEM-encoded)  
@@ -2071,7 +2071,7 @@ After installing **Jansssen Suite** on the server (full configuring), follow ser
 |`jans-auth`|127.0.0.1:8081|
 |`jans-fido2`|127.0.0.1:8073|
 |`jans-scim`|127.0.0.1:8087|
-|`casa`|127.0.0.1:8099|
+|`casa`|127.0.0.1:8080|
 |`postgresql`|127.0.0.1:5432|
 
 Some servers (**jans-auth**, **jans-fido2**, **jans-scim**, **casa**) launched on the **localhost** (**127.0.0.1**) interface.
