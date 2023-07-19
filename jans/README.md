@@ -1611,8 +1611,8 @@ Enabled scripts:
 - fido2
 - ztrust-register
 - ztrust-cert
-- ztrust-forgot-password
 - ztrust-email_2fa_plugin
+- ztrust-application_session
 
 Enabled plug-ins:
 

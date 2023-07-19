@@ -84,7 +84,7 @@ Generated value **jansData** in the JSON format will contain **type of event** (
 
 Examples of **/etc/jans/conf/ztrust-metric-audit.json** file: 
 
-##
+***
 
 ```json
 {
@@ -123,7 +123,7 @@ Examples of **/etc/jans/conf/ztrust-metric-audit.json** file:
 }
 ```
 
-##
+***
 
 ```json
 {
@@ -147,7 +147,7 @@ Examples of **/etc/jans/conf/ztrust-metric-audit.json** file:
 }
 ```
 
-##
+***
 
 - **log_level**: level of log out in the file: **/opt/jans/jetty/jans-auth/logs/jans-auth_script.log**.  
     Values:
@@ -159,7 +159,7 @@ Examples of **/etc/jans/conf/ztrust-metric-audit.json** file:
 
 Examples of generated **jansData** (JSON format):
 
-##
+***
 
 **/etc/jans/conf/ztrust-metric-audit.json**:
 
@@ -250,7 +250,7 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-##
+***
 
 **/etc/jans/conf/ztrust-metric-audit.json**: 
 
@@ -272,7 +272,7 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-##
+***
 
 **/etc/jans/conf/ztrust-metric-audit.json**: 
 
@@ -306,7 +306,7 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-##
+***
 
 **/etc/jans/conf/ztrust-metric-audit.json**: 
 
@@ -363,4 +363,4 @@ Examples of generated **jansData** (JSON format):
 }
 ```
 
-##
+***
