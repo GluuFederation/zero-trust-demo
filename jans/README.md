@@ -124,7 +124,7 @@ jansMetricTyp     audit
 jansData          {generated json, that contains audit properties/values}
 ```
 
-i.e.:
+for example:
 
 ```text
 doc_id            5b893f09-c5ee-4c97-bc0f-d7613589f87e
@@ -214,15 +214,15 @@ of the website.
 
 If you are installing RHEL 8 from media:
 
-* Under Software Selection, select `Minimal Install`
+* Under Software Selection, select `Minimal Install`;
 
-* Under Security Policy, select the `DISA STIG Security Policy`
+* Under Security Policy, select the `DISA STIG Security Policy`;
 
-* Enable networking and assign an **FQDN** hostname.
+* Enable networking and assign an **FQDN** hostname;
 
-* Set the timezone
+* Set the timezone;
 
-* Add a user with admin privileges (not `root`)
+* Add a user with admin privileges (not `root`);
 
 * You will need to create a custom disk layout. The following folders must be on
 a separate partition or logical volume:
@@ -282,7 +282,7 @@ of 1-1 is complete, you will initialize the other servers.
 * Download **Janssen** key:
 
 ```bash
-wget https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/gluu-key/RPM-GPG-KEY-GLUU -O /etc/pki/rpm-gpg/RPM-GPG-KEY-GLUU
+wget https://raw.githubusercontent.com/GluuFederation/zero-trust-demo/main/jans/system/rh/RPM-GPG-KEY-GLUU -O /etc/pki/rpm-gpg/RPM-GPG-KEY-GLUU
 ```
 
 * Install **Janssen** key:
@@ -376,7 +376,7 @@ usage: setup_casa.py [-h] [-jans-branch JANS_BRANCH] [-install-casa]
                      [-casa-client-id CASA_CLIENT_ID]
                      [-casa-client-pw CASA_CLIENT_PW]
 
-This script downloads Csas components and installs them
+This script downloads Casa components and installs them
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -833,9 +833,11 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
+* Navigate to *Scripts*, and click **Add Script**;
+
 * **Script Type**: Select **Person Authentication**;
 
-* Navigate to *Scripts*, and click **Add Script**;
+* Use follow script file `jans/code/scripts/person_authn/email_2fa_plugin/email_2fa_plugin.py` (**Edit Script** or **Import Script**);
 
 * Specify the name as `ztrust-email_2fa_plugin` and add these properties:
 
@@ -855,9 +857,9 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 |email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json  |
 |regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json            |
 
-* Copy and paste the text of `email_2fa_plugin.py` into the *Script* text area.
+* Copy and paste the text of `email_2fa_plugin.py` into the *Script* text area;
 
-* Don't forget to check *Enabled* and click **Update**.
+* Check *Enabled* and click **Save**.
 
 ###  6.4. jans-auth User Registration Script
 
@@ -904,6 +906,8 @@ Browser->End User: Access to the account of a registered user
 * Navigate to *Scripts*, and click **Add Script**;
 
 * **Script Type**: Select **Person Authentication**;
+
+* Use follow script file `jans/code/scripts/person_authn/user_registration/register.py` (**Edit Script** or **Import Script**);
 
 * Specify the Name as `ztrust-register` and add these properties:
 
@@ -1074,9 +1078,7 @@ This template can use follow variables:
 **%%email%%** - email address;  
 **%%otp%%** - OTP (one-time password/code).
 
-* Copy and paste the text of `register.py` into the *Script* text area.
-
-* Don't forget to check *Enabled* and click **Update**.
+* Check *Enabled* and click **Save**.
 
 ###  6.5. jans-auth CAC Card Script
 
@@ -1085,6 +1087,8 @@ This template can use follow variables:
 * Navigate to  *Scripts*, and click **Add Script**;
 
 * **Script Type**: Select **Person Authentication**;
+
+* Use follow script file `jans/code/scripts/person_authn/cert-authn_plugin/cert-authn_plugin.py` (**Edit Script** or **Import Script**);
 
 * Specify the name as `ztrust-cert` and add these **Configuration properties** (**Conf. properties**):
 
@@ -1162,9 +1166,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
                 OCSP - URI:http://<ocsp.domain>:8080
 ```
 
-* Copy and paste the text of `cert-authn_plugin.py` into the *Script* text area.
-
-* Don't forget to check *Enabled* and click **Update**.
+* Check *Enabled* and click **Save**.
 
 ###  6.6. jans-auth App Session Audit Script
 
@@ -1176,7 +1178,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Specify the name as `ztrust-application_session`;
 
-* Use follow script file `jans/code/scripts/app_session/application_session.py`;
+* Use follow script file `jans/code/scripts/app_session/application_session.py` (**Edit Script** or **Import Script**);
 
 * Add these **Configuration properties** (**Conf. properties**)
 
@@ -1253,7 +1255,9 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
     - **casa_extraCss**  
     .
 
-Examples of **/etc/jans/conf/ztrust-metric-audit.json** file: 
+* Check *Enabled* and click **Save**.
+
+* Examples of **/etc/jans/conf/ztrust-metric-audit.json** file: 
 
 ```json
 {
@@ -1314,7 +1318,7 @@ Examples of **/etc/jans/conf/ztrust-metric-audit.json** file:
 }
 ```
 
-Examples of generated **jansData** (JSON format):
+* Examples of generated **jansData** (JSON format):
 
 1.1. **/etc/jans/conf/ztrust-metric-audit.json**:
 
