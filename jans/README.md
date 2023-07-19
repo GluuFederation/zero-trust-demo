@@ -72,39 +72,39 @@ number.
 
 1. **Register for new account with CAC/PIV card**  If a person has a smart card,
 they can present it during the registration process, and we should pick up the
-subject DN which has their name and `edipi`.
+subject DN which has their name and `edipi`;
 1. **Register for new account (no CAC/PIV card)**  If the person does not
-yet have a CAC/PIV card, we should enroll email and an SMS number.
+yet have a CAC/PIV card, we should enroll email and an SMS number;
 1. **Associate a CAC card against existing account**  This use case is possible
 when a person registered before they obtained a CAC/PIV, and then want to
-associate their smart card with their account.
-1. **Registration for account with duplicate email** Do not allow.
-1. **Required fields for registration**
-1. **CAPTCHA**
-1. **Password strength algorithm** Password policy should be customized.  
+associate their smart card with their account;
+1. **Registration for account with duplicate email** Do not allow;
+1. **Required fields for registration**;
+1. **CAPTCHA**;
+1. **Password strength algorithm** Password policy should be customized;  
 Example of some implemented password policy:  
 "The minimum password length is 15 characters, containing at least one lowercase letter,
 one uppercase letter, one number, and one special character".
 1. **Disable automatic account enablement**  The Janssen Server admin can
-restrict enrollment to certain domains.
+restrict enrollment to certain domains;
 1. **Redirect from Smart Card Login for unregistered person**.
 
 ###  1.2. Authentication
 
-1. **FIDO2** The end user's FIDO2 device is used for identification.
+1. **FIDO2** The end user's FIDO2 device is used for identification;
 1. **email identifier** The end-user's email address is used for identification
-(i.e. the email is the username).
+(i.e. the email is the username);
 1. **Smart Card**  The end user clicks on a button, which should prompt their
 browser to enable the selection of an X.509 certificate.
 
 ###  1.3. Credential Management
 
 1. **FIDO2** The end user should be able to enroll FIDO2 device(s), wihich can be
-used during authentication.
+used during authentication;
 1. **Smart Card** The end user should be able to enroll a CAC/PIV card, and to
-view the details of an associated X.509 certificate.
+view the details of an associated X.509 certificate;
 1. **SMS**  The end user should be able to view, add, and remove an associated
-phone number to receive SMS notifications.
+phone number to receive SMS notifications;
 1. **Change Password** End users should be able to change their password,
 provided the new password meets the associated password complexity.
 
@@ -200,7 +200,7 @@ the person.
 ###  1.6. Logout
 
 1. **Logout from Casa**  On hitting the logout button, the person's browser
-should logout.
+should logout;
 1. **Logout from OpenID Connect relying party (RP)**  Provided the RP has a
 properly configured OpenID Connect client in the Janssen Server, and that it makes
 the correct front-channel logout call, the Person's browser should be logged out

@@ -21,17 +21,7 @@ Follow account parameters should be initialized on the page
 - **SMTP Connect Protection**: secure protocol of the connection (*NONE*, *SSL/TLS*, *STARTTLS*):
     * for example: *smtp.gmail.com*: *SSL/TLS* - 465 port, *STARTTLS* - 587 port;
 - **Trust Server**: If set, the **SMTP Host** will be marked as trusted server;
-- **SMTP Port**: Number of TCP/IP port of the **SMTP Host**;
-
-Examples of initializing of SMTP server:
-
-gmail.com, **SSL/TLS** protocol, port **465**:
-
-![smtp ssl/tls protocol](./img/1.smtp_ssl_tls.png)
-
-gmail.com, **STARTTLS** protocol, port **587**:
-
-![smtp starttls protocol](./img/2.smtp_starttls.png )
+- **SMTP Port**: Number of TCP/IP port of the **SMTP Host**.
 
 ### 2. Intializing of Keystore
 
