@@ -371,13 +371,15 @@ Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 For installing of Casa with Janssen Server, please use the **setup_casa.py** script.
 
 ```bash
+python3 setup_casa.py -h
+
 usage: setup_casa.py [-h] [-jans-branch JANS_BRANCH] [-install-casa]
                      [-uninstall-casa] [-profile {jans,openbanking,disa-stig}]
                      [-casa-version CASA_VERSION]
                      [-casa-client-id CASA_CLIENT_ID]
                      [-casa-client-pw CASA_CLIENT_PW]
 
-This script downloads Casa components and installs them
+This script downloads CASA components and installs them
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -398,13 +400,13 @@ optional arguments:
 Example of installing command:
 
 ```bash
-python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-12' -install-casa
+python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-15' -install-casa
 ```
 
 or
 
 ```bash
-python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-12' -casa-client-id='3000.21C12DDA-8542-423E-9501-DF49328A60B3' -casa-client-pw='12345678900$' -install-casa
+python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-15' -casa-client-id='3000.21C12DDA-8542-423E-9501-DF49328A60B3' -casa-client-pw='12345678900$' -install-casa
 ```
 
 ,where:
@@ -501,7 +503,7 @@ JANS_SETUP_DPATH    - path, shere jans setup has been installed
 Example of usage:
 
 ```bash
-python3 ztrust_install_schema.py -rdbm-user=jans -rdbm-password=1234567890$ -rdbm-db=jansdb -rdbm-host=192.168.64.65 -rdbm-port=5432 -in-json-fpath=/root/pgsql/ztrust_schema.json -in-ldif-fpath=/root/pgsql/ztrust-jans-attributes.ldif -jans-setup-dpath=/opt/jans/jans-setup
+python3 ztrust_install_schema.py -rdbm-user=jans -rdbm-password=1234567890$ -rdbm-db=jansdb -rdbm-host=192.168.64.65 -rdbm-port=5432 -in-json-fpath=./ztrust_schema.json -in-ldif-fpath=./ztrust-jans-attributes.ldif -jans-setup-dpath=/opt/jans/jans-setup
 ```
 
 And correspondent output:
@@ -522,7 +524,7 @@ database bind
 reading schema file: /root/pgsql/ztrust_schema.json
 creating tables from schema
 Creating tables for ['/root/pgsql/ztrust_schema.json']
-tables = ['CREATE TABLE "ztrustPerson" (doc_id VARCHAR(64) NOT NULL UNIQUE, "objectClass" VARCHAR(48), dn VARCHAR(128), "edipi" VARCHAR(64), "pivid" VARCHAR(64), "ossoUserDN" VARCHAR(64), "ossoSubscriberGuid" VARCHAR(64), "userStatus" VARCHAR(64), "lastlogin" VARCHAR(64), PRIMARY KEY (doc_id));']
+tables = ['ALTER TABLE "jansPerson" ADD "edipi" VARCHAR(64);', 'ALTER TABLE "jansPerson" ADD "pivid" VARCHAR(64);', 'ALTER TABLE "jansPerson" ADD "ossoUserDN" VARCHAR(64);', 'ALTER TABLE "jansPerson" ADD "ossoSubscriberGuid" VARCHAR(64);', 'ALTER TABLE "jansPerson" ADD "userStatus" VARCHAR(64);', 'ALTER TABLE "jansPerson" ADD "lastlogin" VARCHAR(64);']
 Writing file /tmp/jans_tables.sql
 import ldif file: /root/pgsql/ztrust-jans-attributes.ldif
 ------------------------
@@ -530,26 +532,135 @@ import ldif file: /root/pgsql/ztrust-jans-attributes.ldif
 
 .
 
-Follow tables will be added, after installing of the schema (after running of the script: **ztrust_install_schema.py**):  
+Table **jansPerson** will be updated will be added, after installing of the schema (after running of the script: **ztrust_install_schema.py**):  
 
 ```sql
 SELECT table_catalog, table_schema, table_name, column_name, data_type, character_maximum_length, character_octet_length
 FROM information_schema.columns
-WHERE table_schema = 'public' AND table_name   = 'ztrustPerson';
+WHERE table_schema = 'public' AND table_name = 'jansPerson';
 ```
 
 ```text
- table_catalog | table_schema |  table_name  |    column_name     |     data_type     | character_maximum_length | character_octet_length 
----------------+--------------+--------------+--------------------+-------------------+--------------------------+------------------------
- jansdb        | public       | ztrustPerson | doc_id             | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | objectClass        | character varying |                       48 |                    192
- jansdb        | public       | ztrustPerson | dn                 | character varying |                      128 |                    512
- jansdb        | public       | ztrustPerson | edipi              | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | pivid              | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | ossoUserDN         | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | ossoSubscriberGuid | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | userStatus         | character varying |                       64 |                    256
- jansdb        | public       | ztrustPerson | lastlogin          | character varying |                       64 |                    256
+|table_catalog  | table_schema   | table_name   | column_name                           | data_type                     | character_maximum_length   | character_octet_length   |
+----------------+----------------+--------------+---------------------------------------+-------------------------------+----------------------------+---------------------------
+| jansdb        | public         | jansPerson   | doc_id                                | character varying             | 64                         | 256                      | 
+| jansdb        | public         | jansPerson   | objectClass                           | character varying             | 48                         | 192                      |
+| jansdb        | public         | jansPerson   | dn                                    | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | jansAssociatedClnt                    | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | c                                     | character varying             | 2                          | 8                        |
+| jansdb        | public         | jansPerson   | displayName                           | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | givenName                             | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | jansManagedOrganizations              | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansOptOuts                           | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansStatus                            | character varying             | 16                         | 64                       |
+| jansdb        | public         | jansPerson   | inum                                  | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | mail                                  | character varying             | 96                         | 384                      |
+| jansdb        | public         | jansPerson   | memberOf                              | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | o                                     | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansPersistentJWT                     | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansCreationTimestamp                 | timestamp without time zone   | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansExtUid                            | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansOTPCache                          | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansLastLogonTime                     | timestamp without time zone   | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansActive                            | boolean                       | NULL                       | NULL                     |               
+| jansdb        | public         | jansPerson   | jansAddres                            | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansEmail                             | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansEntitlements                      | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansExtId                             | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | jansImsValue                          | jsonb                         | NULL                       | NULL                     | 
+| jansdb        | public         | jansPerson   | jansMetaCreated                       | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansMetaLastMod                       | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansMetaLocation                      | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | jansMetaVer                           | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansNameFormatted                     | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | jansPhoneValue                        | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansPhotos                            | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansProfileURL                        | character varying             | 256                        | 1024                     |
+| jansdb        | public         | jansPerson   | jansRole                              | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansTitle                             | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansUsrTyp                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansHonorificPrefix                   | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansHonorificSuffix                   | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jans509Certificate                    | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansPassExpDate                       | timestamp without time zone   | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | persistentId                          | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | middleName                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | nickname                              | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansPrefUsrName                       | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | profile                               | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | picture                               | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | website                               | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | emailVerified                         | boolean                       | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | gender                                | character varying             | 32                         | 128                      |
+| jansdb        | public         | jansPerson   | birthdate                             | timestamp without time zone   | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | zoneinfo                              | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | locale                                | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | phoneNumberVerified                   | boolean                       | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | address                               | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | updatedAt                             | timestamp without time zone   | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | preferredLanguage                     | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | role                                  | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | secretAnswer                          | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | secretQuestion                        | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | seeAlso                               | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | sn                                    | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | cn                                    | character varying             | 128                        | 512                      |
+| jansdb        | public         | jansPerson   | transientId                           | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | uid                                   | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | userPassword                          | character varying             | 256                        | 1024                     |    
+| jansdb        | public         | jansPerson   | st                                    | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | street                                | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | l                                     | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansCountInvalidLogin                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansEnrollmentCode                    | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansIMAPData                          | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansPPID                              | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | jansGuid                              | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansPreferredMethod                   | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | userCertificate                       | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | jansOTPDevices                        | character varying             | 512                        | 2048                     |
+| jansdb        | public         | jansPerson   | jansMobileDevices                     | character varying             | 512                        | 2048                     |
+| jansdb        | public         | jansPerson   | jansTrustedDevices                    | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | jansStrongAuthPolicy                  | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansUnlinkedExternalUids              | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansBackchannelDeviceRegistrationTkn  |character varying              | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansBackchannelUsrCode                | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | telephoneNumber                       | character varying             | 20                         | 80                       |
+| jansdb        | public         | jansPerson   | mobile                                | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | carLicense                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | facsimileTelephoneNumber              | character varying             | 20                         | 80                       |
+| jansdb        | public         | jansPerson   | departmentNumber                      | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | employeeType                          | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | manager                               | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | postOfficeBox                         | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | employeeNumber                        | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | preferredDeliveryMethod               | character varying             | 50                         | 200                      |
+| jansdb        | public         | jansPerson   | roomNumber                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | secretary                             | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | homePostalAddress                     | text                          | NULL                       | 1073741824               |
+| jansdb        | public         | jansPerson   | postalCode                            | character varying             | 16                         | 64                       |
+| jansdb        | public         | jansPerson   | description                           | character varying             | 768                        | 3072                     |
+| jansdb        | public         | jansPerson   | title                                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | jansAdminUIRole                       | jsonb                         | NULL                       | NULL                     |
+| jansdb        | public         | jansPerson   | edipi                                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | pivid                                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | ossoUserDN                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | ossoSubscriberGuid                    | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | userStatus                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | lastlogin                             | character varying             | 64                         | 256                      |
+```
+
+Here are added fields:
+
+```text
+|table_catalog  | table_schema   | table_name   | column_name                           | data_type                     | character_maximum_length   | character_octet_length   |
+----------------+----------------+--------------+---------------------------------------+-------------------------------+----------------------------+---------------------------
+| jansdb        | public         | jansPerson   | edipi                                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | pivid                                 | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | ossoUserDN                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | ossoSubscriberGuid                    | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | userStatus                            | character varying             | 64                         | 256                      |
+| jansdb        | public         | jansPerson   | lastlogin                             | character varying             | 64                         | 256                      |
 ```
 
 .
@@ -560,18 +671,18 @@ Follow attributes will be added to the table **jansAttr** (after running of the 
 SELECT
     public."jansAttr".doc_id, public."jansAttr"."objectClass", public."jansAttr".dn,
     public."jansAttr".description, public."jansAttr"."jansAttrName", public."jansAttr"."jansAttrOrigin"
-FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson';
+FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'jansPerson';
 ```
 
 ```text
                 doc_id                | objectClass |                               dn                               |                            description                            |    jansAttrName    | jansAttrOrigin 
 --------------------------------------+-------------+----------------------------------------------------------------+-------------------------------------------------------------------+--------------------+----------------
- 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | inum=11978694-3e96-4f9c-ac3b-455cd063140f,ou=attributes,o=jans | Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID | edipi              | ztrustPerson
- e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | inum=e88df284-d234-43a7-89e7-cea41d6b2c3f,ou=attributes,o=jans | Personal Identity Verification (PIV) Identifier                   | pivid              | ztrustPerson
- f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | inum=f851e4e9-1245-403b-9fa8-96e26d41c538,ou=attributes,o=jans | Legacy OSSO User Distinguish Name                                 | ossoUserDN         | ztrustPerson
- c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | inum=c55cef08-969c-4e50-87e0-9b1e2a2061af,ou=attributes,o=jans | Legacy OSSO Subscriber Global Unique Identifier                   | ossoSubscriberGuid | ztrustPerson
- 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | inum=3d9b76d4-9028-4411-ae81-8f3adc03b52f,ou=attributes,o=jans | The registration status of the user.                              | userStatus         | ztrustPerson
- d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | inum=d51b279b-f966-420d-b06f-f55663f5a1c6,ou=attributes,o=jans | Last login time used to expire inactive users                     | lastlogin          | ztrustPerson
+ 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | inum=11978694-3e96-4f9c-ac3b-455cd063140f,ou=attributes,o=jans | Electronic Data Interchange Personal Indentifier EDIPI aka DoD ID | edipi              | jansPerson
+ e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | inum=e88df284-d234-43a7-89e7-cea41d6b2c3f,ou=attributes,o=jans | Personal Identity Verification (PIV) Identifier                   | pivid              | jansPerson
+ f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | inum=f851e4e9-1245-403b-9fa8-96e26d41c538,ou=attributes,o=jans | Legacy OSSO User Distinguish Name                                 | ossoUserDN         | jansPerson
+ c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | inum=c55cef08-969c-4e50-87e0-9b1e2a2061af,ou=attributes,o=jans | Legacy OSSO Subscriber Global Unique Identifier                   | ossoSubscriberGuid | jansPerson
+ 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | inum=3d9b76d4-9028-4411-ae81-8f3adc03b52f,ou=attributes,o=jans | The registration status of the user.                              | userStatus         | jansPerson
+ d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | inum=d51b279b-f966-420d-b06f-f55663f5a1c6,ou=attributes,o=jans | Last login time used to expire inactive users                     | lastlogin          | jansPerson
 ```
 
 ```sql
@@ -579,19 +690,19 @@ SELECT
     public."jansAttr".doc_id, public."jansAttr"."objectClass",
     public."jansAttr"."jansAttrName", public."jansAttr"."jansAttrOrigin",
     public."jansAttr"."jansSAML1URI", public."jansAttr"."jansSAML2URI"
-FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'ztrustPerson';
+FROM public."jansAttr" where public."jansAttr"."jansAttrOrigin" = 'jansPerson';
 ```
 
 ```text
                 doc_id                | objectClass |    jansAttrName    | jansAttrOrigin |                 jansSAML1URI                  |            jansSAML2URI            
 --------------------------------------+-------------+--------------------+----------------+-----------------------------------------------+------------------------------------
- 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | edipi              | ztrustPerson   | urn:gluu:dir:attribute-def:edipi              | https://idp.example.com/saml/edipi
- e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | pivid              | ztrustPerson   | urn:gluu:dir:attribute-def:pivid              | urn:oid:pivid
- f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | ossoUserDN         | ztrustPerson   | urn:gluu:dir:attribute-def:ossoUserDN         | urn:oid:ossoUserDN
- c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | ossoSubscriberGuid | ztrustPerson   | urn:gluu:dir:attribute-def:ossoSubscriberGuid | urn:oid:ossoSubscriberGuid
- 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | userStatus         | ztrustPerson   | urn:gluu:dir:attribute-def:userStatus         | urn:oid:userStatus
- d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | lastlogin          | ztrustPerson   | urn:gluu:dir:attribute-def:lastlogin          | urn:oid:lastlogin
- ```
+ 11978694-3e96-4f9c-ac3b-455cd063140f | jansAttr    | edipi              | jansPerson     | urn:gluu:dir:attribute-def:edipi              | https://idp.example.com/saml/edipi
+ e88df284-d234-43a7-89e7-cea41d6b2c3f | jansAttr    | pivid              | jansPerson     | urn:gluu:dir:attribute-def:pivid              | urn:oid:pivid
+ f851e4e9-1245-403b-9fa8-96e26d41c538 | jansAttr    | ossoUserDN         | jansPerson     | urn:gluu:dir:attribute-def:ossoUserDN         | urn:oid:ossoUserDN
+ c55cef08-969c-4e50-87e0-9b1e2a2061af | jansAttr    | ossoSubscriberGuid | jansPerson     | urn:gluu:dir:attribute-def:ossoSubscriberGuid | urn:oid:ossoSubscriberGuid
+ 3d9b76d4-9028-4411-ae81-8f3adc03b52f | jansAttr    | userStatus         | jansPerson     | urn:gluu:dir:attribute-def:userStatus         | urn:oid:userStatus
+ d51b279b-f966-420d-b06f-f55663f5a1c6 | jansAttr    | lastlogin          | jansPerson     | urn:gluu:dir:attribute-def:lastlogin          | urn:oid:lastlogin
+```
 
 .
 
@@ -1595,10 +1706,10 @@ see the Casa Admin Console menu option.
 * Copy files to the directory */opt/jans/casa/plugins*:
 
 ```bash
-        cp approval_plugin-5.0.0-12.jar \
-        cert-authn_plugin-5.0.0-12.jar \
-        email_2fa_plugin-5.0.0-12.jar \
-        passw-policy_plugin-5.0.0-12.jar \
+        cp approval_plugin-5.0.0-15.jar \
+        cert-authn_plugin-5.0.0-15.jar \
+        email_2fa_plugin-5.0.0-15.jar \
+        passw-policy_plugin-5.0.0-15.jar \
         /opt/jans/casa/plugins
 ```
 
