@@ -941,7 +941,7 @@ production deployment, you would only need to choose one signature algorithm.
 ```bash
 keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256withRSA \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jans-email-signer.bcfks \
+  -keystore /etc/certs/smtp-keys.bcfks \
   -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -951,7 +951,7 @@ keytool -genkey -alias EmailSigner-RSA -keyalg RSA -keysize 2048 -sigalg SHA256w
 
 ```bash
 keytool -certreq -alias EmailSigner-RSA \
--keystore /etc/certs/jans-email-signer.bcfks \
+-keystore /etc/certs/smtp-keys.bcfks \
 -storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
@@ -971,7 +971,7 @@ keytool -certreq -alias EmailSigner-RSA \
 ```bash
 keytool -genkeypair -alias EmailSigner-EC -keyalg EC -groupname secp256r1
 -sigalg SHA256withECDSA -dname "CN=SMTP CA Certificate" -validity 365
--storetype bcfks -keystore /etc/certs/jans-email-signer.bcfks \
+-storetype bcfks -keystore /etc/certs/smtp-keys.bcfks \
 -keypass ******** -storepass ******** -providername \
 BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
 -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -981,7 +981,7 @@ BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider 
 
 ```bash
 keytool -certreq -alias EmailSigner-EC \
--keystore /etc/certs/jans-email-signer.bcfks \
+-keystore /etc/certs/smtp-keys.bcfks \
 -storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
@@ -1001,7 +1001,7 @@ keytool -certreq -alias EmailSigner-EC \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jans-email-signer.bcfks \
+  -keystore /etc/certs/smtp-keys.bcfks \
   -keypass ******* -storepass ******* \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -1011,7 +1011,7 @@ keytool -genkeypair -alias EmailSigner-Ed25519 -keyalg Ed25519 -sigalg Ed25519 \
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed25519 \
--keystore /etc/certs/jans-email-signer.bcfks \
+-keystore /etc/certs/smtp-keys.bcfks \
 -storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
@@ -1031,7 +1031,7 @@ keytool -certreq -alias EmailSigner-Ed25519 \
 ```bash
 keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
   -dname "CN=SMTP CA Certificate" -validity 365 -storetype bcfks \
-  -keystore /etc/certs/jans-email-signer.bcfks \
+  -keystore /etc/certs/smtp-keys.bcfks \
   -keypass ******** -storepass ******** \
   -providername BCFIPS -providerclass org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
@@ -1041,7 +1041,7 @@ keytool -genkeypair -alias EmailSigner-Ed448 -keyalg Ed448 -sigalg Ed448 \
 
 ```bash
 keytool -certreq -alias EmailSigner-Ed448 \
--keystore /etc/certs/jans-email-signer.bcfks \
+-keystore /etc/certs/smtp-keys.bcfks \
 -storetype bcfks -keyalg ec -file ./jans-email-signer.csr \
 -keypass ******* -storepass ******* -providername BCFIPS \
 -provider org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider \
@@ -1053,17 +1053,17 @@ keytool -certreq -alias EmailSigner-Ed448 \
 * Change the ownership of the keystore so it can be read by jans-auth
 
 ```bash
-chgrp gluu /etc/certs/jans-email-signer.bcfks
+chown jetty:jans /etc/certs/smtp-keys.bcfks
 ```
 
 ```bash
-chmod g+r /etc/certs/jans-email-signer.bcfks
+chmod 660 /etc/certs/smtp-keys.bcfks
 ```
 
 * You can check the certificate:
 
 ```bash
-keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
+keytool -list -v -keystore /etc/certs/smtp-keys.bcfks -storetype BCFKS \
   -keypass ******** \
   -storepass ******** \
   -providername BCFIPS \
@@ -1090,7 +1090,7 @@ keytool -list -v -keystore /etc/certs/jans-email-signer.bcfks -storetype BCFKS \
 |token_lifetime                 | no                          | 15                                          |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      |
 |                               | SMTP properties )           |                                             |
-|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                     |
+|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                     |
 |                               | SMTP properties )           |                                             |  
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     |
 |                               | SMTP properties )           |                                             |  
@@ -1166,7 +1166,7 @@ Browser->End User: Access to the account of a registered user
 |token_lifetime                 | no                          | 15                                          | determines the time period for which the sent token is active       |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      | alias of the keystore                                               |
 |                               | SMTP properties )           |                                             |                                                                     |
-|Signer_Cert_KeyStore           | yes (default: value from    | jans-email-signer.bcfks                     | filename of the keystore                                            |
+|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                     | filename of the keystore                                            |
 |                               | SMTP properties )           |                                             |                                                                     |
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     | keystore password                                                   |
 |                               | SMTP properties )           |                                             |                                                                     |
