@@ -436,7 +436,7 @@ def download_flex(flex_version):
 
 def get_casa_setup_parser():
 
-    parser = argparse.ArgumentParser(description="This script downloads Csas components and installs them")
+    parser = argparse.ArgumentParser(description="This script downloads CASA components and installs them")
 
     parser.add_argument('-jans-branch', help="Janssen github branch", default='main')
     parser.add_argument('-install-casa', help="Install casa", action='store_true')
