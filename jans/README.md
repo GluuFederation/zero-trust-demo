@@ -318,35 +318,36 @@ Please, use follow doc for running setup:
 
 ###  3.4. Janssen Server Verification
 
-1. Check the version of the installed Jannsen components 
+1. Check the version of the installed Jannsen components:  
 
 ```bash
+cd /opt/jans/bin
 python3 ./show_version.py
 
 Title: jans-config-api-server-fips
-Version: 1.0.15-SNAPSHOT
+Version: 1.0.16-SNAPSHOT
 Builddate:
-Build: 3794ee8a71925444d55845940b3463c79178e41e
+Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
 Title: casa-fips
-Version: 5.0.0-12
+Version: 5.0.0-SNAPSHOT
 Builddate:
-Build: 5b1449898b268d5951c9b6b157a750795945de1e
+Build: 5e34e9b3cbd6ca59a3f9557fb44896b4deeb6228
 
 Title: SCIM API Server (FIPS)
-Version: 1.0.15-SNAPSHOT
+Version: 1.0.16-SNAPSHOT
 Builddate:
-Build: 3794ee8a71925444d55845940b3463c79178e41e
+Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
 Title: Fido2 API Server (FIPS)
-Version: 1.0.15-SNAPSHOT
+Version: 1.0.16-SNAPSHOT
 Builddate:
-Build: 3794ee8a71925444d55845940b3463c79178e41e
+Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
 Title: Jans authentication server (FIPS)
-Version: 1.0.15-SNAPSHOT
+Version: 1.0.16-SNAPSHOT
 Builddate:
-Build: 8b9373eb47d2c3353acd9bfa283a414e8892dc01
+Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 ```
 
 1. Verify Janssen Server Access
@@ -404,6 +405,12 @@ or
 
 ```bash
 python3 ./setup_casa.py -profile='disa-stig' -jans-branch='main' -casa-version='5.0.0-12' -casa-client-id='3000.21C12DDA-8542-423E-9501-DF49328A60B3' -casa-client-pw='12345678900$' -install-casa
+```
+
+,where:
+
+```
+-casa-client-id='3000.{guid}'
 ```
 
 .
