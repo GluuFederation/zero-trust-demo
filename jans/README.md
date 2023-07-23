@@ -738,6 +738,80 @@ Options:
 During installing, set of resources (templates, images,...) will be extracted from archive and
 and will be deployed to the Janssen diorectory (default: **/opt/jans**).
 
+Example of usage:
+
+```bash
+python3 ./ztrust_install_jans_auth_assets.py -i "./zero-trust-demo.zip" -o "/opt/jans"
+```
+
+And correspondent output:
+
+```text
+Resources Deployment: Started...
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/layout/login-template.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/layout/login-template.xhtml /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/authorize-extended-template.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/authorize-extended-template.xhtml /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/login-extended-template.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/login-extended-template.xhtml /opt/jans/jetty/jans-auth/custom/pages/WEB-INF/incl/layout
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/error.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/removefooter/error.xhtml /opt/jans/jetty/jans-auth/custom/pages
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/casa/pages/login.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/casa
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/casa/pages/login.xhtml /opt/jans/jetty/jans-auth/custom/pages/casa
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/entertoken.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/auth/register
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/entertoken.xhtml /opt/jans/jetty/jans-auth/custom/pages/auth/register
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/reg.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/auth
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/reg.xhtml /opt/jans/jetty/jans-auth/custom/pages/auth
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/regtr.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/auth
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/regtr.xhtml /opt/jans/jetty/jans-auth/custom/pages/auth
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/reg_status.xhtml
+out_dpath = /opt/jans/jetty/jans-auth/custom/pages/auth
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/user_registration/pages/reg_status.xhtml /opt/jans/jetty/jans-auth/custom/pages/auth
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/logo.png
+out_dpath = /opt/jans/jetty/jans-auth/custom/static/img
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/logo.png /opt/jans/jetty/jans-auth/custom/static/img
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/zero_trust.png
+out_dpath = /opt/jans/jetty/jans-auth/custom/static/img
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/zero_trust.png /opt/jans/jetty/jans-auth/custom/static/img
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/ver_code.png
+out_dpath = /opt/jans/jetty/jans-auth/custom/static/img
+Running: /usr/bin/cp -f /tmp/ztrust-jans-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets/img/ver_code.png /opt/jans/jetty/jans-auth/custom/static/img
+-------------------------------------------------------
+Running: /usr/bin/chown -R jetty:jetty /opt/jans/jetty/jans-auth/custom
+Resources Deployment: Finished...
+```
+
 * For installing assets use script **ztrust_install_jans_auth_assets_sys.py**:
 
 ```bash
@@ -752,6 +826,54 @@ Options:
                         main.zip')
   -o OUT_BASE_DPATH, --out_base_dpath=OUT_BASE_DPATH
                         base output directory path (default: '/etc/jans/conf')
+```
+
+Example of usage:
+
+```bash
+python3 ./ztrust_install_jans_auth_assets_sys.py -i "./zero-trust-demo.zip" -o "/opt/jans"
+```
+
+And correspondent output:
+
+```text
+Resources Deployment: Started...
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-attributes.json
+out_dpath = /opt/jans/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-attributes.json /opt/jans/.
+Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-attributes.json
+Running: /usr/bin/chmod 640 /opt/jans/./ztrust-attributes.json
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-email_2fa.json
+out_dpath = /opt/jans/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-email_2fa.json /opt/jans/.
+Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-email_2fa.json
+Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-email_2fa.json
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json
+out_dpath = /opt/jans/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json /opt/jans/.
+Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-forgot_password.json
+Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-forgot_password.json
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json
+out_dpath = /opt/jans/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json /opt/jans/.
+Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-register.json
+Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-register.json
+-------------------------------------------------------
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-regex.json
+out_dpath = /opt/jans/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-regex.json /opt/jans/.
+Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-regex.json
+Running: /usr/bin/chmod 640 /opt/jans/./ztrust-regex.json
+-------------------------------------------------------
+Resources Deployment: Finished...
 ```
 
 During installing, set of resources (json configuration files) will be extracted from archive and

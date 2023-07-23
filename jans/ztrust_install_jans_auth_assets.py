@@ -70,22 +70,6 @@ def init(argv):
                 "%s/jans/code/scripts/person_authn/assets/removefooter" % cust_root,
                 "jetty/jans-auth/custom/pages"
             ),
-            
-            # <root-dir>/jans/code/scripts/person_authn/assets/removefooter 
-            # jetty/identity/custom/pages
-            (
-                ("finishlogout.xhtml",),
-                "%s/jans/code/scripts/person_authn/assets/removefooter" % cust_root,
-                "jetty/identity/custom/pages"
-            ),
-
-            # <root-dir>/jans/code/scripts/person_authn/assets/removefooter
-            # jetty/identity/custom/pages/WEB-INF/incl/layout
-            (
-                ("fullWidthEmpty.xhtml",),
-                "%s/jans/code/scripts/person_authn/assets/removefooter" % cust_root,
-                "jetty/identity/custom/pages/WEB-INF/incl/layout"
-            ),
 
             # <root-dir>/jans/code/scripts/person_authn/casa/pages 
             # jetty/jans-auth/custom/pages/casa
@@ -94,22 +78,6 @@ def init(argv):
                 "%s/jans/code/scripts/person_authn/casa/pages" % cust_root,
                 "jetty/jans-auth/custom/pages/casa"
             ),
-
-            # <root-dir>/jans/code/scripts/person_authn/email_2fa_plugin/pages
-            # jetty/jans-auth/custom/pages/email_auth    
-            (
-                ("entertoken.xhtml",),
-                "%s/jans/code/scripts/person_authn/email_2fa_plugin/pages" % cust_root,
-                "jetty/jans-auth/custom/pages/auth/email_auth"
-            ),
-
-            # <root-dir>/jans/code/scripts/person_authn/forgot_password/pages
-            # jetty/jans-auth/webapp/auth/forgot_password
-            (
-                ("entertoken.xhtml","forgot.xhtml","newpassword.xhtml"),
-                "%s/jans/code/scripts/person_authn/forgot_password/pages" % cust_root, 
-                "jetty/jans-auth/custom/pages/auth/forgot_password"
-            ),            
 
             # <root-dir>/jans/code/scripts/person_authn/user_registration/pages
             # jetty/jans-auth/custom/pages/register
