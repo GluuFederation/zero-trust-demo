@@ -371,7 +371,7 @@ Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 For installing of Casa with Janssen Server, please use the **setup_casa.py** script.
 
 ```bash
-python3 setup_casa.py -h
+python3 setup_casa.py --help
 
 usage: setup_casa.py [-h] [-jans-branch JANS_BRANCH] [-install-casa]
                      [-uninstall-casa] [-profile {jans,openbanking,disa-stig}]
@@ -480,6 +480,8 @@ This script can be used for installing ZTrust custom schema.
 Usage:
 
 ```bash
+python3 ztrust_install_schema.py --help
+
 usage: ztrust_install_schema.py [-h] -rdbm-user RDBM_USER -rdbm-password
                                 RDBM_PASSWORD [-rdbm-port RDBM_PORT] -rdbm-db
                                 RDBM_DB -rdbm-host RDBM_HOST
