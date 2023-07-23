@@ -899,7 +899,7 @@ actor End User
 participant Email Client
 participant Browser
 participant Website
-participant Janssen
+participant jans-auth
 participant SMTP Server
 
 jans-auth->Browser: Generating page for entering of user login
