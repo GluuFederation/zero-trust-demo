@@ -49,7 +49,7 @@ class SetupCasa:
 
 #        self.dwnl_files = [
 #                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/_extras/casa_web_resources.xml'), self.casa_web_resources_fpath),
-#                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-12.jar'), self.casa_config_fpath),
+#                (os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-config-5.0.0-15.jar'), self.casa_config_fpath),
 #                (os.path.join(downloads.base.current_app.app_info['TWILIO_MAVEN'], '{0}/twilio-{0}.jar'.format(downloads.base.current_app.app_info['TWILIO_VERSION'])), self.twillo_fpath),
 #                (os.path.join(app_versions['BASE_SERVER_JANS'], '_out/Fido2-Client.jar'), self.fido2_client_fpath)
 #            ]
@@ -62,11 +62,11 @@ class SetupCasa:
             ]
 
         if base.argsp.profile == DISA_STIG_PROFILE:
-#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-12.war'), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-fips-5.0.0-15.war'), self.casa_war_fpath))
             self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-fips-{0}.war'.format(base.argsp.casa_version)), self.casa_war_fpath))
 
         else:
-#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-5.0.0-12.war'), self.casa_war_fpath))
+#            self.dwnl_files.append((os.path.join(app_versions['BASE_SERVER_CASA'], '_out/casa-5.0.0-15.war'), self.casa_war_fpath))
             self.dwnl_files.append((os.path.join(app_versions['GLUU_MAVEN'], 'maven/org/gluu/casa/{0}/casa-{0}.war'.format(base.argsp.casa_version)), self.casa_war_fpath))
 
         self.jans_auth_dpath = os.path.join(Config.jetty_base, jans_auth_installer.service_name)
@@ -442,7 +442,7 @@ def get_casa_setup_parser():
     parser.add_argument('-install-casa', help="Install casa", action='store_true')
     parser.add_argument('-uninstall-casa', help="Remove casa", action='store_true')
     parser.add_argument('-profile', help="Setup profile", choices=['jans', 'openbanking', 'disa-stig'], default='jans')
-    parser.add_argument('-casa-version', help="Casa version", default='5.0.0-12')
+    parser.add_argument('-casa-version', help="Casa version", default='5.0.0-15')
     parser.add_argument('-casa-client-id', help="Casa client id")
     parser.add_argument('-casa-client-pw', help="Casa client password")
 
