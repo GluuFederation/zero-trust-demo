@@ -1108,7 +1108,7 @@ keytool -list -v -keystore /etc/certs/smtp-keys.bcfks -storetype BCFKS \
 ![Diagram 4 Registration Otp Sequence](./img/Diagram-4-register_otp_sequence.png)
 
 ```text
-title User Registration (register.py)
+title User Registration
 
 actor End User
 participant Email Client
