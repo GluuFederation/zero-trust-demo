@@ -52,7 +52,7 @@ def init(argv):
             # <root-dir>/jans/code/scripts/person_authn/sys_assets
             # /etc/jans/conf
             (
-                ("ztrust-attributes.json", "ztrust-email-email_2fa.json", "ztrust-email-forgot_password.json", "ztrust-email-register.json", "ztrust-regex.json"),
+                ("ztrust-attributes.json", "ztrust-email-email_2fa.json", "ztrust-email-register.json", "ztrust-regex.json"),
                 "%s/jans/code/scripts/person_authn/assets_sys/etc" % cust_root,
                 "."
             )            

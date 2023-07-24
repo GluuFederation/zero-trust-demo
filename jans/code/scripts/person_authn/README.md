@@ -37,23 +37,6 @@ Following are the configuration properties for the *email_2fa_plugin.py* script:
 
 -----------------------------------------------------------------------------------------------
 
-### **ztrust-forgot_password**
-
-ztrust-forgot_password  
-
-Following are the configuration properties for the *forgot_password.py* script:  
-
-|Propery | Value|
-|------| --------- |
-| attributes_json_file_path         | /etc/gluu/conf/ztrust-attributes.json             |
-| regex_json_file_path              | /etc/gluu/conf/ztrust-regex.json                  |
-| email_templates_json_file_path    | /etc/gluu/conf/ztrust-email-forgot_password.json  |
-| token_length                      | 7                                                 |
-| token_lifetime                    | 15                                                |
-| SCRIPT_FUNCTION                   | forgot_password                                   |
-
------------------------------------------------------------------------------------------------
-
 ### **ztrust-register**
 
 ztrust-register  
