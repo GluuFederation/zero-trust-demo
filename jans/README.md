@@ -853,13 +853,6 @@ Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-email-email_2fa.json
 Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-email-email_2fa.json
 -------------------------------------------------------
 -------------------------------------------------------
-in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json
-out_dpath = /etc/jans/conf/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json /etc/jans/conf/.
-Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-email-forgot_password.json
-Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-email-forgot_password.json
--------------------------------------------------------
--------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json
 out_dpath = /etc/jans/conf/.
 Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json /etc/jans/conf/.
