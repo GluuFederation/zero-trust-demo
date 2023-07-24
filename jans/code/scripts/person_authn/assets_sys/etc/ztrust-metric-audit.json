@@ -1,0 +1,34 @@
+{
+    "event_types": [ "AUTHENTICATED","GONE" ],
+    "audit_data": [
+        "userDn",
+        "id",
+        "outsideSid",
+        "lastUsedAt",
+        "authenticationTime",
+        "state",
+        "expirationDate",
+        "sessionState",
+        "permissionGranted",
+        "permissionGrantedMap",
+        "deviceSecrets"
+    ],
+    "audit_cust_data": [
+        "auth_external_attributes",
+        "opbs",
+        "response_type",
+        "client_id",
+        "auth_step",
+        "acr",
+        "casa_logoUrl",
+        "remote_ip",
+        "scope",
+        "acr_values",
+        "casa_faviconUrl",
+        "redirect_uri",
+        "state",
+        "casa_prefix",
+        "casa_contextPath",
+        "casa_extraCss"
+    ]
+}

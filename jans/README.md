@@ -133,7 +133,7 @@ dn                uniqueIdentifier=5b893f09-c5ee-4c97-bc0f-d7613589f87e,ou=20230
 uniqueIdentifier  5b893f09-c5ee-4c97-bc0f-d7613589f87e
 jansAppTyp        jans_auth
 jansMetricTyp     audit
-jansData          <text below>      
+jansData          <text below>
 ```
 
 Field: **jansData**:
@@ -866,7 +866,13 @@ Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/pe
 Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-regex.json
 Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-regex.json
 -------------------------------------------------------
-Resources Deployment: Finished...
+-------------------------------------------------------
+in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-metric-audit.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-metric-audit.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-metric-audit.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-metric-audit.json
+-------------------------------------------------------
 ```
 
 During installing, set of resources (json configuration files) will be extracted from archive and
@@ -1083,12 +1089,12 @@ keytool -list -v -keystore /etc/certs/smtp-keys.bcfks -storetype BCFKS \
 |token_lifetime                 | no                          | 15                                          |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      |
 |                               | SMTP properties )           |                                             |
-|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                     |
-|                               | SMTP properties )           |                                             |  
+|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                             |
+|                               | SMTP properties )           |                                             |
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     |
-|                               | SMTP properties )           |                                             |  
+|                               | SMTP properties )           |                                             |
 |Signer_SignAlgorithm           | yes (default: value from    | SHA256withECDSA                             |
-|                               | SMTP properties )           |                                             |  
+|                               | SMTP properties )           |                                             |
 |email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json  |
 |regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json            |
 
@@ -1147,7 +1153,7 @@ Browser->End User: Access to the account of a registered user
 * Specify the Name as `ztrust-register` and add these properties:
 
 |key                            | optional                    | value                                       | decription                                                          |
-|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
+|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- |
 |attributes_json_file_path      | no                          | /etc/jans/conf/ztrust-attributes.json       | attributes json file                                                |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
 |use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
@@ -1159,7 +1165,7 @@ Browser->End User: Access to the account of a registered user
 |token_lifetime                 | no                          | 15                                          | determines the time period for which the sent token is active       |
 |Signer_Cert_Alias              | yes (default: value from    | signer                                      | alias of the keystore                                               |
 |                               | SMTP properties )           |                                             |                                                                     |
-|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                     | filename of the keystore                                            |
+|Signer_Cert_KeyStore           | yes (default: value from    | smtp-keys.bcfks                             | filename of the keystore                                            |
 |                               | SMTP properties )           |                                             |                                                                     |
 |Signer_Cert_KeyStorePassword   | yes (default: value from    | *******                                     | keystore password                                                   |
 |                               | SMTP properties )           |                                             |                                                                     |
@@ -1305,8 +1311,7 @@ Example of the attributes json file (defined by **email_templates_json_file_path
 **"email_subject"** - text of email subject, that is sent, during registration;  
 **"email_msg_template"** - template of text of email;
 
-This template can use follow variables:
-
+This template can use follow variables:  
 **%%fn%%** - First Name of registered user;  
 **%%ln%%** - Last Name of registered user;  
 **%%mn%%** - Middle Name of registered user;  
@@ -1319,7 +1324,7 @@ This template can use follow variables:
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
-* Navigate to  *Scripts*, and click **Add Script**;
+* Navigate to *Scripts*, and click **Add Script**;
 
 * **Script Type**: Select **Person Authentication**;
 
@@ -1328,7 +1333,7 @@ This template can use follow variables:
 * Specify the name as `ztrust-cert` and add these **Configuration properties** (**Conf. properties**):
 
 |key                            | optional                    | value                                       | decription                                                          |
-|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
+|------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- |
 |credentials_file               | no                          | /etc/certs/cert_creds.json                  | mandatory property pointing to credentials file in [JSON] format    |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
 |map_user_cert                  | yes                         | False                                       | specifies if the script should map new user to local account        |
@@ -1407,7 +1412,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
-* Navigate to  *Scripts*, and click **Add Script**;
+* Navigate to *Scripts*, and click **Add Script**;
 
 * **Script Type**: Select **Application Sessions**;
 
@@ -1418,10 +1423,10 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 * Add these **Configuration properties** (**Conf. properties**)
 
 |key                                  | optional                    | value                                       | decription                                                                            |
-|------------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------- | 
+|------------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------- |
 |metric_audit_ou_name                 | no                          | jans_auth                                   | mandatory property pointing OU name                                                   |
 |metric_audit_conf_json_file_path     | no                          | /etc/jans/conf/ztrust-metric-audit.json     | specifies configuration file                                                          |
-|log_level                            | no                          | DEBUG                                       | level of log out in the file: **/opt/jans/jetty/jans-auth/logs/jans-auth_script.log** | 
+|log_level                            | no                          | DEBUG                                       | level of log out in the file: **/opt/jans/jetty/jans-auth/logs/jans-auth_script.log** |
 
 **metric_audit_conf_json_file_path**: configuration file should contain follow properties:  
 1. **event_types**.  
@@ -1838,8 +1843,7 @@ see the Casa Admin Console menu option.
 
 ![installed plugins](./img/screenshot-2-casa-plugins.png)
 
-1. In the Casa Admin Console, navigate to the **Enabled authentication methods**
-menu and select the ones you need.
+1. In the Casa Admin Console, navigate to the **Enabled authentication methods** menu and select the ones you need.
 
 **jans-cli-tui** (jython scripts):
 
@@ -1876,8 +1880,7 @@ Also **pending** users can be activated.
 
 ![Password Policy Casa plug-in 2](./img/screenshot-7-casa-password-policy-2.png)
 
-**Password Policy Casa plug-in** allows to read/write the file **/etc/jans/conf/ztrust-regex.json**,
-property: **pass_regex**.
+**Password Policy Casa plug-in** allows to read/write the file **/etc/jans/conf/ztrust-regex.json**, property: **pass_regex**.
 
 For example, **pass_regex** can contain:
 
@@ -1887,8 +1890,7 @@ For example, **pass_regex** can contain:
 }
 ```
 
-User can update this property, using plug-in. Also, user can generate a new Regular Expression, that can be coipied and saved in the
-file **/etc/jans/conf/ztrust-regex.json**.
+User can update this property, using plug-in. Also, user can generate a new Regular Expression, that can be coipied and saved in the file **/etc/jans/conf/ztrust-regex.json**.
 
 After that script **ztrust-register**, which have property **regex_json_file_path**, will use updated property **pass_regex** in the file **/etc/jans/conf/ztrust-regex.json**.
 
@@ -1961,15 +1963,13 @@ Initializing of fido2 trusted credentials:
 
 ##  8. HTTPD configuration
 
-Root configuration file: **/etc/httpd/conf/httpd.conf**
-contains:
+Root configuration file: **/etc/httpd/conf/httpd.conf** contains:
 
 ```text
 IncludeOptional conf.d/*jans.conf
 ```
 
-This definition **IncludeOptional conf.d/\*jans.conf** includes follow additional
-**httpd** configuarion: **/etc/httpd/conf.d/https_jans.conf**.
+This definition **IncludeOptional conf.d/\*jans.conf** includes follow additional **httpd** configuarion: **/etc/httpd/conf.d/https_jans.conf**.
 
 Configuration files:  
 
