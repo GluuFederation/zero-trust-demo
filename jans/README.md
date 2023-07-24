@@ -831,7 +831,7 @@ Options:
 Example of usage:
 
 ```bash
-python3 ./ztrust_install_jans_auth_assets_sys.py -i "./zero-trust-demo.zip" -o "/opt/jans"
+python3 ./ztrust_install_jans_auth_assets_sys.py -i "./zero-trust-demo.zip" -o "/etc/jans/conf"
 ```
 
 And correspondent output:
@@ -840,38 +840,38 @@ And correspondent output:
 Resources Deployment: Started...
 -------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-attributes.json
-out_dpath = /opt/jans/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-attributes.json /opt/jans/.
-Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-attributes.json
-Running: /usr/bin/chmod 640 /opt/jans/./ztrust-attributes.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-attributes.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-attributes.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-attributes.json
 -------------------------------------------------------
 -------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-email_2fa.json
-out_dpath = /opt/jans/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-email_2fa.json /opt/jans/.
-Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-email_2fa.json
-Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-email_2fa.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-email_2fa.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-email-email_2fa.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-email-email_2fa.json
 -------------------------------------------------------
 -------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json
-out_dpath = /opt/jans/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json /opt/jans/.
-Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-forgot_password.json
-Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-forgot_password.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-forgot_password.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-email-forgot_password.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-email-forgot_password.json
 -------------------------------------------------------
 -------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json
-out_dpath = /opt/jans/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json /opt/jans/.
-Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-email-register.json
-Running: /usr/bin/chmod 640 /opt/jans/./ztrust-email-register.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-email-register.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-email-register.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-email-register.json
 -------------------------------------------------------
 -------------------------------------------------------
 in_fpath = /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-regex.json
-out_dpath = /opt/jans/.
-Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-regex.json /opt/jans/.
-Running: /usr/bin/chown jetty:jetty /opt/jans/./ztrust-regex.json
-Running: /usr/bin/chmod 640 /opt/jans/./ztrust-regex.json
+out_dpath = /etc/jans/conf/.
+Running: /usr/bin/cp -f /tmp/ZTrust-SYS-tmp/zero-trust-demo/jans/code/scripts/person_authn/assets_sys/etc/ztrust-regex.json /etc/jans/conf/.
+Running: /usr/bin/chown jetty:jetty /etc/jans/conf/./ztrust-regex.json
+Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-regex.json
 -------------------------------------------------------
 Resources Deployment: Finished...
 ```
