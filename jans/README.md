@@ -1155,7 +1155,7 @@ Browser->End User: Access to the account of a registered user
 
 |key                            | optional                    | value                                       | decription                                                          |
 |------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- | 
-|attributes_json_file_path      | no                          | /etc/certs/ztrust-attributes.json           | attributes json file                                                |
+|attributes_json_file_path      | no                          | /etc/jans/conf/ztrust-attributes.json       | attributes json file                                                |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
 |use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
 |use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
