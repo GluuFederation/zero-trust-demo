@@ -29,13 +29,14 @@ Zero Trust Demo for **Janssen 1.0.15** with **OpenID**
   * [6. jans-auth configuration](#6-jans-auth-configuration)
     + [6.1. jans-auth properties](#61-jans-auth-properties)
     + [6.2. Custom assets](#62-custom-assets)
-    + [6.3. jans-auth Email 2FA Script](#63-jans-auth-email-2fa-script)
-      - [6.3.1. Generating private keys and certificates for signing emails](#631-generating-private-keys-and-certificates-for-signing-emails)
-      - [6.3.2. Properties of Email 2FA Script](#632-properties-of-email-2fa-script)
-    + [6.4. jans-auth User Registration Script](#64-jans-auth-user-registration-script)
-    + [6.5. jans-auth CAC Card Script](#65-jans-auth-cac-card-script)
-    + [6.6. jans-auth App Session Audit Script](#66-jans-auth-app-session-audit-script)
-    + [6.7. jans-auth Extension ztrust-ext](#67-jans-auth-extension-ztrust-ext)
+    + [6.3. jans-auth Extension ztrust-ext](#63-jans-auth-extension-ztrust-ext)
+      - [6.3.1 How to build the module bootsfaces-1.6.0-SNAPSHOT-jakarta.jar](#631-how-to-build-the-module-bootsfaces-160-snapshot-jakartajar)
+    + [6.4. jans-auth Email 2FA Script](#64-jans-auth-email-2fa-script)
+      - [6.4.1. Generating private keys and certificates for signing emails](#641-generating-private-keys-and-certificates-for-signing-emails)
+      - [6.4.2. Properties of Email 2FA Script](#642-properties-of-email-2fa-script)
+    + [6.5. jans-auth User Registration Script](#65-jans-auth-user-registration-script)
+    + [6.6. jans-auth CAC Card Script](#66-jans-auth-cac-card-script)
+    + [6.7. jans-auth App Session Audit Script](#67-jans-auth-app-session-audit-script)
     + [6.8. jans-auth Extension fido2](#68-jans-auth-extension-fido2)
   * [7. Casa Configuration](#7-casa-configuration)
     + [7.1. Activation Casa plug-in](#71-activation-casa-plug-in)
@@ -878,13 +879,95 @@ Running: /usr/bin/chmod 640 /etc/jans/conf/./ztrust-metric-audit.json
 During installing, set of resources (json configuration files) will be extracted from archive and
 and will be deployed to the global Janssen configuration directory (default: **/etc/jans/conf**).
 
-* Restart jans-auth
+* Restart jans-auth:
 
 ```bash
 systemctl restart jans-auth  
 ```
 
-###  6.3. jans-auth Email 2FA Script
+.
+
+###  6.3. jans-auth Extension ztrust-ext
+
+* Build extension **ztrust-ext**.
+
+* Copy built jar (**ztrust-ext-1.0.14-SNAPSHOT.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
+
+* Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
+
+* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
+
+```xml
+<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
+```
+
+* Restart jans-auth:
+
+```bash
+service jans-auth restart
+```
+
+* **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** is used till **bootsfaces-1.6.0** is not released. **bootsfaces-1.6.0-jakarta** supports **jakarta.\*** namespace. **bootsfaces-1.6.0-jakarta** can be built from sources: https://github.com/TheCoder4eu/BootsFaces-OSP.git. When the **bootsfaces-1.6.0** is released, follow dependency can be added to the project **jans-auth-server/server**:
+
+```xml
+<dependency>
+    <groupId>net.bootsfaces</groupId>
+    <artifactId>bootsfaces</artifactId>
+    <version>1.6.0</version>
+    <classifier>jakarta</classifier>
+</dependency>
+```
+
+####  6.3.1 How to build the module bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+
+**bootsfaces** versions: **1.5.0**, **1.4.x** don't support **jakarta**. **bootsfaces** versions: **1.6.X** support **jakarta**:  
+
+```xml
+        <dependency>
+            <groupId>net.bootsfaces</groupId>
+            <artifactId>bootsfaces</artifactId>
+            <version>1.6.0-SNAPSHOT</version>
+            <classifier>jakarta</classifier>
+        </dependency>
+```
+
+.
+
+**bootsfaces** version: **1.6.0** isn't released yet (current version: **1.6.0-SNAPSHOT**). Should be used till **bootsfaces** version: **1.6.0** isn't released.
+
+Build:
+
+* **git clone https://github.com/TheCoder4eu/BootsFaces-OSP.git**;
+
+* **cd BootsFaces-OSP**;
+
+* **mvn clean package** or **mvn clean install**;
+
+* result file: **BootsFaces-OSP/target/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**;
+
+* copy built jar (**bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
+
+* open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
+
+* add extension lib: **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** to the tag: 
+
+```xml
+<Set name="extraClasspath">
+``` 
+
+;
+
+in the file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
+
+* restart jans-auth:
+
+```bash
+service jans-auth restart
+```
+
+.
+
+###  6.4. jans-auth Email 2FA Script
 
 This script asks the user to enter a password in step 1, sends a signed
 email to the user with an OTP, and asks the user to enter the OTP in step 2.
@@ -920,7 +1003,7 @@ Website<->Browser: HTTP/HTTPS requests/responces
 Browser<->End User: Website content
 ```
 
-####  6.3.1. Generating private keys and certificates for signing emails
+####  6.4.1. Generating private keys and certificates for signing emails
 
 The Email 2FA Script needs a private key to sign the email. The example
 `keytool` commands show how to generate a self-signed certificate and
@@ -1070,7 +1153,7 @@ keytool -list -v -keystore /etc/certs/smtp-keys.bcfks -storetype BCFKS \
   -providerpath /opt/dist/app/bc-fips-1.0.2.3.jar:/opt/dist/app/bcpkix-fips-1.0.6.jar
 ```
 
-####  6.3.2. Properties of Email 2FA Script
+####  6.4.2. Properties of Email 2FA Script
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
@@ -1102,7 +1185,7 @@ keytool -list -v -keystore /etc/certs/smtp-keys.bcfks -storetype BCFKS \
 
 * Check *Enabled* and click **Save**.
 
-###  6.4. jans-auth User Registration Script
+###  6.5. jans-auth User Registration Script
 
 ![Diagram 4 Registration Otp Sequence](./img/Diagram-4-register_otp_sequence.png)
 
@@ -1320,7 +1403,7 @@ This template can use follow variables:
 
 * Check *Enabled* and click **Save**.
 
-###  6.5. jans-auth CAC Card Script
+###  6.6. jans-auth CAC Card Script
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
@@ -1408,7 +1491,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Check *Enabled* and click **Save**.
 
-###  6.6. jans-auth App Session Audit Script
+###  6.7. jans-auth App Session Audit Script
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
@@ -1760,39 +1843,6 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 ![jansMetric DB Records 1](./img/screenshot-15-app-session-2.png)
 
 ![jansMetric DB Records 2](./img/screenshot-15-app-session-3.png)
-
-###  6.7. jans-auth Extension ztrust-ext
-
-* Build extension **ztrust-ext**.
-
-* Copy built jar (**ztrust-ext-1.0.14-SNAPSHOT.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
-
-* Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
-
-* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
-
-```text
-<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
-```
-
-* Restart jans-auth:
-
-```bash
-service jans-auth restart  
-```
-
-* **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** is used till **bootsfaces-1.6.0** is not released. **bootsfaces-1.6.0-jakarta** supports **jakarta.\*** namespace. **bootsfaces-1.6.0-jakarta** can be built from sources: https://github.com/TheCoder4eu/BootsFaces-OSP.git. When the **bootsfaces-1.6.0** is released, follow dependency can be added to the project **jans-auth-server/server**:
-
-```xml
-<dependency>
-    <groupId>net.bootsfaces</groupId>
-    <artifactId>bootsfaces</artifactId>
-    <version>1.6.0</version>
-    <classifier>jakarta</classifier>
-</dependency>
-```
-
-.
 
 ###  6.8. jans-auth Extension fido2
 
