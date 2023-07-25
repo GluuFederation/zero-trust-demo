@@ -79,6 +79,14 @@ def init(argv):
                 "jetty/jans-auth/custom/pages/casa"
             ),
 
+            # <root-dir>/jans/code/scripts/person_authn/email_2fa_plugin/pages
+            # jetty/jans-auth/custom/pages/email_auth    
+            (
+                ("entertoken.xhtml",),
+                "%s/jans/code/scripts/person_authn/email_2fa_plugin/pages" % cust_root,
+                "jetty/jans-auth/custom/pages/auth/email_auth"
+            ),
+
             # <root-dir>/jans/code/scripts/person_authn/user_registration/pages
             # jetty/jans-auth/custom/pages/register
             (
