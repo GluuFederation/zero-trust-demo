@@ -889,11 +889,22 @@ systemctl restart jans-auth
 
 ###  6.3. jans-auth Extension ztrust-ext
 
-* Build extension **ztrust-ext**.
+* Build extension **ztrust-ext**;
 
-* Copy built jar (**ztrust-ext-1.0.14-SNAPSHOT.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**.
+* Copy built jars (**ztrust-ext-1.0.14-SNAPSHOT.jar** and **bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
 
-* Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**.
+* Change mode and owner:group of these modules:  
+
+```bash
+chmod 600 ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+chmod 600 ./ztrust-ext-1.0.14-SNAPSHOT.jar
+chown jetty:jetty ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+chown jetty:jetty ./ztrust-ext-1.0.14-SNAPSHOT.jar
+```
+
+;
+
+* Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
 
 * Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
 
@@ -901,11 +912,15 @@ systemctl restart jans-auth
 <Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set></Configure>
 ```
 
+;
+
 * Restart jans-auth:
 
 ```bash
 service jans-auth restart
 ```
+
+;
 
 * **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** is used till **bootsfaces-1.6.0** is not released. **bootsfaces-1.6.0-jakarta** supports **jakarta.\*** namespace. **bootsfaces-1.6.0-jakarta** can be built from sources: https://github.com/TheCoder4eu/BootsFaces-OSP.git. When the **bootsfaces-1.6.0** is released, follow dependency can be added to the project **jans-auth-server/server**:
 
@@ -918,9 +933,9 @@ service jans-auth restart
 </dependency>
 ```
 
-####  6.3.1 How to build the module bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+.
 
-**bootsfaces** versions: **1.5.0**, **1.4.x** don't support **jakarta**. **bootsfaces** versions: **1.6.X** support **jakarta**:  
+####  6.3.1 How to build the module bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
 
 ```xml
         <dependency>
@@ -930,8 +945,6 @@ service jans-auth restart
             <classifier>jakarta</classifier>
         </dependency>
 ```
-
-.
 
 **bootsfaces** version: **1.6.0** isn't released yet (current version: **1.6.0-SNAPSHOT**). Should be used till **bootsfaces** version: **1.6.0** isn't released.
 
@@ -947,13 +960,22 @@ Build:
 
 * copy built jar (**bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
 
+* Change mode and owner:group of these modules:  
+
+```bash
+chmod 600 ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+chown jetty:jetty ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
+```
+
+;
+
 * open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
 
 * add extension lib: **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar** to the tag: 
 
 ```xml
 <Set name="extraClasspath">
-``` 
+```
 
 ;
 
