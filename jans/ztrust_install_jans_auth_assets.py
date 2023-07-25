@@ -139,17 +139,14 @@ def main(argv):
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/auth");
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/casa");
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/auth/email_auth");
-        create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/auth/forgot_password");
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/auth/register");
 
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/WEB-INF");
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/WEB-INF/incl");
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/pages/WEB-INF/incl/layout");
-        
+
         create_dir(gluu_depl_dpath, "jetty/jans-auth/custom/static/img");
-        
- #       create_dir(gluu_depl_dpath, "jetty/identity/custom/pages/WEB-INF/incl/layout");
-        
+
         for process_file in process_files:
         
             for process_fname in process_file[0]:
