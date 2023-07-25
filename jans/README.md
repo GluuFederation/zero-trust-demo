@@ -1262,9 +1262,9 @@ Browser->End User: Access to the account of a registered user
 |attributes_json_file_path      | no                          | /etc/jans/conf/ztrust-attributes.json       | attributes json file                                                |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
 |use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_ocsp_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_path_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_generic_validator          | yes                         | True                                        | enable/disable specific certificate validation                      |
+|use_ocsp_validator             | yes                         | True                                        | enable/disable specific certificate validation                      |
+|use_path_validator             | yes                         | True                                        | enable/disable specific certificate validation                      |
 |chain_cert_file_path           | no                          | /etc/certs/ztrust.chain                     | mandatory property pointing to certificate chains in [PEM] format   |
 |token_length                   | no                          | 7                                           | determines the length of the characters of the OTP sent to the user |
 |token_lifetime                 | no                          | 15                                          | determines the time period for which the sent token is active       |
@@ -1279,7 +1279,7 @@ Browser->End User: Access to the account of a registered user
 |regex_json_file_path           | no                          | /etc/jans/conf/ztrust-regex.json            | regex json file                                                     |
 |email_templates_json_file_path | no                          | /etc/jans/conf/ztrust-email-email_2fa.json  | contains parameters of generation of validation email               |
 |Enable_User                    | yes                         | False                                       | enables user account registration if true                           |
-|Require_Email_Confirmation     | yes                         | False                                       | If set, an OTP is sent before activating the registration           |
+|Require_Email_Confirmation     | yes                         | True                                        | If set, an OTP is sent before activating the registration           |
 
 **use_generic_validator** - if this property is **true**, common check of client certificate (that checked certificate is not exprired) is provided;  
 **use_path_validator** - if this property is **true**, certificate path (validity of CA(s) of certificate) is provided;  
@@ -1441,11 +1441,11 @@ This template can use follow variables:
 |------------------------------ | --------------------------- | ------------------------------------------- | ------------------------------------------------------------------- |
 |credentials_file               | no                          | /etc/certs/cert_creds.json                  | mandatory property pointing to credentials file in [JSON] format    |
 |crl_max_response_size          | yes                         | 5 * 1024 * 1024                             | specifies the maximum allowed size of [CRL] response                |
-|map_user_cert                  | yes                         | False                                       | specifies if the script should map new user to local account        |
+|map_user_cert                  | yes                         | True                                        | specifies if the script should map new user to local account        |
 |use_crl_validator              | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_generic_validator          | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_ocsp_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
-|use_path_validator             | yes                         | False                                       | enable/disable specific certificate validation                      |
+|use_generic_validator          | yes                         | True                                        | enable/disable specific certificate validation                      |
+|use_ocsp_validator             | yes                         | True                                        | enable/disable specific certificate validation                      |
+|use_path_validator             | yes                         | True                                        | enable/disable specific certificate validation                      |
 |chain_cert_file_path           | no                          | /etc/certs/ztrust.chain                     | mandatory property pointing to certificate chains in [PEM] format   |
 
 Example of the attributes json file (defined by **credentials_file**) (**/etc/certs/cert_creds.json**):
