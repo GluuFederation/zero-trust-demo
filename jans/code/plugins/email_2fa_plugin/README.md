@@ -25,34 +25,32 @@ Follow account parameters should be initialized, using **/opt/jans/jans-cli/conf
 ### 2. Intializing of Keystore
 
 This Keystore and his keypair (*private key** and **public key/certificate**) will be used for singing emails.
-Follow parameters should be initialized on the page:
-**oxTrust** (**identity**): *Configuration*/*Organization Configuration*/*SMTP Server Configuration*:
+Follow account parameters should be initialized, using **/opt/jans/jans-cli/config-cli.py** or **/opt/jans/jans-cli/config-cli-tui.py**, **SMTP** section:
 
-- **KeyStore File Path**: keystore file path:
+- **KeyStore:**: keystore file path:
     * for example: */etc/certs/smtp-keys.bcfks*;
-- **KeyStore Password**: keystore/alias password:
+- **Keystore Password:**: keystore/alias password:
     * for example: *tRmJpb$1_&BzlEUC7*;
-- **KeyStore Alias**: alias of an entry (keypair: **private key** and **public key/certificate**) in the keystore:
+- **Keystore Alias:**: alias of an entry (keypair: **private key** and **public key/certificate**) in the keystore:
     * for example: *smtp_sig_ec256*;
-- **Signing Algorithm**: algorithm is used for signing of an email:
+- **Keystore Signing Alg**: algorithm is used for signing of an email:
     * for example: *SHA256withECDSA*;
 
 After initializing **SMTP Server** and **Keystore**, applications (including the plug-in **email_2fa_plugin**) can sign emails and send them, using SMTP Server and his account.
 
-### 2. Installing plug-in script (**email_2fa_plugin**)
+### 2. Installing plug-in script **email_2fa_plugin**
 
-- Login as **Admin User**;
-- Install and enable (**Admin User**) script from file **email_2fa_plugin.py** as **Custom script** on this page:
-**oxTrust** (**identity**): *Configuration*/*Person Authentication Scripts*/*Custom Scripts*;
-- Parameters of the script defined in *README.md* (*<root-dir>/code/scripts/person_authn/email_2fa_plugin*);
+- Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+- Navigate to *Scripts*, and click **Add Script**;
+- Specify the name as `ztrust-email_2fa_plugin` and properties, defined in *README.md* (*<root-dir>/code/scripts/person_authn/email_2fa_plugin*);
 - Script can be installed and used as Authentication Method without installed **Casa** and plug-in **email_2fa_plugin**;
 
-### 3. Installing casa plug-in **email_2fa_plugin**)
+### 3. Installing casa plug-in **email_2fa_plugin**
 
 - For installing casa plug-ins, it's necessary enable **Administrative mode**. It can be executed, creating file *.administrable* in the home directory of **Casa**
-(*/opt/gluu/jetty/casa*). After re-launching **Casa**, **Administrative mode** will be enabled;
+(*/opt/jans/jetty/casa*). After re-launching **Casa**, **Administrative mode** will be enabled;
 - Login as **Admin User**;
-- Install (*Add a plugin*) of the plugin **emailotp** (**email_2fa_plugin**) on the page *Manage your Gluu Casa plugins* of **Casa**;
+- Install (*Add a plugin*) of the plugin **email_2fa_plugin** (**ztrust-email_2fa_plugin**) on the page *Manage your Gluu Casa plugins* of **Casa**;
 
 Installed plug-in:
 
@@ -60,8 +58,7 @@ Installed plug-in:
 
 ### 4. Enabling casa plug-in **email_2fa_plugin**
 
-- If plug-in script (**email_2fa_plugin**) has been added on this page: **oxTrust** (**identity**): *Configuration*/*Person Authentication Scripts*/*Custom Scripts*
-this plug-in can be enabled on the page: *Enabled authentication methods* of **Casa**;
+- If plug-in script **email_2fa_plugin** (**ztrust-email_2fa_plugin**) has been added this plug-in can be enabled on the page: *Enabled authentication methods* of **Casa**;
 
 Enabled plug-in:
 
@@ -92,28 +89,12 @@ Tuning Second Factor Authentication:
 
 ![Tuning Second Factor Authentication](./img/5.second_factor_auth.png)
 
-### 7. Enabling Tuning casa plug-in **email_2fa_plugin** (**Email 2FA Plugin**) as an Authentication Method
-
-- After setting up casa plug-in on the page: *Manage your trusted credentials for account access* of **Casa** the plug-in **email_2fa_plugin** (**Email 2FA Plugin**)
-can be used as Authentication Method on this page: *Configuration*/*Manage Authentication*/*Default Authentication Method*.
-- After setting up casa plug-in on the page: *Manage your trusted credentials for account access* of **Casa** the plug-in **email_2fa_plugin** (**Email 2FA Plugin**)
-and enabling **email_2fa_plugin** (**Email 2FA Plugin**) as 2FA Plugin of **Casa**, it's possible to enable **delegated admin** plugin (**casa**) on this page:
-*Configuration*/*Manage Authentication*/*Default Authentication Method*.
-
-**email_2fa_plugin** defined as Default Second Factor Authentication:
-
-![Tuning Second Factor Authentication](./img/6.default_auth_email_2fa_plugin.png)
-
-**casa** defined as Default Second Factor Authentication:
-
-![Tuning Second Factor Authentication](./img/7.default_auth_casa.png)
-
-### 8. 2FA Authentication, using **email_2fa_plugin** (**Email 2FA Plugin**) plugin of **Casa** or **delegated admin** plugin (**casa**) of **Casa**
+### 7. 2FA Authentication, using **email_2fa_plugin** (**Email 2FA Plugin**) plugin of **Casa** or **delegated admin** plugin (**casa**) of **Casa**
 
 Welcome Login Page:
 
-![Tuning Second Factor Authentication](./img/8.login_welcome.png)
+![Tuning Second Factor Authentication](./img/6.login_welcome.png)
 
 2FA Login Page, that contains entered OTP:
 
-![Tuning Second Factor Authentication](./img/9.login_auth_token.png)
+![Tuning Second Factor Authentication](./img/7.login_auth_token.png)

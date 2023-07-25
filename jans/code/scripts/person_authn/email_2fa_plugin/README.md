@@ -24,7 +24,11 @@ Example of the attributes json file (defined by **email_templates_json_file_path
 
 This template can use follow variables:
 
-**%%otp%%** - OTP (one-time password/code).  
+**%%fn%%** - First Name of registered user;  
+**%%ln%%** - Last Name of registered user;  
+**%%mn%%** - Middle Name of registered user;  
+**%%email%%** - email address;  
+**%%otp%%** - OTP (one-time password/code).
 
 - **token_length**:     It determines the length of the characters of the One time Password sent to the user:
     + required parameter;
@@ -51,4 +55,12 @@ This template can use follow variables:
     + nonrequired parameter;
     + default value: value, defined in **Janssen** (**/opt/jans/jans-cli/config-cli-tui.py**): *SMTP*/*KeyStore Algorithm*;
     + by default algirithm is used by signing of certificate from the Keystore;
-        * for example: *SHA256withECDSA*.
+        * for example: *SHA256withECDSA*;
+- **email_templates_json_file_path**:
+    + required parameter;
+    + default value: not defined;
+        * for example: */etc/jans/conf/ztrust-email-email_2fa.json*;
+- **regex_json_file_path**:
+    + required parameter;
+    + default value: not defined;
+        * for example: */etc/jans/conf/ztrust-regex.json*.
