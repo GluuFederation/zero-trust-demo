@@ -6,12 +6,12 @@
 **bootsfaces** versions: **1.6.X** support **jakarta**:
 
 ```xml
-		<dependency>
-			<groupId>net.bootsfaces</groupId>
-			<artifactId>bootsfaces</artifactId>
-			<version>1.6.0-SNAPSHOT</version>
-			<classifier>jakarta</classifier>
-		</dependency>
+        <dependency>
+            <groupId>net.bootsfaces</groupId>
+            <artifactId>bootsfaces</artifactId>
+            <version>1.6.0-SNAPSHOT</version>
+            <classifier>jakarta</classifier>
+        </dependency>
 ```
 
 .
@@ -38,9 +38,12 @@ Build:
 	<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-4.4.2.Final.jar,./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar</Set></Configure>
 	```
 
+    ;
+
 * restart jans-auth:
 
 	```bash
-	service jans-auth restart  
+	service jans-auth restart
 	```
+
 	.
