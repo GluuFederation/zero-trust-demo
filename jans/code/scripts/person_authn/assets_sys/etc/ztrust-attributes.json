@@ -1,11 +1,10 @@
 {
     "ids": [
-	"givenName",
-	"sn",
-	"familyName",
-	"certificate",
-	"captcha_elem"
+        "givenName",
+        "sn",
+        "familyName",
+        "certificate",
+        "captcha_elem"
     ],
-
     "passStrength": 1
 }

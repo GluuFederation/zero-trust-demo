@@ -1,10 +1,10 @@
 {
     "email_subject": "Registration Details",
     "email_msg_template": [
-	"<h2 style='margin-left:10%%;color: #337ab7;'>Welcome</h2><hr style='width:80%%;border: 1px solid #337ab7;'></hr><div style='text-align:left;'>",
-	"<p>First Name: <span style='color: #337ab7;'>%%fn%%</span>,</p>",
-	"<p>Last Name: <span style='color: #337ab7;'>%%ln%%</span>,</p>",
-	"<p>Middle Name: <span style='color: #337ab7;'>%%mn%%</span>,</p>",
-	"<p>Email: <span style='color: #337ab7;'>%%email%%</span>,</p><p>Use <span style='color: #337ab7;'>%%otp%%</span> OTP to finish Registration.</p></div>"
+        "<h2 style='margin-left:10%%;color: #337ab7;'>Welcome</h2><hr style='width:80%%;border: 1px solid #337ab7;'></hr><div style='text-align:left;'>",
+        "<p>First Name: <span style='color: #337ab7;'>%%fn%%</span>,</p>",
+        "<p>Last Name: <span style='color: #337ab7;'>%%ln%%</span>,</p>",
+        "<p>Middle Name: <span style='color: #337ab7;'>%%mn%%</span>,</p>",
+        "<p>Email: <span style='color: #337ab7;'>%%email%%</span>,</p><p>Use <span style='color: #337ab7;'>%%otp%%</span> OTP to finish Registration.</p></div>"
     ]
 }

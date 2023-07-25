@@ -1519,7 +1519,7 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Navigate to *Scripts*, and click **Add Script**;
 
-* **Script Type**: Select **Application Sessions**;
+* **Script Type**: Select **Application Session**;
 
 * Specify the name as `ztrust-application_session`;
 
