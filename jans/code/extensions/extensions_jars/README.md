@@ -35,7 +35,7 @@ Build:
 * add extension lib: **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
 
 	```text
-	<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-4.4.2.Final.jar,./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar</Set></Configure>
+	<Set name="extraClasspath">./custom/libs/twilio-7.17.0.jar,./custom/libs/jsmpp-2.3.7.jar,./custom/libs/ztrust-ext-1.0.16-SNAPSHOT.jar,./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar</Set></Configure>
 	```
 
     ;

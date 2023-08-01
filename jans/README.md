@@ -36,8 +36,9 @@ Zero Trust Demo for **Janssen 1.0.15** with **OpenID**
       - [6.4.2. Properties of Email 2FA Script](#642-properties-of-email-2fa-script)
     + [6.5. jans-auth User Registration Script](#65-jans-auth-user-registration-script)
     + [6.6. jans-auth CAC Card Script](#66-jans-auth-cac-card-script)
-    + [6.7. jans-auth App Session Audit Script](#67-jans-auth-app-session-audit-script)
-    + [6.8. jans-auth Extension fido2](#68-jans-auth-extension-fido2)
+    + [6.7. jans-auth Extension fido2](#67-jans-auth-extension-fido2)
+    + [6.8. jans-auth Extension twilio_sms](#68-jans-auth-extension-twilio_sms)
+    + [6.9. jans-auth App Session Audit Script](#69-jans-auth-app-session-audit-script)
   * [7. Casa Configuration](#7-casa-configuration)
     + [7.1. Activation Casa plug-in](#71-activation-casa-plug-in)
     + [7.2. Password Policy Casa plug-in](#72-password-policy-casa-plug-in)
@@ -96,7 +97,8 @@ restrict enrollment to certain domains;
 1. **email identifier** The end-user's email address is used for identification
 (i.e. the email is the username);
 1. **Smart Card**  The end user clicks on a button, which should prompt their
-browser to enable the selection of an X.509 certificate.
+browser to enable the selection of an X.509 certificate;
+1. **SMS** The end user's phone number should be used for identification.
 
 ###  1.3. Credential Management
 
@@ -457,7 +459,7 @@ Exit Setup Casa
 .
 
 If **-casa-client-id** and/or **-casa-client-pw** are not defined, random values **Casa Client ID** and **Casa Client Secret** will be generated.
-Default **Casa Client ID** prefix is follow: **3000.**.
+Default **Casa Client ID** prefix is follow: **3000.** .
 
 Example of uninstalling:
 
@@ -891,25 +893,25 @@ systemctl restart jans-auth
 
 * Build extension **ztrust-ext**;
 
-* Copy built jars (**ztrust-ext-1.0.14-SNAPSHOT.jar** and **bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
+* Copy built jars (**ztrust-ext-1.0.16-SNAPSHOT.jar** and **bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
 
 * Change mode and owner:group of these modules:  
 
 ```bash
 chmod 600 ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
-chmod 600 ./ztrust-ext-1.0.14-SNAPSHOT.jar
-chown jetty:jetty ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
-chown jetty:jetty ./ztrust-ext-1.0.14-SNAPSHOT.jar
+chmod 600 ./ztrust-ext-1.0.16-SNAPSHOT.jar
+chown jetty:jetty ./bootsface6s-1.6.0-SNAPSHOT-jakarta.jar
+chown jetty:jetty ./ztrust-ext-1.0.16-SNAPSHOT.jar
 ```
 
 ;
 
 * Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
 
-* Add extension lib: **./custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
+* Add extension lib: **./custom/libs/ztrust-ext-1.0.16-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
 
 ```xml
-<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.14-SNAPSHOT.jar</Set>
+<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.16-SNAPSHOT.jar</Set>
 ```
 
 ;
@@ -1513,7 +1515,37 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 * Check *Enabled* and click **Save**.
 
-###  6.7. jans-auth App Session Audit Script
+###  6.7. jans-auth Extension fido2
+
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+
+* Navigate to *Scripts*, select **fido2** script and enable it:
+
+![Janssen fido2 script](./img/screenshot-13-janssen-fido2-script.png)
+
+.
+
+###  6.8. jans-auth Extension twilio_sms
+
+* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
+
+* Navigate to *Scripts*, select **twilio_sms** script and enable it:
+
+![Janssen twilio_sms_ script](./img/screenshot-16-janssen-twilio_sms-script.png)
+
+;
+
+* Add/define these **Configuration properties** (**Conf. properties**):
+
+|key                            | optional                    | value                                       | decription                                                                       |
+|------------------------------ | --------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
+|twilio_sid                     | no                          | AC88b70bfd7b6ad8c44963d5da63fd37a1          | Twilio account SID (obtain it from your Twilio account)                          |
+|twilio_token                   | no                          | 608bb5d9df6e863f58bc174837b9ea03            | Access token associated to Twilio account (obtain it from your Twilio account)   |
+|from_number                    | no                          | +14067197957                                | Twilio phone number assigned to the account (obtain it from your Twilio account) |
+
+.
+
+###  6.9. jans-auth App Session Audit Script
 
 * Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
 
@@ -1866,14 +1898,6 @@ Example of text info of signed client certificate, that contains OCSP info (**Au
 
 ![jansMetric DB Records 2](./img/screenshot-15-app-session-3.png)
 
-###  6.8. jans-auth Extension fido2
-
-* Launch **config-cli-tui.py** (**python3 -W ignore /opt/jans/jans-cli/config-cli-tui.py**);
-
-* Navigate to *Scripts*, select **fido2** script and enable it:
-
-![Janssen fido2 script](./img/screenshot-13-janssen-fido2-script.png)
-
 .
 
 ##  7. Casa Configuration
@@ -1924,14 +1948,17 @@ see the Casa Admin Console menu option.
 Enabled scripts:
 
 - fido2
+- twilio_sms
 - ztrust-register
 - ztrust-cert
 - ztrust-email_2fa_plugin
 - ztrust-application_session
 
-Enabled plug-ins:
+Loaded plug-ins:
 
-![enabled plugins](./img/screenshot-4-casa-auth-methods.png)
+![loaded plugins](./img/screenshot-4-casa-auth-methods.png)
+
+.
 
 ###  7.1. Activation Casa plug-in
 
@@ -1970,7 +1997,7 @@ After that script **ztrust-register**, which have property **regex_json_file_pat
 
 **Certificate Authentication plug-in**  allows enrollment and authentication via client certificates.
 
-Here is list of enrolled certificates by current user (**Admin**) account:  
+Here is the list of enrolled certificates by current user (**Admin**) account:  
 ![Certificate Authentication plug-in 1](./img/screenshot-8-casa-cert-authn-1.png)
 
 Detailed info of enrolled certificates:  
@@ -1984,6 +2011,8 @@ Proceeding of new certificate:
 
 Selected certificate has been added:  
 ![Certificate Authentication plug-in 5](./img/screenshot-12-casa-cert-authn-5.png)
+
+.
 
 ###  7.4. Fido2 Authentication service
 
@@ -2030,6 +2059,37 @@ Initializing of fido2 trusted credentials:
 
 1. **fido2** device records in **jansdb**:  
 ![FIDO2 Authentication 8](./img/screenshot-14-casa-fido2-14.png)
+
+.
+
+###  7.5. Twilio Authentication service
+
+1. Activate **fido2** authentication method in **casa**:  
+![Twilio SMS Authentication 1](./img/screenshot-17-casa-twilio_sms-1.png)
+
+1. Mobile Phone Numbers (User Home):  
+![Twilio SMS Authentication 2](./img/screenshot-17-casa-twilio_sms-2.png)
+
+1. Adding of a mobile phone number (for 2FA OTP receiving) (**step 1**):  
+![Twilio SMS Authentication 3 (step 1)](./img/screenshot-17-casa-twilio_sms-3.png)
+
+1. Adding of a mobile phone number (for 2FA OTP receiving) (**step 2**):  
+![Twilio SMS Authentication 3 (step 2)](./img/screenshot-17-casa-twilio_sms-4.png)
+
+1. Adding of a mobile phone number (for 2FA OTP receiving) (**step 3**):  
+![Twilio SMS Authentication 5 (step 3)](./img/screenshot-17-casa-twilio_sms-5.png)
+
+1. Mobile Phone Numbers:  
+![Twilio SMS Authentication 6](./img/screenshot-17-casa-twilio_sms-6.png)
+
+1. Mobile Phone Numbers (User Home):  
+![Twilio SMS Authentication 7](./img/screenshot-17-casa-twilio_sms-7.png)
+
+1. 2FA authenication during Login (**step 1**):  
+![Twilio SMS Authentication 8 (step 1)](./img/screenshot-17-casa-twilio_sms-8.png)
+
+1. 2FA authenication during Login (**step 2**):  
+![Twilio SMS Authentication 8 (step 2)](./img/screenshot-17-casa-twilio_sms-9.png)
 
 .
 

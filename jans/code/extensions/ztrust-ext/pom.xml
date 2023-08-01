@@ -6,7 +6,7 @@
 
     <groupId>io.jans.jans-auth-server-extensions</groupId>
     <artifactId>ztrust-ext</artifactId>
-    <version>1.0.14-SNAPSHOT</version>
+    <version>1.0.16-SNAPSHOT</version>
 
     <name>ztrust-ext</name>
 
