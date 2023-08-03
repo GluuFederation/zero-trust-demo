@@ -14,7 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <plugin.id>passw-policy_plugin</plugin.id>
         <plugin.version>5.0.0-12</plugin.version>
-        <jans.version>1.0.14-SNAPSHOT</jans.version>
+        <jans.version>1.0.17-SNAPSHOT</jans.version>
     </properties>
 
     <repositories>

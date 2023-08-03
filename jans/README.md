@@ -328,7 +328,7 @@ cd /opt/jans/bin
 python3 ./show_version.py
 
 Title: jans-config-api-server-fips
-Version: 1.0.16-SNAPSHOT
+Version: 1.0.17-SNAPSHOT
 Builddate:
 Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
@@ -338,17 +338,17 @@ Builddate:
 Build: 5e34e9b3cbd6ca59a3f9557fb44896b4deeb6228
 
 Title: SCIM API Server (FIPS)
-Version: 1.0.16-SNAPSHOT
+Version: 1.0.17-SNAPSHOT
 Builddate:
 Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
 Title: Fido2 API Server (FIPS)
-Version: 1.0.16-SNAPSHOT
+Version: 1.0.17-SNAPSHOT
 Builddate:
 Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 
 Title: Jans authentication server (FIPS)
-Version: 1.0.16-SNAPSHOT
+Version: 1.0.17-SNAPSHOT
 Builddate:
 Build: 222e89f94f138e715d1ea8df7d62ee4d24295ad2
 ```
@@ -893,25 +893,25 @@ systemctl restart jans-auth
 
 * Build extension **ztrust-ext**;
 
-* Copy built jars (**ztrust-ext-1.0.16-SNAPSHOT.jar** and **bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
+* Copy built jars (**ztrust-ext-1.0.17-SNAPSHOT.jar** and **bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**) to the directory: **/opt/jans/jetty/jans-auth/custom/libs**;
 
 * Change mode and owner:group of these modules:  
 
 ```bash
 chmod 600 ./bootsfaces-1.6.0-SNAPSHOT-jakarta.jar
-chmod 600 ./ztrust-ext-1.0.16-SNAPSHOT.jar
+chmod 600 ./ztrust-ext-1.0.17-SNAPSHOT.jar
 chown jetty:jetty ./bootsface6s-1.6.0-SNAPSHOT-jakarta.jar
-chown jetty:jetty ./ztrust-ext-1.0.16-SNAPSHOT.jar
+chown jetty:jetty ./ztrust-ext-1.0.17-SNAPSHOT.jar
 ```
 
 ;
 
 * Open file: **/opt/jans/jetty/jans-auth/webapps/jans-auth.xml**;
 
-* Add extension lib: **./custom/libs/ztrust-ext-1.0.16-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
+* Add extension lib: **./custom/libs/ztrust-ext-1.0.17-SNAPSHOT.jar** and **./custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar**:
 
 ```xml
-<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.16-SNAPSHOT.jar</Set>
+<Set name="extraClasspath">/opt/jans/jetty/jans-auth/custom/libs/jans-fido2-client.jar,/opt/jans/jetty/jans-auth/custom/libs/twilio.jar,/opt/jans/jetty/jans-auth/custom/libs/casa-config.jar,/opt/jans/jetty/jans-auth/custom/libs/bootsfaces-1.6.0-SNAPSHOT-jakarta.jar,/opt/jans/jetty/jans-auth/custom/libs/ztrust-ext-1.0.17-SNAPSHOT.jar</Set>
 ```
 
 ;
